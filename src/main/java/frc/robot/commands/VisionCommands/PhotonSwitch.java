@@ -24,14 +24,12 @@ public class PhotonSwitch extends CommandBase {
 	public void initialize() {
 		cameraIndex = cam.getPipelineIndex();
 		if (cameraIndex == 1) {
-			Robot.led.setColor(128, 0, 128);
+			// Robot.led.setColor(128, 0, 128);
 			cameraIndex++;
-		} 
-		else if(cameraIndex== 2){
-			Robot.led.setColor(255, 255, 255);
-		}
-		else {
-			Robot.led.setColor(255, 255, 0);
+		} else if (cameraIndex == 2) {
+			// Robot.led.setColor(255, 255, 255);
+		} else {
+			// Robot.led.setColor(255, 255, 0);
 			cameraIndex++;
 		}
 

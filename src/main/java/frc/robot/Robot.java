@@ -19,8 +19,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.RGBLED;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -40,7 +38,6 @@ public class Robot extends TimedRobot {
 	private Command m_autonomousCommand;
 	public static Drivetrain drivetrain;
 	public static boolean orientation = true;
-	public static RGBLED led;
 	private SendableChooser<Command> autoChooser;
 	public static boolean currentcheck;
 	public static Trajectory revgo, go, wcurve, parkReturn, outAndReturn;
@@ -50,7 +47,6 @@ public class Robot extends TimedRobot {
 	public static PhotonCamera camera;
 	private static Compressor compressor;
 	public PowerDistribution pdp;
-	public static Intake intake;
 	private Timer wristTimer = new Timer();
 	private boolean wristChange = false;
 	public static double scoringPreset;
@@ -66,9 +62,7 @@ public class Robot extends TimedRobot {
 
 		pdp = new PowerDistribution(1, ModuleType.kRev);
 		compressor = new Compressor(PneumaticsModuleType.REVPH);
-		intake = new Intake();
 		drivetrain = new Drivetrain();
-		led = new RGBLED();
 		new RobotContainer();
 		autoChooser = new SendableChooser<>();
 		drivetrain.resetGyro();
@@ -91,10 +85,10 @@ public class Robot extends TimedRobot {
 		CommandScheduler.getInstance().run();
 		compressor.enableAnalog(60, 110);
 
-		if (intake.intakeMotor.getOutputCurrent() > Constants.IntakeMaxCurrent)
-			RobotContainer.driver.setRumble(RumbleType.kBothRumble, 1);
-		else
-			RobotContainer.driver.setRumble(RumbleType.kBothRumble, 0);
+		// if (intake.intakeMotor.getOutputCurrent() > Constants.IntakeMaxCurrent)
+		// 	RobotContainer.driver.setRumble(RumbleType.kBothRumble, 1);
+		// else
+		// 	RobotContainer.driver.setRumble(RumbleType.kBothRumble, 0);
 
 		SmartDashboard.putNumber("PReSSURE", compressor.getPressure());
 
@@ -120,10 +114,10 @@ public class Robot extends TimedRobot {
 		pdp.setSwitchableChannel(false);
 	}
 
-	@Override
-	public void disabledPeriodic() {
-		led.setMode("rainbow");
-	}
+	// @Override
+	// public void disabledPeriodic() {
+	// 	led.setMode("rainbow");
+	// }
 
 	/**
 	 * This autonomous runs the autonomous command selected by your
@@ -227,10 +221,10 @@ public class Robot extends TimedRobot {
 
 		Robot.drivetrain.arcadeDrive(thrust, turn);
 
-		if (Constants.mode && !Constants.Intaking)
-			Robot.led.setColor(255, 255, 0); // Cone Lights
-		if (!Constants.mode && !Constants.Intaking)
-			Robot.led.setColor(128, 0, 128); // Cube Lights
+		// if (Constants.mode && !Constants.Intaking)
+		// 	Robot.led.setColor(255, 255, 0); // Cone Lights
+		// if (!Constants.mode && !Constants.Intaking)
+		// 	Robot.led.setColor(128, 0, 128); // Cube Lights
 
 	}
 

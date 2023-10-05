@@ -67,7 +67,7 @@ public class VisionDrive extends CommandBase {
 
 			Robot.drivetrain.arcadeDrive(thrust, output);
 
-			Robot.led.setColor(255, 0, 0);
+			// Robot.led.setColor(255, 0, 0);
 
 		}
 
@@ -83,7 +83,7 @@ public class VisionDrive extends CommandBase {
 	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
-		Robot.led.setColor(0, 255, 0);
+		// Robot.led.setColor(0, 255, 0);
 		Robot.drivetrain.setMotors(0, 0);
 	}
 
