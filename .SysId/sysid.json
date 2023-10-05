@@ -1,0 +1,11 @@
+{
+  "SysId": {
+    "Analysis Type": "Drivetrain",
+    "NetworkTables Settings": {
+      "serverTeam": "2791"
+    },
+    "mode": "Client (NT4)",
+    "port3": 5810,
+    "serverTeam": "2791"
+  }
+}
