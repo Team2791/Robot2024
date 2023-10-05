@@ -14,19 +14,9 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-import frc.robot.commands.ArmCommands.PivotSet;
-import frc.robot.commands.ArmCommands.ScoringExtension;
-import frc.robot.commands.ArmCommands.ChangeMode;
-import frc.robot.commands.ArmCommands.ExtendArm;
-import frc.robot.commands.ArmCommands.ManualPivotDown;
-import frc.robot.commands.ArmCommands.ManualPivotUp;
-import frc.robot.commands.ArmCommands.PivotArm;
 
 import frc.robot.commands.AutoCommands.Level;
 import frc.robot.commands.DrivetrainCommands.ResetGyro;
-import frc.robot.commands.IntakeCommands.ConeOutCubeOut;
-import frc.robot.commands.IntakeCommands.ConeInCubeOut;
-import frc.robot.commands.IntakeCommands.RotateWrist;
 import frc.robot.commands.VisionCommands.PhotonAim;
 
 /**
@@ -67,35 +57,35 @@ public class RobotContainer {
 		camera2 = new PhotonCamera("2791photonvision");
 
 		// DRIVER CONTROLS
-		driverX.toggleOnTrue(new ChangeMode());
-		driverA.whileTrue(new ConeOutCubeOut());
-		driverY.whileTrue(new ConeInCubeOut());
+		// driverX.toggleOnTrue(new ChangeMode());
+		// driverA.whileTrue(new ConeOutCubeOut());
+		// driverY.whileTrue(new ConeInCubeOut());
 		driverStart.whileTrue(new Level());
 
 
 		// OPERATOR CONTROLS
-		operatorDPadUp.toggleOnTrue(new ParallelCommandGroup(new PivotArm(0), new ExtendArm(2)));
-		operatorDPadDown.toggleOnTrue(new ExtendArm(3));
-		operatorA.toggleOnTrue(new RotateWrist());
-		operatorRT.toggleOnTrue(new ScoringExtension());
-		operatorLT.toggleOnTrue(new ExtendArm(Constants.ConeMidExtension));
+		// operatorDPadUp.toggleOnTrue(new ParallelCommandGroup(new PivotArm(0), new ExtendArm(2)));
+		// operatorDPadDown.toggleOnTrue(new ExtendArm(3));
+		// operatorA.toggleOnTrue(new RotateWrist());
+		// operatorRT.toggleOnTrue(new ScoringExtension());
+		// operatorLT.toggleOnTrue(new ExtendArm(Constants.ConeMidExtension));
 
-		operatorRB.toggleOnTrue(new PivotSet(1, false));
-		operatorLB.toggleOnTrue(new PivotSet(4, false));
-		operatorB.toggleOnTrue(new ParallelCommandGroup(new ExtendArm(0.8), new PivotSet(2, false)));
-		operatorY.toggleOnTrue(new PivotSet(5,false));
-		// Intake Presets
-		operatorTinyLeft.toggleOnTrue(
-				new ParallelCommandGroup(new PivotArm(Constants.FlangeIntakePivotBack), new ExtendArm(0.8)));
-		operatorTinyRight.toggleOnTrue(
-				new ParallelCommandGroup(new PivotArm(Constants.FlangeIntakePivotFront), new ExtendArm(0.8)));
-		operatorDPadRight.toggleOnTrue(
-				new ParallelCommandGroup(new ExtendArm(0.8), new PivotSet(3, true)));
-		operatorDPadLeft.toggleOnTrue(
-				new ParallelCommandGroup(new ExtendArm(0.8), new PivotSet(3, false)));
+		// operatorRB.toggleOnTrue(new PivotSet(1, false));
+		// operatorLB.toggleOnTrue(new PivotSet(4, false));
+		// operatorB.toggleOnTrue(new ParallelCommandGroup(new ExtendArm(0.8), new PivotSet(2, false)));
+		// operatorY.toggleOnTrue(new PivotSet(5,false));
+		// // Intake Presets
+		// operatorTinyLeft.toggleOnTrue(
+		// 		new ParallelCommandGroup(new PivotArm(Constants.FlangeIntakePivotBack), new ExtendArm(0.8)));
+		// operatorTinyRight.toggleOnTrue(
+		// 		new ParallelCommandGroup(new PivotArm(Constants.FlangeIntakePivotFront), new ExtendArm(0.8)));
+		// operatorDPadRight.toggleOnTrue(
+		// 		new ParallelCommandGroup(new ExtendArm(0.8), new PivotSet(3, true)));
+		// operatorDPadLeft.toggleOnTrue(
+		// 		new ParallelCommandGroup(new ExtendArm(0.8), new PivotSet(3, false)));
 
-		operatorLeftYNeg.whileTrue(new ManualPivotDown());
-		operatorLeftYPos.whileTrue(new ManualPivotUp());
+		// operatorLeftYNeg.whileTrue(new ManualPivotDown());
+		// operatorLeftYPos.whileTrue(new ManualPivotUp());
 	}
 
 	/**
@@ -120,16 +110,16 @@ public class RobotContainer {
 		// pitstick.povDownRight().toggleOnTrue(new PivotArm(Robot.intakePresetFront));
 		// pitstick.povDownLeft().toggleOnTrue(new PivotArm(Robot.intakePresetBack));
 
-		pitstick.rightBumper().toggleOnTrue(new	PivotArm(Constants.ConeScoringPivotFront));
-		pitstick.leftBumper().toggleOnTrue(new PivotArm(Constants.ConeScoringPivotBack));
-		pitstick.rightTrigger().toggleOnTrue(new ExtendArm(Constants.ConeUpperExtension));
-		pitstick.leftTrigger().toggleOnTrue(new	ExtendArm(Constants.ConeMidExtension));
-		pitstick.povUp().toggleOnTrue(new ParallelCommandGroup(new PivotArm(0), new ExtendArm(4)));
-		pitstick.povDown().toggleOnTrue(new ExtendArm(3));
+		// pitstick.rightBumper().toggleOnTrue(new	PivotArm(Constants.ConeScoringPivotFront));
+		// pitstick.leftBumper().toggleOnTrue(new PivotArm(Constants.ConeScoringPivotBack));
+		// pitstick.rightTrigger().toggleOnTrue(new ExtendArm(Constants.ConeUpperExtension));
+		// pitstick.leftTrigger().toggleOnTrue(new	ExtendArm(Constants.ConeMidExtension));
+		// pitstick.povUp().toggleOnTrue(new ParallelCommandGroup(new PivotArm(0), new ExtendArm(4)));
+		// pitstick.povDown().toggleOnTrue(new ExtendArm(3));
 
 
-		pitstick.povDownLeft().toggleOnTrue(new ParallelCommandGroup(new ExtendArm(0.3), new PivotArm(Constants.ConeIntakePivotBack)));
-		pitstick.povDownRight().toggleOnTrue(new ParallelCommandGroup(new ExtendArm(0.3), new PivotArm(Constants.ConeIntakePivotFront)));
+		// pitstick.povDownLeft().toggleOnTrue(new ParallelCommandGroup(new ExtendArm(0.3), new PivotArm(Constants.ConeIntakePivotBack)));
+		// pitstick.povDownRight().toggleOnTrue(new ParallelCommandGroup(new ExtendArm(0.3), new PivotArm(Constants.ConeIntakePivotFront)));
 	
 	}
 

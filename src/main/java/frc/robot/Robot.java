@@ -18,17 +18,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.AutoCommands.AutoSequences.ConeCube;
-import frc.robot.commands.AutoCommands.AutoSequences.ConeCubeWire;
-import frc.robot.commands.AutoCommands.AutoSequences.ConeCubeWireBLUE;
-import frc.robot.commands.AutoCommands.AutoSequences.CubeBalance;
-import frc.robot.commands.AutoCommands.AutoSequences.MiddleBalanceAuto;
-import frc.robot.commands.AutoCommands.AutoSequences.MiddleMobile;
-import frc.robot.commands.AutoCommands.AutoSequences.MiddlePiece;
-import frc.robot.commands.AutoCommands.AutoSequences.TwoCube;
-import frc.robot.commands.AutoCommands.AutoSequences.TwoCubeWire;
-import frc.robot.subsystems.Arm;
-import frc.robot.commands.AutoCommands.AutoSequences.MiddleBalanceAuto;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.RGBLED;
@@ -50,7 +39,6 @@ public class Robot extends TimedRobot {
 
 	private Command m_autonomousCommand;
 	public static Drivetrain drivetrain;
-	public static Arm arm;
 	public static boolean orientation = true;
 	public static RGBLED led;
 	private SendableChooser<Command> autoChooser;
@@ -80,19 +68,21 @@ public class Robot extends TimedRobot {
 		compressor = new Compressor(PneumaticsModuleType.REVPH);
 		intake = new Intake();
 		drivetrain = new Drivetrain();
-		arm = new Arm();
 		led = new RGBLED();
 		new RobotContainer();
 		autoChooser = new SendableChooser<>();
 		drivetrain.resetGyro();
 		drivetrain.resetEncoders();
 
-		autoChooser.setDefaultOption("(CENTER) Balance No Mobility", new MiddleBalanceAuto());
-		autoChooser.addOption("(CENTER) CUBE + Balance + Mobility", new CubeBalance());
-	
-		autoChooser.addOption("(Non-Wire side) Cone + Cube", new ConeCube());
-		autoChooser.addOption("(RED)(Wire side) Cone Cube", new ConeCubeWire());
-		autoChooser.addOption("(BLUE)(Wire Side) Cone + Cube", new ConeCubeWireBLUE());
+		// autoChooser.setDefaultOption("(CENTER) Balance No Mobility", new
+		// MiddleBalanceAuto());
+		// autoChooser.addOption("(CENTER) CUBE + Balance + Mobility", new
+		// CubeBalance());
+
+		// autoChooser.addOption("(Non-Wire side) Cone + Cube", new ConeCube());
+		// autoChooser.addOption("(RED)(Wire side) Cone Cube", new ConeCubeWire());
+		// autoChooser.addOption("(BLUE)(Wire Side) Cone + Cube", new
+		// ConeCubeWireBLUE());
 		SmartDashboard.putData(autoChooser);
 	}
 
@@ -106,32 +96,26 @@ public class Robot extends TimedRobot {
 		else
 			RobotContainer.driver.setRumble(RumbleType.kBothRumble, 0);
 
-		if (arm.getPivotPot() > 0)
-			Constants.Jonah = 1;
-		if (arm.getPivotPot() < 0)
-			Constants.Jonah = -1;
-
 		SmartDashboard.putNumber("PReSSURE", compressor.getPressure());
 
 		// if (intake.getWristCurrent() > 40) {
-		// 	wristTimer.reset();
-		// 	wristTimer.start();
-		// 	wristChange = true;
+		// wristTimer.reset();
+		// wristTimer.start();
+		// wristChange = true;
 		// }
 		// if (wristTimer.get() > 3 && wristChange) {
-		// 	intake.setRotateMotor(0);
+		// intake.setRotateMotor(0);
 		// }
 
 		// if (wristChange && intake.getWristCurrent() < 30) {
-		// 	wristChange = false;
-		// 	wristTimer.reset();
+		// wristChange = false;
+		// wristTimer.reset();
 		// }
 	}
 
 	/** This function is called once each time the robot enters Disabled mode. */
 	@Override
 	public void disabledInit() {
-		Robot.arm.setPivotbrake(true);
 		Robot.drivetrain.setBrakeMode();
 		pdp.setSwitchableChannel(false);
 	}
@@ -242,11 +226,6 @@ public class Robot extends TimedRobot {
 			turn /= 3.5;
 
 		Robot.drivetrain.arcadeDrive(thrust, turn);
-
-		if (Constants.ManualExtend && Math.abs(RobotContainer.operator.getRightY()) > 0.15)
-			Robot.arm.extend(-RobotContainer.operator.getRightY() / 2.6);
-		if (Constants.ManualExtend && Math.abs(RobotContainer.operator.getRightY()) < 0.15)
-			Robot.arm.extend(0);
 
 		if (Constants.mode && !Constants.Intaking)
 			Robot.led.setColor(255, 255, 0); // Cone Lights
