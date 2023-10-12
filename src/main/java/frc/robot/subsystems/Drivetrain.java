@@ -41,14 +41,14 @@ public class Drivetrain extends SubsystemBase {
 	public Drivetrain() {
 		gyro = new AHRS(Port.kMXP);
 		// Motors instantiation
-		rightLeader = new CANSparkMax(RobotMap.rightLeader, MotorType.kBrushless);
-		rightFollower1 = new CANSparkMax(RobotMap.rightFollower1,
+		rightLeader = new CANSparkMax(RobotMap.MOTOR4, MotorType.kBrushless);
+		//rightFollower1 = new CANSparkMax(RobotMap.rightFollower1,
+				//MotorType.kBrushless);
+		//rightFollower2 = new CANSparkMax(RobotMap.rightFollower2, MotorType.kBrushless);
+		leftLeader = new CANSparkMax(RobotMap.MOTOR1, MotorType.kBrushless);
+		leftFollower1 = new CANSparkMax(RobotMap.MOTOR2,
 				MotorType.kBrushless);
-		rightFollower2 = new CANSparkMax(RobotMap.rightFollower2, MotorType.kBrushless);
-		leftLeader = new CANSparkMax(RobotMap.leftLeader, MotorType.kBrushless);
-		leftFollower1 = new CANSparkMax(RobotMap.leftFollower1,
-				MotorType.kBrushless);
-		leftFollower2 = new CANSparkMax(RobotMap.leftFollower2, MotorType.kBrushless);
+		leftFollower2 = new CANSparkMax(RobotMap.MOTOR3, MotorType.kBrushless);
 
 		leftFollower1.follow(leftLeader);
 		leftFollower2.follow(leftLeader);
@@ -100,9 +100,9 @@ public class Drivetrain extends SubsystemBase {
 
 	}
 
-	public void setMotors(double leftSpeed, double rightSpeed) {
+	public void setMotors(double leftSpeed){//, double rightSpeed) {
 		leftLeader.set(leftSpeed);
-		rightLeader.set(rightSpeed);
+		//rightLeader.set(rightSpeed);
 	}
 
 	public void setOutput(double leftVolts, double rightVolts) {
