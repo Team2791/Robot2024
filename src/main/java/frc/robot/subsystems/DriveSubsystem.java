@@ -117,7 +117,25 @@ public class DriveSubsystem extends SubsystemBase {
    * @param rateLimit     Whether to enable rate limiting for smoother control.
    */
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
-    
+ 
+		// Exponential transform for smoother translation control
+		// Joystick output and motor input are both -1.0 to 1.0
+		// So both J and M in the math are 1, which simplifies.
+
+		double exponent = 3.0;
+
+		double Y = xSpeed;
+		double X = ySpeed;
+
+		double Ysign = Math.signum(Y);
+		double Xsign = Math.signum(X);
+
+		Y = Math.abs(Y);
+		X = Math.abs(X);
+
+		xSpeed = Ysign * Math.pow(Y, exponent);
+		ySpeed = Xsign * Math.pow(X, exponent);
+
     double xSpeedCommanded;
     double ySpeedCommanded;
 
