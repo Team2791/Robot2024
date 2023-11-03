@@ -53,13 +53,13 @@ public final class Constants {
 
     // SPARK MAX CAN IDs (DONE)
     public static final int kFrontLeftDrivingCanId = 10;
-    public static final int kRearLeftDrivingCanId = 20;
-    public static final int kFrontRightDrivingCanId = 30;
+    public static final int kRearLeftDrivingCanId = 30;
+    public static final int kFrontRightDrivingCanId = 20;
     public static final int kRearRightDrivingCanId = 40;
 
     public static final int kFrontLeftTurningCanId = 15;
-    public static final int kRearLeftTurningCanId = 25;
-    public static final int kFrontRightTurningCanId = 35;
+    public static final int kRearLeftTurningCanId = 35;
+    public static final int kFrontRightTurningCanId = 25;
     public static final int kRearRightTurningCanId = 45;
 
     public static final boolean kGyroReversed = false;
@@ -95,14 +95,14 @@ public final class Constants {
     public static final double kTurningEncoderPositionPIDMinInput = 0; // radians
     public static final double kTurningEncoderPositionPIDMaxInput = kTurningEncoderPositionFactor; // radians
 
-    public static final double kDrivingP = 0.04;
+    public static final double kDrivingP = 0.05; // .04
     public static final double kDrivingI = 0;
     public static final double kDrivingD = 0;
     public static final double kDrivingFF = 1 / kDriveWheelFreeSpeedRps;
     public static final double kDrivingMinOutput = -1;
     public static final double kDrivingMaxOutput = 1;
 
-    public static final double kTurningP = 1;
+    public static final double kTurningP = 1.5; // 1
     public static final double kTurningI = 0;
     public static final double kTurningD = 0;
     public static final double kTurningFF = 0;
@@ -112,8 +112,8 @@ public final class Constants {
     public static final IdleMode kDrivingMotorIdleMode = IdleMode.kBrake;
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
 
-    public static final int kDrivingMotorCurrentLimit = 50; // amps
-    public static final int kTurningMotorCurrentLimit = 20; // amps
+    public static final int kDrivingMotorCurrentLimit = 20; // amps
+    public static final int kTurningMotorCurrentLimit = 10; // amps
   }
 
   public static final class OIConstants {
