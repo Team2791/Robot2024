@@ -20,9 +20,13 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+
+import java.security.spec.KeySpec;
 import java.util.List;
 
 /*
@@ -79,7 +83,7 @@ public class RobotContainer {
 	 *
 	 * @return the command to run in autonomous
 	 */
-	public Command getAutonomousCommand() {
+	public Command getAutonomousCommand() { 
 		// Create config for trajectory
 		TrajectoryConfig config = new TrajectoryConfig(
 				AutoConstants.kMaxSpeedMetersPerSecond,
@@ -94,29 +98,19 @@ public class RobotContainer {
 				// Pass through these two interior waypoints, making an 's' curve path
 				List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
 				// End 3 meters straight ahead of where we started, facing forward
-				new Pose2d(3, 0, new Rotation2d(0)),
+				new Pose2d(3, 0, new Rotation2d(180)),
 				config);
 
-		var thetaController = new ProfiledPIDController(
-				AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
+		PIDController xController = new PIDController(AutoConstants.kPXController,0,0);
+		PIDController yController = new PIDController(AutoConstants.kPYController,0,0);
+		ProfiledPIDController thetaController = new ProfiledPIDController(AutoConstants.kPThetaController,0,0,AutoConstants.kThetaControllerConstraints);
 		thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-		SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-				exampleTrajectory,
-				m_robotDrive::getPose, // Functional interface to feed supplier
-				DriveConstants.kDriveKinematics,
+		SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(exampleTrajectory, m_robotDrive::getPose, DriveConstants.kDriveKinematics, xController, yController, thetaController, m_robotDrive::setModuleStates, m_robotDrive);
 
-				// Position controllers
-				new PIDController(AutoConstants.kPXController, 0, 0),
-				new PIDController(AutoConstants.kPYController, 0, 0),
-				thetaController,
-				m_robotDrive::setModuleStates,
-				m_robotDrive);
 
-		// Reset odometry to the starting pose of the trajectory.
-		m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
 
-		// Run path following command, then stop at the end.
-		return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false, false));
+		return new SequentialCommandGroup(new InstantCommand(() -> m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose())), swerveControllerCommand, new InstantCommand(() ->  m_robotDrive.stopModules()));
+
 	}
 }

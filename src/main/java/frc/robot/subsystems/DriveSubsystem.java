@@ -73,6 +73,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+
     // Update the odometry in the periodic block
     m_odometry.update(
         Rotation2d.fromDegrees(m_gyro.getAngle()),
@@ -84,6 +85,7 @@ public class DriveSubsystem extends SubsystemBase {
         });
 	SmartDashboard.putNumber("yaw:",m_gyro.getYaw());
 	SmartDashboard.putNumber("angle:",m_gyro.getAngle());
+	SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
   }
 
   /**
@@ -234,6 +236,13 @@ public class DriveSubsystem extends SubsystemBase {
     m_rearRight.setDesiredState(desiredStates[3]);
   }
 
+  public void stopModules() {
+	m_frontLeft.stop();
+	m_frontRight.stop();
+	m_rearLeft.stop();
+	m_rearRight.stop();
+}
+
   /** Resets the drive encoders to currently read a position of 0. */
   public void resetEncoders() {
     m_frontLeft.resetEncoders();
@@ -242,6 +251,7 @@ public class DriveSubsystem extends SubsystemBase {
     m_rearRight.resetEncoders();
   }
 
+
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
     m_gyro.reset();
@@ -249,7 +259,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   /**
    * Returns the heading of the robot.
-   *
+   *	
    * @return the robot's heading in degrees, from -180 to 180
    */
   public double getHeading() {
