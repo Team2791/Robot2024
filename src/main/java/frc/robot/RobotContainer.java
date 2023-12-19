@@ -55,10 +55,10 @@ public class RobotContainer {
 				// Turning is controlled by the X axis of the right stick.
 				new RunCommand(
 						() -> m_robotDrive.drive(
-							-MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
-							-MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
-							-MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
-							true, true),
+								-MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
+								-MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
+								-MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
+								true, true),
 						m_robotDrive));
 	}
 
@@ -83,7 +83,7 @@ public class RobotContainer {
 	 *
 	 * @return the command to run in autonomous
 	 */
-	public Command getAutonomousCommand() { 
+	public Command getAutonomousCommand() {
 		// Create config for trajectory
 		TrajectoryConfig config = new TrajectoryConfig(
 				AutoConstants.kMaxSpeedMetersPerSecond,
@@ -96,21 +96,24 @@ public class RobotContainer {
 				// Start at the origin facing the +X direction
 				new Pose2d(0, 0, new Rotation2d(0)),
 				// Pass through these two interior waypoints, making an 's' curve path
-				List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+				List.of(new Translation2d(1, 1), new Translation2d(2, 0)),
 				// End 3 meters straight ahead of where we started, facing forward
-				new Pose2d(3, 0, new Rotation2d(180)),
+				new Pose2d(3, 0, new Rotation2d(90)),
 				config);
 
-		PIDController xController = new PIDController(AutoConstants.kPXController,0,0);
-		PIDController yController = new PIDController(AutoConstants.kPYController,0,0);
-		ProfiledPIDController thetaController = new ProfiledPIDController(AutoConstants.kPThetaController,0,0,AutoConstants.kThetaControllerConstraints);
+		PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
+		PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
+		ProfiledPIDController thetaController = new ProfiledPIDController(AutoConstants.kPThetaController, 0, 0,
+				AutoConstants.kThetaControllerConstraints);
 		thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-		SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(exampleTrajectory, m_robotDrive::getPose, DriveConstants.kDriveKinematics, xController, yController, thetaController, m_robotDrive::setModuleStates, m_robotDrive);
+		SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(exampleTrajectory,
+				m_robotDrive::getPose, DriveConstants.kDriveKinematics, xController, yController, thetaController,
+				m_robotDrive::setModuleStates, m_robotDrive);
 
-
-
-		return new SequentialCommandGroup(new InstantCommand(() -> m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose())), swerveControllerCommand, new InstantCommand(() ->  m_robotDrive.stopModules()));
+		return new SequentialCommandGroup(
+				new InstantCommand(() -> m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose())),
+				swerveControllerCommand, new InstantCommand(() -> m_robotDrive.stopModules()));
 
 	}
 }
