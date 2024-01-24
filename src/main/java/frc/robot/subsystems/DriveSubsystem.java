@@ -95,9 +95,9 @@ public class DriveSubsystem extends SubsystemBase {
 					// THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
 					var alliance = DriverStation.getAlliance();
-					if (alliance == null) {
-						return alliance == DriverStation.Alliance.Red;
-					}
+					//if (alliance == null || alliance != null) {
+					//	return alliance == DriverStation.Alliance.Red;
+					//}
 					return false;
 				},
 				this // Reference to this subsystem to set requirements

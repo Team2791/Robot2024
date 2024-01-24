@@ -25,10 +25,5 @@
       }
     },
   ],
-  "java.test.defaultConfig": "WPIlibUnitTests",
-
-  "editor.detectIndentation": false,
-  "editor.insertSpaces": false,
-  "editor.tabSize": 4,
-  "editor.formatOnSave": true,
+  "java.test.defaultConfig": "WPIlibUnitTests"
 }
