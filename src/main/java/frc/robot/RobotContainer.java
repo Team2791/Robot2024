@@ -39,7 +39,7 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-	public static PhotonCamera camera, camera2;
+	public static PhotonCamera camera1, camera2;
 
 	// The robot's subsystems
 	private final DriveSubsystem m_robotDrive = new DriveSubsystem();
@@ -52,7 +52,8 @@ public class RobotContainer {
 	 */
 	public RobotContainer() {
 
-		camera = new PhotonCamera("2791photonvision1");
+		camera1 = new PhotonCamera("2791photonvision1");
+
 
 		// Configure the button bindings
 		configureButtonBindings();
