@@ -43,31 +43,33 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-	public static PhotonCamera camera1, camera2;
+	private final XboxController m_driverController;
+	private final PhotonCamera camera1 = new PhotonCamera("2791camera");
 
 	// The robot's subsystems
 	private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+	private final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(camera1, m_robotDrive);
 
-	  
-	  private final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(camera1, m_robotDrive);
-
-  		private final PhotonVisionFollow chaseTagCommand = new PhotonVisionFollow(camera1, m_robotDrive, poseEstimator::getCurrentPose);
+	private final PhotonVisionFollow chaseTagCommand = new PhotonVisionFollow(camera1, m_robotDrive, poseEstimator::getCurrentPose);
 
 	// The driver's controller
-	XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+	
 	private Trigger driverX, driverY, driverA, driverB, driverLB, driverRB, driverLT, driverRT;
 
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
 	 */
 	public RobotContainer() {
+		m_driverController  = new XboxController(OIConstants.kDriverControllerPort);
+			configureButtonBindings();
+		driverA.toggleOnTrue(chaseTagCommand);
 
-		camera1 = new PhotonCamera("2791photonvision1");
+
+		
 
 
 		// Configure the button bindings
-		configureButtonBindings();
-		driverB.whileTrue(chaseTagCommand);
+		//driverB.whileTrue(chaseTagCommand);
 
 		// Configure default commands
 		m_robotDrive.setDefaultCommand(
@@ -80,7 +82,10 @@ public class RobotContainer {
 								-MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
 								true, true),
 						m_robotDrive));
+
+	
 	}
+	
 
 	/**
 	 * Use this method to define your button->command mappings. Buttons can be
@@ -93,7 +98,7 @@ public class RobotContainer {
 	 */
 	private void configureButtonBindings() {
 		new JoystickButton(m_driverController, Button.kR1.value).whileTrue(new RunCommand(() -> m_robotDrive.setX(),m_robotDrive));
-		
+		driverA = new JoystickButton(m_driverController, XboxController.Button.kA.value);
 	}
 
 	/**
