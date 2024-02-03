@@ -26,6 +26,8 @@ import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import java.util.Arrays;
+import java.util.stream.IntStream;
 
 public class DriveSubsystem extends SubsystemBase {
 	// Create MAXSwerveModules
@@ -319,4 +321,20 @@ public class DriveSubsystem extends SubsystemBase {
 	public double getTurnRate() {
 		return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
 	}
+
+
+
+ 	public SwerveModulePosition[] getModulePositions() {
+		SwerveModulePosition arr[] = new SwerveModulePosition[4];
+		arr[0] = m_frontLeft.getPosition();
+		arr[1] = m_frontRight.getPosition();
+		arr[2] = m_rearLeft.getPosition();
+		arr[3] = m_rearRight.getPosition();
+    	return arr;
+  }
+
+  public Rotation2d getGyroscopeRotation() {
+    return Rotation2d.fromDegrees(m_gyro.getAngle());
+  }
+  
 }

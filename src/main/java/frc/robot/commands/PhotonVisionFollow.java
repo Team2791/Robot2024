@@ -22,7 +22,7 @@ import java.util.function.Supplier;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
-public class PhotonVision extends Command {
+public class PhotonVisionFollow extends Command {
 
   private static final TrapezoidProfile.Constraints X_CONSTRAINTS = new TrapezoidProfile.Constraints(3, 2);
   private static final TrapezoidProfile.Constraints Y_CONSTRAINTS = new TrapezoidProfile.Constraints(3, 2);
@@ -49,7 +49,7 @@ public class PhotonVision extends Command {
 
 
   /** Creates a new PhotonVision. */
-  public PhotonVision(PhotonCamera photonCamera, DriveSubsystem drivetrainSubsystem,Supplier<Pose2d> poseProvider) {
+  public PhotonVisionFollow(PhotonCamera photonCamera, DriveSubsystem drivetrainSubsystem,Supplier<Pose2d> poseProvider) {
     this.photonCamera = photonCamera;
     this.driveSubsystem = drivetrainSubsystem;
     this.poseProvider = poseProvider;
