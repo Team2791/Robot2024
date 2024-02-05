@@ -19,6 +19,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.PhotonVisionFollow;
+import frc.robot.commands.TagAllign;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.PoseEstimatorSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -50,7 +51,11 @@ public class RobotContainer {
 	private final DriveSubsystem m_robotDrive = new DriveSubsystem();
 	private final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(camera1, m_robotDrive);
 
+
+
+	//commands
 	private final PhotonVisionFollow chaseTagCommand = new PhotonVisionFollow(camera1, m_robotDrive, poseEstimator::getCurrentPose);
+	private final TagAllign tagAllign = new TagAllign(camera1, m_robotDrive);
 
 	// The driver's controller
 	
@@ -63,7 +68,7 @@ public class RobotContainer {
 		m_driverController  = new XboxController(OIConstants.kDriverControllerPort);
 			configureButtonBindings();
 		driverA.toggleOnTrue(chaseTagCommand);
-
+		driverB.toggleOnTrue(tagAllign);
 
 		
 
@@ -99,6 +104,7 @@ public class RobotContainer {
 	private void configureButtonBindings() {
 		new JoystickButton(m_driverController, Button.kR1.value).whileTrue(new RunCommand(() -> m_robotDrive.setX(),m_robotDrive));
 		driverA = new JoystickButton(m_driverController, XboxController.Button.kA.value);
+		driverB = new JoystickButton(m_driverController, XboxController.Button.kB.value);
 	}
 
 	/**
