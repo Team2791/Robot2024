@@ -7,11 +7,11 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class testDrive extends Command {
+public class TestDrive extends Command {
 
   private final DriveSubsystem drivetrain;
   /** Creates a new testDrive. */
-  public testDrive(DriveSubsystem drivetrain) {
+  public TestDrive(DriveSubsystem drivetrain) {
     this.drivetrain = drivetrain;
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -23,7 +23,7 @@ public class testDrive extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drivetrain.drive(1, 1, 0,false, false);
+    drivetrain.drive(-1, 1, 1,true, false);
   }
 
   // Called once the command ends or is interrupted.

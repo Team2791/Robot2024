@@ -52,7 +52,7 @@ public class DriveSubsystem extends SubsystemBase {
 			DriveConstants.kBackRightChassisAngularOffset);
 
 	// The gyro sensor
-	private static AHRS m_gyro = new AHRS(Port.kMXP);
+	public static AHRS m_gyro = new AHRS(Port.kMXP);
 
 	// Slew rate filter variables for controlling lateral acceleration
 	private double m_currentRotation = 0.0;
@@ -258,6 +258,8 @@ public class DriveSubsystem extends SubsystemBase {
 		m_frontRight.setDesiredState(swerveModuleStates[1]);
 		m_rearLeft.setDesiredState(swerveModuleStates[2]);
 		m_rearRight.setDesiredState(swerveModuleStates[3]);
+
+		SmartDashboard.putNumber("Yaw", m_gyro.getYaw());
 	}
 
 	/**
