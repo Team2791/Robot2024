@@ -136,7 +136,7 @@ public final class Constants {
 
 	public static final class AutoConstants {
 
-		public static final double kRotationP = 0.0000001;
+		public static final double kRotationP = 0.1;
 		public static final double kRotationI = 0;
 		public static final double kRotationD = 0;
 

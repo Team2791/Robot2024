@@ -29,6 +29,8 @@ public class TagAllign extends Command {
   boolean done = false;
   AHRS gyro;
   double x;
+  double setPoint;
+  double p,i,d,lastError = 0;
   /** Creates a new TagAllign. */
   public TagAllign(PhotonCamera camera, DriveSubsystem driveSubsystem) {
     this.gyro = DriveSubsystem.m_gyro;
@@ -60,24 +62,21 @@ public class TagAllign extends Command {
 
     if (res.hasTargets()) {
       var target = res.getBestTarget();
-
+    
       // average as stream
       // 0 - 640
       x = target.getDetectedCorners().stream().mapToDouble((a) -> a.x).sum() / 4;
       SmartDashboard.putNumber("avg april tag position", x);
 
-      if (x > 300) {
-        drivetrain.drive(
-          0,0,-.1,true,false);
-      } else if (x < 340) {
-        drivetrain.drive(0,0,.1,true,false);
-      } else {
-        drivetrain.stopModules();
-        done = true;
-      }
-    }
-    
+    setPoint = 640/2;
+    p = setPoint-x;
+    i += p;
+    d=p-lastError;
+    double power = .001*p + i*.0001 + d*.00004;
+    SmartDashboard.putNumber("power", power);
+    drivetrain.drive(0,0,power,false,false);
 
+    }
 
   }
 
