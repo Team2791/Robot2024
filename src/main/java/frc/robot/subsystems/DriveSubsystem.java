@@ -174,7 +174,7 @@ public class DriveSubsystem extends SubsystemBase {
 		// Joystick output and motor input are both -1.0 to 1.0
 		// So both J and M in the math are 1, which simplifies.
 
-		double exponent = 3.0;
+		double exponent = 5.0;
 
 		double Y = xSpeed;
 		double X = ySpeed;
