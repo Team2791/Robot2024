@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.PhotonVisionFollow;
 import frc.robot.commands.TagAlign;
-import frc.robot.commands.TagAlignAll;
+import frc.robot.commands.TagAlignTagCentric;
 import frc.robot.commands.TestDrive;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.PoseEstimatorSubsystem;
@@ -41,7 +41,7 @@ public class RobotContainer {
 	private final PhotonVisionFollow chaseTagCommand =
 			new PhotonVisionFollow(camera1, m_robotDrive, poseEstimator::getCurrentPose);
 
-	private final TagAlignAll tagAlign = new TagAlignAll(camera1, m_robotDrive);
+	private final Command tagAlign = new TagAlignTagCentric(camera1, m_robotDrive);
 	private final TestDrive testDrive = new TestDrive(m_robotDrive);
 
 	// The driver's controller
