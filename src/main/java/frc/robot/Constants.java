@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -44,10 +43,11 @@ public final class Constants {
 		public static final double kWheelBase = Units.inchesToMeters(21.5);
 		// Distance between front and back wheels on robot
 		public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
-				new Translation2d(kWheelBase / 2, kTrackWidth / 2),
-				new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
-				new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
-				new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
+		    new Translation2d(kWheelBase / 2, kTrackWidth / 2),
+		    new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
+		    new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
+		    new Translation2d(-kWheelBase / 2, -kTrackWidth / 2)
+		);
 
 		// Angular offsets of the modules relative to the chassis in radians
 		public static final double kFrontLeftChassisAngularOffset = -Math.PI / 2;
@@ -89,13 +89,10 @@ public final class Constants {
 		// 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
 		// teeth on the bevel pinion
 		public static final double kDrivingMotorReduction = (45.0 * 22) / (kDrivingMotorPinionTeeth * 15);
-		public static final double kDriveWheelFreeSpeedRps = (kDrivingMotorFreeSpeedRps * kWheelCircumferenceMeters)
-				/ kDrivingMotorReduction;
+		public static final double kDriveWheelFreeSpeedRps = (kDrivingMotorFreeSpeedRps * kWheelCircumferenceMeters) / kDrivingMotorReduction;
 
-		public static final double kDrivingEncoderPositionFactor = (kWheelDiameterMeters * Math.PI)
-				/ kDrivingMotorReduction; // meters
-		public static final double kDrivingEncoderVelocityFactor = ((kWheelDiameterMeters * Math.PI)
-				/ kDrivingMotorReduction) / 60.0; // meters per second
+		public static final double kDrivingEncoderPositionFactor = (kWheelDiameterMeters * Math.PI) / kDrivingMotorReduction; // meters
+		public static final double kDrivingEncoderVelocityFactor = ((kWheelDiameterMeters * Math.PI) / kDrivingMotorReduction) / 60.0; // meters per second
 
 		public static final double kTurningEncoderPositionFactor = (2 * Math.PI); // radians
 		public static final double kTurningEncoderVelocityFactor = (2 * Math.PI) / 60.0; // radians per second
@@ -128,11 +125,25 @@ public final class Constants {
 		public static final int kDriverControllerPort = 0;
 		public static final double kDriveDeadband = 0.05;
 	}
+
 	public static class VisionConstants {
-	public static final Transform3d CAMERA_TO_ROBOT =
-        new Transform3d(new Translation3d(-0.3425, 0.0, -0.233), new Rotation3d());
-    public static final Transform3d ROBOT_TO_CAMERA = CAMERA_TO_ROBOT.inverse();
-  	}
+		public static final Transform3d CAMERA_TO_ROBOT = new Transform3d(
+		    new Translation3d(-0.3425, 0.0, -0.233),
+		    new Rotation3d()
+		);
+		public static final Transform3d ROBOT_TO_CAMERA = CAMERA_TO_ROBOT.inverse();
+
+		public static final int RES_WIDTH = 640;
+		public static final int RES_CENTER = RES_WIDTH / 2;
+		public static final int TargetDistanceMeters = 2;
+
+		public static final double kP = .001;
+		public static final double kI = .0001;
+		public static final double kD = .00004;
+
+		public static final double kTolerance = 20;
+		public static final double kToleranceLinear = 0.1;
+	}
 
 	public static final class AutoConstants {
 
@@ -143,7 +154,7 @@ public final class Constants {
 		public static final double kTranslationP = 3.35;
 		public static final double kTranslationI = .8;
 		public static final double kTranslationD = .1;
- 
+
 		public static final double kMaxSpeedMetersPerSecond = 3;
 		public static final double kMaxAccelerationMetersPerSecondSquared = 3;
 		public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
@@ -155,7 +166,8 @@ public final class Constants {
 
 		// Constraint for the motion profiled robot angle controller
 		public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
-				kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+		    kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared
+		);
 	}
 
 	public static final class NeoMotorConstants {
