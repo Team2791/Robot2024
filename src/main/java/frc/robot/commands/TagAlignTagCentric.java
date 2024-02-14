@@ -37,7 +37,7 @@ public class TagAlignTagCentric extends Command {
 
 	PIDController areactl = new PIDController(area_kP, area_kI, area_kD); // in percentage
 	PIDController yawctl = new PIDController(yaw_kP, yaw_kI, yaw_kD); // radians i think
-	PIDController rotctl = new PIDController(rot_kP, rot_kI, rot_kD);
+	PIDController rotctl = new PIDController(rot_kP, rot_kI, rot_kD); // radians i think
 
 	public TagAlignTagCentric(PhotonCamera camera, DriveSubsystem drivetrain) {
 		this.camera = camera;
@@ -53,8 +53,8 @@ public class TagAlignTagCentric extends Command {
 		this.yawctl.setSetpoint(2 * Math.PI);
 		this.yawctl.setTolerance(0.2);
 
-		this.rotctl.setSetpoint(0);
-		this.rotctl.setTolerance(camera.getCameraMatrix().get().getNumCols() / 50); // todo: use a constant if this doesn't work
+		this.rotctl.setSetpoint(320);
+		this.rotctl.setTolerance(40);
 	}
 
 	@Override
@@ -74,10 +74,9 @@ public class TagAlignTagCentric extends Command {
 		double yaw_power = yawctl.calculate(yaw);
 
 		double av_x = target.getDetectedCorners().stream().mapToDouble(a -> a.x).sum() / 4;
-		double x_camrel = av_x - camera.getCameraMatrix().get().getNumCols(); // todo: use a constant if this doesn't work
-		double rot_power = rotctl.calculate(x_camrel);
+		double rot_power = -rotctl.calculate(av_x);
 
-		this.drivetrain.drive(area_power, yaw_power, rot_power, false, true);
+		this.drivetrain.drive(area_power, yaw_power, rot_power, false, false);
 
 		SmartDashboard.putNumber("(Photon) Target Area", area);
 		SmartDashboard.putNumber("(Photon) Commanded Area Power (x)", area_power);
