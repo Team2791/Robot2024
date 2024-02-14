@@ -70,7 +70,7 @@ public class TagAlignTagCentric extends Command {
 		double area = target.getArea();
 		double area_power = areactl.calculate(area);
 
-		double yaw = target.getYaw() - (2 * Math.PI); // camera-relative yaw (-2pi < yaw < 2pi)
+		double yaw = target.getYaw();
 		double yaw_power = yawctl.calculate(yaw);
 
 		double av_x = target.getDetectedCorners().stream().mapToDouble(a -> a.x).sum() / 4;
