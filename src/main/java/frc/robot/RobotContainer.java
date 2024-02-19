@@ -21,9 +21,9 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Climb;
 import frc.robot.commands.ClimbRelease;
 import frc.robot.commands.Shoot;
-import frc.robot.commands.TagAllignCommand;
-import frc.robot.commands.TagAllignContinuous;
-import frc.robot.commands.TurretAllign;
+import frc.robot.commands.AprilTagDistance;
+import frc.robot.commands.AprilTagRotateCommand;
+import frc.robot.commands.AprilTagRotateContinuous;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -72,17 +72,17 @@ public class RobotContainer {
 	public RobotContainer() {
 		m_driverController  = new XboxController(OIConstants.kDriverControllerPort);
 		configureButtonBindings();
-		driverB.toggleOnTrue(new TagAllignContinuous(camera1, m_robotDrive));
+		driverB.toggleOnTrue(new AprilTagRotateContinuous(camera1, m_robotDrive));
 		driverDPadUp.toggleOnTrue(new Climb());
 		driverDPadDown.toggleOnTrue(new ClimbRelease());
-		driverA.toggleOnTrue(new Shoot());
+		driverLT.toggleOnTrue(new Shoot());
 
 		
 
 		NamedCommands.registerCommand("Shoot", new Shoot());
         NamedCommands.registerCommand("Climb", new Climb());
-        NamedCommands.registerCommand("TurretAllign", new TurretAllign());
-		NamedCommands.registerCommand("TagAllignCommand", new TagAllignCommand(camera1, m_robotDrive));
+        NamedCommands.registerCommand("TurretAllign", new AprilTagDistance(camera1));
+		NamedCommands.registerCommand("TagAllignCommand", new AprilTagRotateCommand(camera1, m_robotDrive));
 		// Configure the button bindings
 		//driverB.whileTrue(chaseTagCommand);
 

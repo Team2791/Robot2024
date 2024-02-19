@@ -17,7 +17,7 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class TagAllignContinuous extends Command {
+public class AprilTagRotateContinuous extends Command {
 
   PhotonCamera camera;
   DriveSubsystem drivetrain;
@@ -32,7 +32,7 @@ public class TagAllignContinuous extends Command {
   double i;
   double d;
   /** Creates a new TagAllign. */
-  public TagAllignContinuous(PhotonCamera camera, DriveSubsystem driveSubsystem) {
+  public AprilTagRotateContinuous(PhotonCamera camera, DriveSubsystem driveSubsystem) {
     this.gyro = DriveSubsystem.m_gyro;
     this.camera = camera;
     this.drivetrain = driveSubsystem;

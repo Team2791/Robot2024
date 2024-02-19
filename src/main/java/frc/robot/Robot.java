@@ -8,7 +8,11 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.takeIn;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.RGBLED;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 
@@ -27,6 +31,9 @@ public class Robot extends TimedRobot {
 	public static Turret turret;
 	private Command m_autonomousCommand;
 	public static Shooter shooter;
+	public static DriveSubsystem drivetrain;
+	public static Intake intake;
+	public static RGBLED led;
 
 	private RobotContainer m_robotContainer;
 
@@ -41,6 +48,10 @@ public class Robot extends TimedRobot {
 		climber = new Climber();
 		turret = new Turret();
 		shooter = new Shooter();
+		drivetrain = new DriveSubsystem();
+		intake = new Intake();
+		led = new RGBLED();
+
 		// Instantiate our RobotContainer. This will perform all our button bindings,
 		// and put our
 		// autonomous chooser on the dashboard.
@@ -72,10 +83,12 @@ public class Robot extends TimedRobot {
 	/** This function is called once each time the robot enters Disabled mode. */
 	@Override
 	public void disabledInit() {
+		
 	}
 
 	@Override
 	public void disabledPeriodic() {
+		led.setMode("rainbow");
 	}
 
 	/**

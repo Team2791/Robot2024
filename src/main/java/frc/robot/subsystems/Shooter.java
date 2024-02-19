@@ -17,8 +17,8 @@ import frc.robot.RobotMap;
 
 public class Shooter extends SubsystemBase {
 
-  CANSparkMax leftMotor;
-  CANSparkMax rightMotor;
+  private CANSparkMax leftMotor;
+  private CANSparkMax rightMotor;
   /** Creates a new Shooter. */
   public Shooter() {
     leftMotor = new CANSparkMax(RobotMap.leftShooterMotor, MotorType.kBrushless);

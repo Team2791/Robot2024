@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Robot;
-
 public class AprilTagTranslate extends Command {
   PIDController pid = new PIDController(.01, .01, .01);
   double setPoint;

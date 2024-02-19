@@ -40,6 +40,7 @@ public class Climb extends Command {
     Robot.climber.climb(.1);
 
     if(Robot.climber.getLeftMotorCurrent() > Constants.GameConstants.climbVoltage && Robot.climber.getRightMotorCurrent() > Constants.GameConstants.climbVoltage){
+      Robot.led.setColor(0,0,255);
 
       if(robotRoll>0){
         Robot.climber.climb(robotRoll*.1, robotRoll*.5);

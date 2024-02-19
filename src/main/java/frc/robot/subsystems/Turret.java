@@ -14,8 +14,7 @@ import frc.robot.RobotMap;
 
 public class Turret extends SubsystemBase {
 
-  CANSparkMax turningMotor;
-  public static DriveSubsystem drivetrain;
+  private CANSparkMax turningMotor;
   /** Creates a new Turret. */
   public Turret() {
     turningMotor = new CANSparkMax(RobotMap.turretMotor, MotorType.kBrushless);
