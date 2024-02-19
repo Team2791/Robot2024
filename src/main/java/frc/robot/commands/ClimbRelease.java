@@ -4,37 +4,51 @@
 
 package frc.robot.commands;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.IdleMode;
+
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Robot;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class testDrive extends Command {
+public class ClimbRelease extends Command {
+  public Timer timer;
+  private boolean isFinished;
+  /** Creates a new ClimbRelease. */
+  public ClimbRelease() {
 
-  private final DriveSubsystem drivetrain;
-  /** Creates a new testDrive. */
-  public testDrive(DriveSubsystem drivetrain) {
-    this.drivetrain = drivetrain;
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    timer = new Timer();
+    Robot.climber.climb(-.01);
+    timer.start();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drivetrain.drive(1, 1, 0,false, false);
+    while (timer.get()<5.0){
+      Robot.climber.climb(0);
+      isFinished = true;
+
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    drivetrain.drive(0,0,0,false,false);
+    isFinished = true;
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return isFinished;
   }
 }

@@ -18,10 +18,14 @@ import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.PhotonVisionFollow;
-import frc.robot.commands.TagAllign;
+import frc.robot.commands.Climb;
+import frc.robot.commands.ClimbRelease;
+import frc.robot.commands.Shoot;
+import frc.robot.commands.TagAllignCommand;
+import frc.robot.commands.TagAllignContinuous;
+import frc.robot.commands.TurretAllign;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.PoseEstimatorSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -29,12 +33,14 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import org.photonvision.PhotonCamera;
 import java.security.spec.KeySpec;
 import java.util.List;
 
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 /*
@@ -49,30 +55,34 @@ public class RobotContainer {
 
 	// The robot's subsystems
 	private final DriveSubsystem m_robotDrive = new DriveSubsystem();
-	private final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(camera1, m_robotDrive);
 
 
 
 	//commands
-	private final PhotonVisionFollow chaseTagCommand = new PhotonVisionFollow(camera1, m_robotDrive, poseEstimator::getCurrentPose);
-	private final TagAllign tagAllign = new TagAllign(camera1, m_robotDrive);
+	private final Climber climb = new Climber();
 
 	// The driver's controller
 	
 	private Trigger driverX, driverY, driverA, driverB, driverLB, driverRB, driverLT, driverRT;
+	private Trigger driverDPadUp, driverDPadDown, driverDPadLeft, driverDPadRight, driverLeftStick;
 
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
 	 */
 	public RobotContainer() {
 		m_driverController  = new XboxController(OIConstants.kDriverControllerPort);
-			configureButtonBindings();
-		driverA.toggleOnTrue(chaseTagCommand);
-		driverB.toggleOnTrue(tagAllign);
+		configureButtonBindings();
+		driverB.toggleOnTrue(new TagAllignContinuous(camera1, m_robotDrive));
+		driverDPadUp.toggleOnTrue(new Climb());
+		driverDPadDown.toggleOnTrue(new ClimbRelease());
+		driverA.toggleOnTrue(new Shoot());
 
 		
 
-
+		NamedCommands.registerCommand("Shoot", new Shoot());
+        NamedCommands.registerCommand("Climb", new Climb());
+        NamedCommands.registerCommand("TurretAllign", new TurretAllign());
+		NamedCommands.registerCommand("TagAllignCommand", new TagAllignCommand(camera1, m_robotDrive));
 		// Configure the button bindings
 		//driverB.whileTrue(chaseTagCommand);
 
@@ -105,6 +115,8 @@ public class RobotContainer {
 		new JoystickButton(m_driverController, Button.kR1.value).whileTrue(new RunCommand(() -> m_robotDrive.setX(),m_robotDrive));
 		driverA = new JoystickButton(m_driverController, XboxController.Button.kA.value);
 		driverB = new JoystickButton(m_driverController, XboxController.Button.kB.value);
+		driverDPadUp = new POVButton(m_driverController, 0);
+		driverDPadDown = new POVButton(m_driverController, 180);
 	}
 
 	/**
