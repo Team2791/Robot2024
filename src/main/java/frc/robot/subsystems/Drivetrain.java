@@ -84,14 +84,14 @@ public class Drivetrain extends SubsystemBase {
 		    // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
 		    new HolonomicPathFollowerConfig(
 		        new PIDConstants(
-		            Constants.AutoConstants.kTranslationP,
-		            Constants.AutoConstants.kTranslationI,
-		            Constants.AutoConstants.kTranslationD
+		            Constants.Auto.PID.Translation.P,
+		            Constants.Auto.PID.Translation.I,
+		            Constants.Auto.PID.Translation.D
 		        ),
 		        new PIDConstants(
-		            Constants.AutoConstants.kRotationP,
-		            Constants.AutoConstants.kRotationI,
-		            Constants.AutoConstants.kRotationD
+		            Constants.Auto.PID.Rotation.P,
+		            Constants.Auto.PID.Rotation.I,
+		            Constants.Auto.PID.Rotation.D
 		        ),
 		        Constants.Drive.Limits.MaxSpeed,
 		        Constants.Drive.Dimensions.DriveBaseRadius,

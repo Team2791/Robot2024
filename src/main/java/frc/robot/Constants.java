@@ -184,42 +184,54 @@ public final class Constants {
 		public static final double Deadband = 0.05;
 	}
 
-	public static class VisionConstants {
-		public static final Transform3d CAMERA_TO_ROBOT = new Transform3d(
+	public static class Vision {
+		public static final Transform3d CameraToRobot = new Transform3d(
 		    new Translation3d(-0.3425, 0.0, -0.233),
 		    new Rotation3d()
 		);
-		public static final Transform3d ROBOT_TO_CAMERA = CAMERA_TO_ROBOT.inverse();
+
+		public static final Transform3d RobotToCamera = CameraToRobot.inverse();
 	}
 
-	public static final class AutoConstants {
+	public static final class Auto {
+		public static final class PID {
+			public static final class Rotation {
+				public static final double P = 0.0000001;
+				public static final double I = 0;
+				public static final double D = 0;
+			}
 
-		public static final double kRotationP = 0.0000001;
-		public static final double kRotationI = 0;
-		public static final double kRotationD = 0;
+			public static final class Translation {
+				public static final double P = 3.35;
+				public static final double I = .8;
+				public static final double D = .1;
+			}
+		}
 
-		public static final double kTranslationP = 3.35;
-		public static final double kTranslationI = .8;
-		public static final double kTranslationD = .1;
+		public static final class Limits {
+			/** Meters per second */
+			public static final double MaxSpeed = 3;
 
-		public static final double kMaxSpeedMetersPerSecond = 3;
-		public static final double kMaxAccelerationMetersPerSecondSquared = 3;
-		public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
-		public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
+			/** Meters per second squared */
+			public static final double MaxAcceleration = 3;
 
-		public static final double kPXController = 1;
-		public static final double kPYController = 1;
-		public static final double kPThetaController = 1;
+			/** Radians per second */
+			public static final double MaxAngularSpeed = Math.PI;
 
-		// Constraint for the motion profiled robot angle controller
-		public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
-		    kMaxAngularSpeedRadiansPerSecond,
-		    kMaxAngularSpeedRadiansPerSecondSquared
+			/** Radians per second squared */
+			public static final double MaxAngularAcceleration = Math.PI;
+		}
+
+		public static final class Profile {
+			public static final double XController = 1;
+			public static final double YController = 1;
+			public static final double ThetaController = 1;
+		}
+
+		public static final TrapezoidProfile.Constraints ThetaControllerConstraints = new TrapezoidProfile.Constraints(
+		    Limits.MaxAngularSpeed,
+		    Limits.MaxAngularAcceleration
 		);
-	}
-
-	public static final class NeoMotorConstants {
-		public static final double kFreeSpeedRpm = 5676;
 	}
 
 	public static final class GameConstants {
