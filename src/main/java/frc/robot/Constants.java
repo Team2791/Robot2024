@@ -28,6 +28,10 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+	public static final class Circle {
+		public static final double Tau = Math.PI * 2;
+	}
+
 	public static final class Drive {
 		public static final class Dimensions {
 			/** Meters */
@@ -68,7 +72,7 @@ public final class Constants {
 			public static final double MaxSpeed = 4.8;
 
 			/** Radians per second */
-			public static final double MaxAngularSpeed = 2 * Math.PI;
+			public static final double MaxAngularSpeed = Circle.Tau;
 		}
 
 		public static final SwerveDriveKinematics Kinematics = new SwerveDriveKinematics(
@@ -134,10 +138,10 @@ public final class Constants {
 			public static final double DrivingVelocityFactor = ((Constants.Drive.Dimensions.DriveBaseRadius * Math.PI) / Gear.DriveMotorReduction) / 60.0;
 
 			/** Radians */
-			public static final double TurningPositionFactor = 2 * Math.PI;
+			public static final double TurningPositionFactor = Circle.Tau;
 
 			/** Radians per second */
-			public static final double TurningVelocityFactor = (2 * Math.PI) / 60.0;
+			public static final double TurningVelocityFactor = (Circle.Tau) / 60.0;
 
 			/** Radians */
 			public static final double TurningPositionPIDMin = 0;

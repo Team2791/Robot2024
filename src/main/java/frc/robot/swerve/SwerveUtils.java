@@ -1,5 +1,7 @@
 package frc.robot.swerve;
 
+import frc.robot.Constants;
+
 public class SwerveUtils {
 
 	/**
@@ -37,7 +39,7 @@ public class SwerveUtils {
 		if (difference <= step) {
 			return target;
 		} else if (difference > Math.PI) {
-			if (current + 2 * Math.PI - target < step || target + 2 * Math.PI - current < step) {
+			if (current + Constants.Circle.Tau - target < step || target + Constants.Circle.Tau - current < step) {
 				return target;
 			} else {
 				return WrapAngle(current - stepDirection * step); //this will handle wrapping gracefully
@@ -50,33 +52,31 @@ public class SwerveUtils {
 
 	/**
 	 * Finds the (unsigned) minimum difference between two angles including calculating across 0.
-	 * @param _angleA An angle (in radians).
-	 * @param _angleB An angle (in radians).
+	 * @param a An angle (in radians).
+	 * @param b An angle (in radians).
 	 * @return The (unsigned) minimum difference between the two angles (in radians).
 	 */
-	public static double AngleDifference(double _angleA, double _angleB) {
-		double difference = Math.abs(_angleA - _angleB);
+	public static double AngleDifference(double a, double b) {
+		double difference = Math.abs(a - b);
 		return difference > Math.PI
-		    ? (2 * Math.PI) - difference
+		    ? Constants.Circle.Tau - difference
 		    : difference;
 	}
 
 	/**
 	 * Wraps an angle until it lies within the range from 0 to 2*PI (exclusive).
-	 * @param _angle The angle (in radians) to wrap.  Can be positive or negative and can lie multiple wraps outside the output range.
+	 * @param angle The angle (in radians) to wrap.  Can be positive or negative and can lie multiple wraps outside the output range.
 	 * @return An angle (in radians) from 0 and 2*PI (exclusive).
 	 */
-	public static double WrapAngle(double _angle) {
-		double twoPi = 2 * Math.PI;
-
-		if (_angle == twoPi) { // Handle this case separately to avoid floating point errors with the floor after the division in the case below
+	public static double WrapAngle(double angle) {
+		if (angle == Constants.Circle.Tau) {
 			return 0.0;
-		} else if (_angle > twoPi) {
-			return _angle - twoPi * Math.floor(_angle / twoPi);
-		} else if (_angle < 0.0) {
-			return _angle + twoPi * (Math.floor((-_angle) / twoPi) + 1);
+		} else if (angle > Constants.Circle.Tau) {
+			return angle - Constants.Circle.Tau * Math.floor(angle / Constants.Circle.Tau);
+		} else if (angle < 0.0) {
+			return angle + Constants.Circle.Tau * (Math.floor((-angle) / Constants.Circle.Tau) + 1);
 		} else {
-			return _angle;
+			return angle;
 		}
 	}
 }
