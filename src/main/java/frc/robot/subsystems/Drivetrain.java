@@ -16,7 +16,6 @@ import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.DriveConstants;
 import frc.utils.SwerveUtils;
 
 import java.util.Arrays;
@@ -27,31 +26,31 @@ public class Drivetrain extends SubsystemBase {
 
 	// Create MAXSwerveModules
 	private final MAXSwerveModule frontLeft = new MAXSwerveModule(
-	    DriveConstants.kFrontLeftDrivingCanId,
-	    DriveConstants.kFrontLeftTurningCanId,
-	    DriveConstants.kFrontLeftChassisAngularOffset
+	    Constants.Ids.DrivingMotor.FrontLeft,
+	    Constants.Ids.TurningMotor.FrontLeft,
+	    Constants.Drive.Dimensions.AngularOffsetFrontLeft
 	);
 
 	private final MAXSwerveModule frontRight = new MAXSwerveModule(
-	    DriveConstants.kFrontRightDrivingCanId,
-	    DriveConstants.kFrontRightTurningCanId,
-	    DriveConstants.kFrontRightChassisAngularOffset
+	    Constants.Ids.DrivingMotor.FrontRight,
+	    Constants.Ids.TurningMotor.FrontRight,
+	    Constants.Drive.Dimensions.AngularOffsetFrontRight
 	);
 
 	private final MAXSwerveModule rearLeft = new MAXSwerveModule(
-	    DriveConstants.kRearLeftDrivingCanId,
-	    DriveConstants.kRearLeftTurningCanId,
-	    DriveConstants.kBackLeftChassisAngularOffset
+	    Constants.Ids.DrivingMotor.RearLeft,
+	    Constants.Ids.TurningMotor.RearLeft,
+	    Constants.Drive.Dimensions.AngularOffsetBackLeft
 	);
 
 	private final MAXSwerveModule rearRight = new MAXSwerveModule(
-	    DriveConstants.kRearRightDrivingCanId,
-	    DriveConstants.kRearRightTurningCanId,
-	    DriveConstants.kBackRightChassisAngularOffset
+	    Constants.Ids.DrivingMotor.RearRight,
+	    Constants.Ids.TurningMotor.RearRight,
+	    Constants.Drive.Dimensions.AngularOffsetBackRight
 	);
 
-	private final SlewRateLimiter magLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
-	private final SlewRateLimiter rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
+	private final SlewRateLimiter magLimiter = new SlewRateLimiter(Constants.Drive.Slew.Magnitude);
+	private final SlewRateLimiter rotLimiter = new SlewRateLimiter(Constants.Drive.Slew.Rotational);
 
 	// Odometry class for tracking robot pose
 	private final SwerveDriveOdometry odometry;
@@ -68,7 +67,7 @@ public class Drivetrain extends SubsystemBase {
 		this.gyro = gyro;
 
 		this.odometry = new SwerveDriveOdometry(
-		    DriveConstants.kDriveKinematics,
+		    Constants.Drive.Kinematics,
 		    Rotation2d.fromDegrees(gyro.getAngle()),
 		    new SwerveModulePosition[]{
 		        frontLeft.getPosition(), frontRight.getPosition(), rearLeft.getPosition(), rearRight.getPosition()
@@ -93,9 +92,8 @@ public class Drivetrain extends SubsystemBase {
 		            Constants.AutoConstants.kRotationI,
 		            Constants.AutoConstants.kRotationD
 		        ),
-		        Constants.DriveConstants.kMaxSpeedMetersPerSecond,
-		        0.39,
-		        // TODO: make a constant
+		        Constants.Drive.Limits.MaxSpeed,
+		        Constants.Drive.Dimensions.DriveBaseRadius,
 		        new ReplanningConfig()
 		    ),
 		    () -> {
@@ -159,7 +157,7 @@ public class Drivetrain extends SubsystemBase {
 	 * @return Robot-relative chassis speeds
 	 */
 	public ChassisSpeeds speeds() {
-		return DriveConstants.kDriveKinematics.toChassisSpeeds(
+		return Constants.Drive.Kinematics.toChassisSpeeds(
 		    frontLeft.getState(),
 		    frontRight.getState(),
 		    rearLeft.getState(),
@@ -188,7 +186,7 @@ public class Drivetrain extends SubsystemBase {
 
 			// Calculate the direction slew rate based on an estimate of the lateral acceleration
 			// Avoid division by zero. Math.max(...) is safe because Math.sqrt(...) is always positive
-			double directionSlew = Math.abs(DriveConstants.kDirectionSlewRate / Math.max(0.001, translationMagRaw));
+			double directionSlew = Math.abs(Constants.Drive.Slew.Direction / Math.max(0.001, translationMagRaw));
 
 			double now = WPIUtilJNI.now() * 1e-6;
 			double elapsed = now - lastRun;
@@ -230,16 +228,16 @@ public class Drivetrain extends SubsystemBase {
 		}
 
 		// Convert the commanded speeds into the correct units for the drivetrain
-		xPower *= DriveConstants.kMaxSpeedMetersPerSecond;
-		yPower *= DriveConstants.kMaxSpeedMetersPerSecond;
-		rPower *= DriveConstants.kMaxAngularSpeed;
+		xPower *= Constants.Drive.Limits.MaxSpeed;
+		yPower *= Constants.Drive.Limits.MaxSpeed;
+		rPower *= Constants.Drive.Limits.MaxAngularSpeed;
 
 		ChassisSpeeds speeds = fieldRelative
 		    ? ChassisSpeeds.fromFieldRelativeSpeeds(xPower, yPower, rPower, Rotation2d.fromDegrees(-gyro.getAngle()))
 		    : new ChassisSpeeds(xPower, yPower, rPower);
 
 
-		this.setModuleStates(DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds));
+		this.setModuleStates(Constants.Drive.Kinematics.toSwerveModuleStates(speeds));
 	}
 
 	/**
@@ -258,7 +256,7 @@ public class Drivetrain extends SubsystemBase {
 	 * @param desiredStates The desired SwerveModule states.
 	 */
 	public void setModuleStates(SwerveModuleState[] desiredStates) {
-		SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kMaxSpeedMetersPerSecond);
+		SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Drive.Limits.MaxSpeed);
 
 		frontLeft.setDesiredState(desiredStates[0]);
 		frontRight.setDesiredState(desiredStates[1]);
