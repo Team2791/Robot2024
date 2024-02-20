@@ -33,12 +33,12 @@ public class RobotContainer {
 	// Shared subsystems in RobotContainer
 	private final PhotonCamera camera = new PhotonCamera("2791camera");
 	private final AHRS gyro = new AHRS(Port.kMXP);
-	private final Climber climber = new Climber(gyro);
-	private final Turret turret = new Turret();
-	private final Shooter shooter = new Shooter();
+	// private final Climber climber = new Climber(gyro);
+	// private final Turret turret = new Turret();
+	// private final Shooter shooter = new Shooter();
 	private final Drivetrain drivetrain = new Drivetrain(gyro);
-	private final Intake intake = new Intake();
-	private final RGBLED led = new RGBLED();
+	// private final Intake intake = new Intake();
+	// private final RGBLED led = new RGBLED();
 
 	// The driver's controller
 	private Trigger driverX, driverY, driverA, driverB, driverLB, driverRB, driverLT, driverRT;
@@ -47,12 +47,12 @@ public class RobotContainer {
 	// Commands
 	private final Command faceTag = new FaceTag(camera, drivetrain, false);
 	private final Command faceTagForever = new FaceTag(camera, drivetrain, true);
-	private final Command climbUp = new Climb(climber, gyro, led, true);
-	private final Command climbDown = new Climb(climber, gyro, led, false);
-	private final Command shoot = new Shoot(shooter);
-	private final Command aimTurret = new AimTurret(camera, turret);
-	private final Command spitOut = new SpitOut(intake);
-	private final Command takeIn = new TakeIn(intake, led);
+	// private final Command climbUp = new Climb(climber, gyro, led, true);
+	// private final Command climbDown = new Climb(climber, gyro, led, false);
+	// private final Command shoot = new Shoot(shooter);
+	// private final Command aimTurret = new AimTurret(camera, turret);
+	// private final Command spitOut = new SpitOut(intake);
+	// private final Command takeIn = new TakeIn(intake, led);
 
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -60,16 +60,16 @@ public class RobotContainer {
 	public RobotContainer() {
 		configureButtonBindings();
 		driverB.toggleOnTrue(faceTagForever);
-		driverDPadUp.toggleOnTrue(climbUp);
-		driverDPadDown.toggleOnTrue(climbDown);
-		driverLT.toggleOnTrue(shoot);
+		// driverDPadUp.toggleOnTrue(climbUp);
+		// driverDPadDown.toggleOnTrue(climbDown);
+		// driverLT.toggleOnTrue(shoot);
 
-		NamedCommands.registerCommand("Shoot", shoot);
-		NamedCommands.registerCommand("Climb", climbUp);
-		NamedCommands.registerCommand("AimTurret", aimTurret);
+		// NamedCommands.registerCommand("Shoot", shoot);
+		// NamedCommands.registerCommand("Climb", climbUp);
+		// NamedCommands.registerCommand("AimTurret", aimTurret);
 		NamedCommands.registerCommand("FaceTag", faceTag);
-		NamedCommands.registerCommand("SpitOut", spitOut);
-		NamedCommands.registerCommand("TakeIn", takeIn);
+		// NamedCommands.registerCommand("SpitOut", spitOut);
+		// NamedCommands.registerCommand("TakeIn", takeIn);
 
 		this.drivetrain.setDefaultCommand(
 		    new RunCommand(
@@ -89,7 +89,6 @@ public class RobotContainer {
 	 * Sets rgb leds to rainbow
 	 */
 	public void setRainbow() {
-		led.setMode("rainbow");
 	}
 
 
