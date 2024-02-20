@@ -46,7 +46,6 @@ public class Intake extends SubsystemBase {
 		return intake.getOutputCurrent();
 	}
 
-
 	@Override
 	public void periodic() {
 		SmartDashboard.putNumber("(Intake) Current Angle", intake.getAbsoluteEncoder().getVelocity());
