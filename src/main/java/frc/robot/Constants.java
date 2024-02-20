@@ -16,16 +16,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 /**
- * The Constants class provides a convenient place for teams to hold robot-wide
- * numerical or boolean
- * constants. This class should not be used for any other purpose. All constants
- * should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
- *
- * <p>
- * It is advised to statically import this class (or one of its inner classes)
- * wherever the
- * constants are needed, to reduce verbosity.
+ * It's not a mess now thank angad for his valiant effort
  */
 public final class Constants {
 	public static final class Circle {
@@ -191,6 +182,15 @@ public final class Constants {
 		);
 
 		public static final Transform3d RobotToCamera = CameraToRobot.inverse();
+
+		/** Meters */
+		public static final double CameraHeight = 0.1;
+
+		/** Meters */
+		public static final double TargetHeight = 3;
+
+		/** Radians */
+		public static final double CameraPitch = 0;
 	}
 
 	public static final class Auto {
@@ -234,12 +234,17 @@ public final class Constants {
 		);
 	}
 
-	public static final class GameConstants {
-		public static final double climbVoltage = 5;
-		public static final double CAMERA_HEIGHT_METERS = .1;
-		public static final double TARGET_HEIGHT_METERS = 3;
-		public static final double CAMERA_PITCH_RADIANS = 0;
+	/** Miscellaneous subsystem constants */
+	public static final class Subsystem {
+		/** meters */
+		public static final double ShooterHeight = 0.5;
+
+		/** amps */
+		public static final double ClimberCurrent = 5;
+	}
+
+	public static final class Game {
+		/** meters */
 		public static final double SpeakerHeight = 2;
-		public static final double ShooterHeight = .5;
 	}
 }

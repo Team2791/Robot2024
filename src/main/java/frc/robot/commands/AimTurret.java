@@ -34,13 +34,13 @@ public class AimTurret extends Command {
 		PhotonPipelineResult result = camera.getLatestResult();
 
 		double range = PhotonUtils.calculateDistanceToTargetMeters(
-		    Constants.GameConstants.CAMERA_HEIGHT_METERS,
-		    Constants.GameConstants.TARGET_HEIGHT_METERS,
-		    Constants.GameConstants.CAMERA_PITCH_RADIANS,
+		    Constants.Vision.CameraHeight,
+		    Constants.Vision.TargetHeight,
+		    Constants.Vision.CameraPitch,
 		    Units.degreesToRadians(result.getBestTarget().getPitch())
 		);
 
-		double angle = Math.atan(Constants.GameConstants.SpeakerHeight - Constants.GameConstants.ShooterHeight / range);
+		double angle = Math.atan(Constants.Game.SpeakerHeight - Constants.Subsystem.ShooterHeight / range);
 		this.turret.setAngle(angle);
 	}
 

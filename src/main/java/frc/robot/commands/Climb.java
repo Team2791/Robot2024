@@ -50,8 +50,8 @@ public class Climb extends Command {
 		this.climber.climb(this.multPosRoll);
 
 		double roll = this.gyro.getRoll();
-		boolean enoughAmpsLeft = this.climber.leftAmps() > Constants.GameConstants.climbVoltage;
-		boolean enoughAmpsRight = this.climber.rightAmps() > Constants.GameConstants.climbVoltage;
+		boolean enoughAmpsLeft = this.climber.leftAmps() > Constants.Subsystem.ClimberCurrent;
+		boolean enoughAmpsRight = this.climber.rightAmps() > Constants.Subsystem.ClimberCurrent;
 
 		if (enoughAmpsLeft && enoughAmpsRight) {
 			this.led.setColor(255, 0, 0);
