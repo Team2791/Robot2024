@@ -5,79 +5,63 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-
-import edu.wpi.first.wpilibj.I2C.Port;
+import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Robot;
 import frc.robot.RobotMap;
 
 public class Climber extends SubsystemBase {
+	private final CANSparkMax left;
+	private final CANSparkMax right;
+	private final AHRS gyro;
 
-  private CANSparkMax leftMotor;
-  private CANSparkMax rightMotor;
-  AHRS gyro;
-  public static DriveSubsystem drivetrain;
+	/**
+	 * Creates a new Climber.
+	 */
+	public Climber(AHRS gyro) {
+		this.gyro = gyro;
 
-  /** Creates a new Climber. */
-  public Climber() {
+		this.left = new CANSparkMax(RobotMap.leftClimbMotor, MotorType.kBrushless);
+		this.right = new CANSparkMax(RobotMap.rightClimbMotor, MotorType.kBrushless);
 
-    leftMotor = new CANSparkMax(RobotMap.leftClimbMotor, MotorType.kBrushless);
-    rightMotor = new CANSparkMax(RobotMap.rightClimbMotor, MotorType.kBrushless);
-    gyro = new AHRS(Port.kMXP);
-    leftMotor.setIdleMode(IdleMode.kBrake);
-    rightMotor.setIdleMode(IdleMode.kBrake);
-  }
+		this.left.setIdleMode(IdleMode.kBrake);
+		this.right.setIdleMode(IdleMode.kBrake);
+	}
 
-  public double getRobotRoll(){
-    return gyro.getRoll();
-  }
+	public int bias() {
+		return (int) Math.signum(gyro.getRoll());
+	}
 
-  public double getBias(){
-    if(getRobotRoll() > 0){ // if leaning right
-      return 1.0;
-    }
-    else if(getRobotRoll()<0){ // if leaning left
-      return -1.0;
-    }
-    else return 0.0;
-  }
+	public void climb(double speedLeft, double speedRight) {
+		left.set(speedLeft);
+		right.set(speedRight);
+	}
 
-  public void climb(double leftSpeed, double rightSpeed){
-    leftMotor.set(leftSpeed);
-    rightMotor.set(rightSpeed);
-  }
+	public void climb(double speed) {
+		climb(speed, speed);
+	}
 
-  public void climb(double speed){
-    leftMotor.set(speed);
-    rightMotor.set(speed);
-  }
+	public double leftAmps() {
+		return left.getOutputCurrent();
+	}
 
-  public double getLeftMotorCurrent(){
-    return leftMotor.getOutputCurrent();
-  }
-  
-  public double getRightMotorCurrent(){
-    return rightMotor.getOutputCurrent();
-  }
-  
-  public void setBrakeMode(){
-    rightMotor.setIdleMode(IdleMode.kBrake);
-    leftMotor.setIdleMode(IdleMode.kBrake);
-  }
+	public double rightAmps() {
+		return right.getOutputCurrent();
+	}
 
-  public void setCoastMode(){
-    rightMotor.setIdleMode(IdleMode.kCoast);
-    leftMotor.setIdleMode(IdleMode.kCoast);
-  }
+	public void setMode(IdleMode mode) throws IllegalArgumentException {
+		if (mode != IdleMode.kBrake && mode != IdleMode.kCoast) {
+			throw new IllegalArgumentException("Invalid mode");
+		}
 
-  public void periodic(){
-    SmartDashboard.putNumber("Left Motor Current", Robot.climber.getLeftMotorCurrent());
-    SmartDashboard.putNumber("Right Motor Current", Robot.climber.getRightMotorCurrent());
-    SmartDashboard.putNumber("Gyro Roll", gyro.getRoll());
-  }
+		left.setIdleMode(mode);
+		right.setIdleMode(mode);
+	}
 
+	public void periodic() {
+		SmartDashboard.putNumber("(Climber) Left Motor Amps", leftAmps());
+		SmartDashboard.putNumber("(Climber) Right Motor Amps", rightAmps());
+	}
 }

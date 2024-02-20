@@ -12,38 +12,44 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotMap;
 
 public class Intake extends SubsystemBase {
+	private final CANSparkMax intake;
 
-  public CANSparkMax Intakemotor;
-  /** Creates a new Intake. */
-  public Intake() {
-    Intakemotor = new CANSparkMax(RobotMap.intakeMotor, MotorType.kBrushless);
+	public Intake() {
+		intake = new CANSparkMax(RobotMap.intakeMotor, MotorType.kBrushless);
+	}
 
-  }
+	public void setAngle(double angle, double speed) {
+		while (intake.getAbsoluteEncoder().getPosition() < angle) {
+			intake.set(speed);
+		}
+
+		intake.set(0);
+	}
+
+	public void setAngle(double angle) {
+		setAngle(angle, .5);
+	}
+
+	public void takeIn() {
+		intake.set(.5);
+	}
+
+	public void spitOut() {
+		intake.set(-.5);
+	}
+
+	public void stop() {
+		intake.set(0);
+	}
+
+	public double amps() {
+		return intake.getOutputCurrent();
+	}
 
 
-  public void setIntakeAngle(double angle, double speed){
-    while(Intakemotor.getAbsoluteEncoder().getPosition()<angle){
-    Intakemotor.set(speed);}
-
-    Intakemotor.set(0);
-  }
-
-  public void takeIn(){
-    Intakemotor.set(.5);
-  }
-
-  public void spitOut(){
-    Intakemotor.set(-.5);
-  }
-  
-  public void stop(){
-    Intakemotor.set(0);
-  }
-
-
-  @Override
-  public void periodic() {
-    SmartDashboard.putNumber("Intake Angle", Intakemotor.getAbsoluteEncoder().getVelocity());
-  }
+	@Override
+	public void periodic() {
+		SmartDashboard.putNumber("(Intake) Current Angle", intake.getAbsoluteEncoder().getVelocity());
+	}
 
 }

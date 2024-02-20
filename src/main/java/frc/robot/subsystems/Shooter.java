@@ -4,46 +4,40 @@
 
 package frc.robot.subsystems;
 
-import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
-import edu.wpi.first.wpilibj.CAN;
-import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotMap;
 
 public class Shooter extends SubsystemBase {
+	private CANSparkMax left;
+	private CANSparkMax right;
 
-  private CANSparkMax leftMotor;
-  private CANSparkMax rightMotor;
-  /** Creates a new Shooter. */
-  public Shooter() {
-    leftMotor = new CANSparkMax(RobotMap.leftShooterMotor, MotorType.kBrushless);
-    rightMotor = new CANSparkMax(RobotMap.rightShooterMotor, MotorType.kBrushless);
-    leftMotor.setIdleMode(IdleMode.kCoast);
-    rightMotor.setIdleMode(IdleMode.kCoast);
-  }
+	/** Creates a new Shooter. */
+	public Shooter() {
+		left = new CANSparkMax(RobotMap.leftShooterMotor, MotorType.kBrushless);
+		right = new CANSparkMax(RobotMap.rightShooterMotor, MotorType.kBrushless);
 
-  public void setShooter(double speed){
-    leftMotor.set(speed);
-    rightMotor.set(speed);
-  }
+		left.setIdleMode(IdleMode.kCoast);
+		right.setIdleMode(IdleMode.kCoast);
+	}
 
-  public void setShooter(double leftSpeed, double rightSpeed){
-    leftMotor.set(leftSpeed);
-    rightMotor.set(rightSpeed);
-  }
+	public void setShooter(double speed) {
+		left.set(speed);
+		right.set(speed);
+	}
 
-  @Override
-  public void periodic() {
-    SmartDashboard.putNumber("Left Motor Speed", leftMotor.getEncoder().getVelocity());
-    SmartDashboard.putNumber("Right Motor Velocity", rightMotor.getEncoder().getVelocity());
-  }
+	public void setShooter(double leftSpeed, double rightSpeed) {
+		left.set(leftSpeed);
+		right.set(rightSpeed);
+	}
 
-  
-
-
+	@Override
+	public void periodic() {
+		SmartDashboard.putNumber("(Shooter) Left Motor Speed", left.getEncoder().getVelocity());
+		SmartDashboard.putNumber("(Shooter) Right Motor Speed", right.getEncoder().getVelocity());
+	}
 }

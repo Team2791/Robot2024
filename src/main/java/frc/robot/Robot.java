@@ -8,13 +8,6 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.takeIn;
-import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.RGBLED;
-import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Turret;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -26,69 +19,38 @@ import frc.robot.subsystems.Turret;
  * project.
  */
 public class Robot extends TimedRobot {
-
-	public static Climber climber;
-	public static Turret turret;
-	private Command m_autonomousCommand;
-	public static Shooter shooter;
-	public static DriveSubsystem drivetrain;
-	public static Intake intake;
-	public static RGBLED led;
-
-	private RobotContainer m_robotContainer;
+	private final RobotContainer container = new RobotContainer();
+	private Command autoCommand = container.getAutonomousCommand();
 
 	/**
 	 * This function is run when the robot is first started up and should be used
-	 * for any
-	 * initialization code.
+	 * for any initialization code.
 	 */
 	@Override
 	public void robotInit() {
 		CameraServer.startAutomaticCapture();
-		climber = new Climber();
-		turret = new Turret();
-		shooter = new Shooter();
-		drivetrain = new DriveSubsystem();
-		intake = new Intake();
-		led = new RGBLED();
-
-		// Instantiate our RobotContainer. This will perform all our button bindings,
-		// and put our
-		// autonomous chooser on the dashboard.
-		m_robotContainer = new RobotContainer();
 	}
 
 	/**
-	 * This function is called every 20 ms, no matter the mode. Use this for items
-	 * like diagnostics
+	 * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
 	 * that you want ran during disabled, autonomous, teleoperated and test.
-	 *
-	 * <p>
-	 * This runs after the mode specific periodic functions, but before LiveWindow
-	 * and
+	 * 
+	 * This runs after the mode specific periodic functions, but before LiveWindow and
 	 * SmartDashboard integrated updating.
 	 */
 	@Override
 	public void robotPeriodic() {
-		// Runs the Scheduler. This is responsible for polling buttons, adding
-		// newly-scheduled
-		// commands, running already-scheduled commands, removing finished or
-		// interrupted commands,
-		// and running subsystem periodic() methods. This must be called from the
-		// robot's periodic
-		// block in order for anything in the Command-based framework to work.
 		CommandScheduler.getInstance().run();
 	}
 
 	/** This function is called once each time the robot enters Disabled mode. */
 	@Override
 	public void disabledInit() {
-		
+		container.setRainbow();
 	}
 
 	@Override
 	public void disabledPeriodic() {
-		led.setMode("rainbow");
 	}
 
 	/**
@@ -97,18 +59,10 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+		autoCommand = container.getAutonomousCommand();
 
-		/*
-		 * String autoSelected = SmartDashboard.getString("Auto Selector",
-		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-		 * = new MyAutoCommand(); break; case "Default Auto": default:
-		 * autonomousCommand = new ExampleCommand(); break; }
-		 */
-
-		// schedule the autonomous command (example)
-		if (m_autonomousCommand != null) {
-			m_autonomousCommand.schedule();
+		if (autoCommand != null) {
+			autoCommand.schedule();
 		}
 	}
 
@@ -119,12 +73,8 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
-		// This makes sure that the autonomous stops running when
-		// teleop starts running. If you want the autonomous to
-		// continue until interrupted by another command, remove
-		// this line or comment it out.
-		if (m_autonomousCommand != null) {
-			m_autonomousCommand.cancel();
+		if (autoCommand != null) {
+			autoCommand.cancel();
 		}
 	}
 
@@ -135,7 +85,6 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void testInit() {
-		// Cancels all running commands at the start of test mode.
 		CommandScheduler.getInstance().cancelAll();
 	}
 
