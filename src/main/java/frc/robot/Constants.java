@@ -97,56 +97,82 @@ public final class Constants {
 		}
 	}
 
-	public static final class ModuleConstants {
-		// The MAXSwerve module can be configured with one of three pinion gears: 12T,
-		// 13T, or 14T.
-		// This changes the drive speed of the module (a pinion gear with more teeth
-		// will result in a
-		// robot that drives faster).
-		public static final int kDrivingMotorPinionTeeth = 14;
 
-		// Invert the turning encoder, since the output shaft rotates in the opposite
-		// direction of
-		// the steering motor in the MAXSwerve Module.
-		public static final boolean kTurningEncoderInverted = true;
+	public static final class Module {
+		public static final class Gear {
+			/**
+			 * The MAXSwerve module can have either a 12, 13, or 14 tooth pinion gear.
+			 * This changes the drive speed of the module (more teeth = faster).
+			 */
+			public static final int DrivingMotorPinionTeeth = 14;
+			public static final int BevelGearTeeth = 45;
+			public static final int FirstSpurGearTeeth = 22;
+			public static final int BevelPinionTeeth = 15;
 
-		// Calculations required for driving motor conversion factors and feed forward
-		public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
-		public static final double kWheelDiameterMeters = 0.0762;
-		public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
-		// 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
-		// teeth on the bevel pinion
-		public static final double kDrivingMotorReduction = (45.0 * 22) / (kDrivingMotorPinionTeeth * 15);
-		public static final double kDriveWheelFreeSpeedRps = (kDrivingMotorFreeSpeedRps * kWheelCircumferenceMeters) / kDrivingMotorReduction;
+			public static final double DriveMotorReduction = ((double) (BevelGearTeeth * FirstSpurGearTeeth)) / ((double) (DrivingMotorPinionTeeth * BevelPinionTeeth));
+		}
 
-		public static final double kDrivingEncoderPositionFactor = (kWheelDiameterMeters * Math.PI) / kDrivingMotorReduction; // meters
-		public static final double kDrivingEncoderVelocityFactor = ((kWheelDiameterMeters * Math.PI) / kDrivingMotorReduction) / 60.0; // meters per second
+		public static final class Limits {
+			/** Meters per second */
+			public static final double DrivingMotorFreeSpeed = 5676.0 / 60.0;
 
-		public static final double kTurningEncoderPositionFactor = (2 * Math.PI); // radians
-		public static final double kTurningEncoderVelocityFactor = (2 * Math.PI) / 60.0; // radians per second
+			/** Rotations per second */
+			public static final double DrivingWheelFreeSpeed = (Gear.DriveMotorReduction * Constants.Drive.Dimensions.DriveBaseRadius) / DrivingMotorFreeSpeed;
 
-		public static final double kTurningEncoderPositionPIDMinInput = 0; // radians
-		public static final double kTurningEncoderPositionPIDMaxInput = kTurningEncoderPositionFactor; // radians
+			/** Amps */
+			public static final int DrivingMotorCurrent = 40;
 
-		public static final double kDrivingP = .15; // .04
-		public static final double kDrivingI = 0.0001;
-		public static final double kDrivingD = 0.01;
-		public static final double kDrivingFF = 1 / kDriveWheelFreeSpeedRps;
-		public static final double kDrivingMinOutput = -1;
-		public static final double kDrivingMaxOutput = 1;
+			/** Amps */
+			public static final int TurningMotorCurrent = 15;
+		}
 
-		public static final double kTurningP = 4; // 1
-		public static final double kTurningI = 0.0001;
-		public static final double kTurningD = .02;
-		public static final double kTurningFF = 0;
-		public static final double kTurningMinOutput = -1;
-		public static final double kTurningMaxOutput = 1;
+		public static final class Encoder {
+			/** Meters */
+			public static final double DrivingPositionFactor = (Constants.Drive.Dimensions.DriveBaseRadius * Math.PI) / Gear.DriveMotorReduction;
 
-		public static final IdleMode kDrivingMotorIdleMode = IdleMode.kBrake;
-		public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
+			/** Meters per second */
+			public static final double DrivingVelocityFactor = ((Constants.Drive.Dimensions.DriveBaseRadius * Math.PI) / Gear.DriveMotorReduction) / 60.0;
 
-		public static final int kDrivingMotorCurrentLimit = 40; // amps
-		public static final int kTurningMotorCurrentLimit = 15; // amps
+			/** Radians */
+			public static final double TurningPositionFactor = 2 * Math.PI;
+
+			/** Radians per second */
+			public static final double TurningVelocityFactor = (2 * Math.PI) / 60.0;
+
+			/** Radians */
+			public static final double TurningPositionPIDMin = 0;
+
+			/** Radians */
+			public static final double TurningPositionPIDMax = TurningPositionFactor;
+
+			/** Radians */
+			public static final boolean TurningInverted = true;
+		}
+
+		public static final class PID {
+			public static final class Driving {
+				public static final double P = 0.15;
+				public static final double I = 0.0001;
+				public static final double D = 0.01;
+				public static final double FF = 1 / Limits.DrivingWheelFreeSpeed;
+				public static final double MinOutput = -1;
+				public static final double MaxOutput = 1;
+			}
+
+			public static final class Turning {
+				public static final double P = 4;
+				public static final double I = 0.0001;
+				public static final double D = 0.02;
+				public static final double FF = 0;
+				public static final double MinOutput = -1;
+				public static final double MaxOutput = 1;
+			}
+		}
+
+		public static final class Idle {
+			public static final IdleMode Driving = IdleMode.kBrake;
+			public static final IdleMode Turning = IdleMode.kBrake;
+		}
 	}
 
 	public static final class OIConstants {

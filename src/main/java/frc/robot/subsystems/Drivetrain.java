@@ -16,7 +16,8 @@ import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.utils.SwerveUtils;
+import frc.robot.swerve.MAXSwerveModule;
+import frc.robot.swerve.SwerveUtils;
 
 import java.util.Arrays;
 
