@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.OIConstants;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import org.photonvision.PhotonCamera;
@@ -28,7 +27,7 @@ import org.photonvision.PhotonCamera;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-	private final XboxController controller = new XboxController(OIConstants.kDriverControllerPort);
+	private final XboxController controller = new XboxController(Constants.Controller.Port);
 
 	// Shared subsystems in RobotContainer
 	private final PhotonCamera camera = new PhotonCamera("2791camera");
@@ -74,9 +73,9 @@ public class RobotContainer {
 		this.drivetrain.setDefaultCommand(
 		    new RunCommand(
 		        () -> this.drivetrain.drive(
-		            -MathUtil.applyDeadband(controller.getLeftY(), OIConstants.kDriveDeadband),
-		            -MathUtil.applyDeadband(controller.getLeftX(), OIConstants.kDriveDeadband),
-		            -MathUtil.applyDeadband(controller.getRightX(), OIConstants.kDriveDeadband),
+		            -MathUtil.applyDeadband(controller.getLeftY(), Constants.Controller.Deadband),
+		            -MathUtil.applyDeadband(controller.getLeftX(), Constants.Controller.Deadband),
+		            -MathUtil.applyDeadband(controller.getRightX(), Constants.Controller.Deadband),
 		            true,
 		            true
 		        ),

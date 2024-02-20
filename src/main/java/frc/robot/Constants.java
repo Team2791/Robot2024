@@ -141,7 +141,7 @@ public final class Constants {
 			public static final double TurningPositionFactor = Circle.Tau;
 
 			/** Radians per second */
-			public static final double TurningVelocityFactor = (Circle.Tau) / 60.0;
+			public static final double TurningVelocityFactor = Circle.Tau / 60.0;
 
 			/** Radians */
 			public static final double TurningPositionPIDMin = 0;
@@ -179,9 +179,9 @@ public final class Constants {
 		}
 	}
 
-	public static final class OIConstants {
-		public static final int kDriverControllerPort = 0;
-		public static final double kDriveDeadband = 0.05;
+	public static final class Controller {
+		public static final int Port = 0;
+		public static final double Deadband = 0.05;
 	}
 
 	public static class VisionConstants {
