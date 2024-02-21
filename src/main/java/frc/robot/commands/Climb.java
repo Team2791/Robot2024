@@ -4,69 +4,85 @@
 
 package frc.robot.commands;
 
-import com.revrobotics.CANSparkMax;
+import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkBase.IdleMode;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.Robot;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Led;
+import frc.robot.subsystems.Led.LedMode;
 
 public class Climb extends Command {
+	private boolean done = false;
 
-  private boolean isDone = false;
-  
-  double robotRoll;
+	private final Climber climber;
+	private final AHRS gyro;
+	private final Led led;
 
-  
-  /** Creates a new Climb. */
-  public Climb() {
-  }
+	private final double multPosRoll;
+	private final double multNegRoll;
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    Robot.climber.climb(.5);
-  }
+	/**
+	 * Creates a new Climb.
+	 */
+	public Climb(Climber climber, AHRS gyro, Led led, boolean up) {
+		this.climber = climber;
+		this.gyro = gyro;
+		this.led = led;
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    robotRoll = Robot.climber.drivetrain.m_gyro.getRoll();
+		if (up) {
+			this.multNegRoll = 0.1;
+			this.multPosRoll = 0.5;
+		} else {
+			this.multNegRoll = -0.5;
+			this.multPosRoll = -0.1;
+		}
+	}
 
+	// Called when the command is initially scheduled.
+	@Override
+	public void initialize() {
+	}
 
-    Robot.climber.climb(.1);
+	// Called every time the scheduler runs while the command is scheduled.
+	@Override
+	public void execute() {
+		this.climber.climb(this.multPosRoll);
 
-    if(Robot.climber.getLeftMotorCurrent() > Constants.GameConstants.climbVoltage && Robot.climber.getRightMotorCurrent() > Constants.GameConstants.climbVoltage){
-      Robot.led.setColor(0,0,255);
+		double roll = this.gyro.getRoll();
+		boolean enoughAmpsLeft = this.climber.leftAmps() > Constants.Subsystem.ClimberCurrent;
+		boolean enoughAmpsRight = this.climber.rightAmps() > Constants.Subsystem.ClimberCurrent;
 
-      if(robotRoll>0){
-        Robot.climber.climb(robotRoll*.1, robotRoll*.5);
-      }
-      else if(robotRoll<0){
-        Robot.climber.climb(robotRoll*.5, robotRoll*.1);
-      }
-      else{
-        Robot.climber.climb(.1);
-      }
+		if (enoughAmpsLeft && enoughAmpsRight) {
+			this.led.set(LedMode.defaultMode().colorBase(Color.kGreen));
 
+			switch ((int) Math.signum(roll)) {
+				case 1:
+					this.climber.climb(roll * this.multNegRoll, roll * this.multPosRoll);
+					break;
+				case -1:
+					this.climber.climb(roll * this.multPosRoll, roll * this.multNegRoll);
+					break;
+				default:
+					this.climber.climb(roll * this.multNegRoll);
+					break;
+			}
+		}
 
-    }
-    
+		// TODO: figure out how to set done
+	}
 
-  }
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    Robot.climber.setBrakeMode();
-    isDone = true;
-  }
+	// Called once the command ends or is interrupted.
+	@Override
+	public void end(boolean interrupted) {
+		this.climber.setMode(IdleMode.kBrake);
+	}
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return isDone;
-  }
+	// Returns true when the command should end.
+	@Override
+	public boolean isFinished() {
+		return done;
+	}
 }

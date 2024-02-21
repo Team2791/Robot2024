@@ -5,37 +5,39 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Intake;
 
-public class Shoot extends Command {
-	private final double speed;
-	private final Shooter shooter;
+public class TakeIn extends Command {
+	private final Intake intake;
 
-	/** Creates a new Shoot. */
-	public Shoot(Shooter shooter, double speed) {
-		this.shooter = shooter;
-		this.speed = speed;
+	public TakeIn(Intake intake) {
+		this.intake = intake;
 	}
 
-	public Shoot(Shooter shooter) {
-		this(shooter, 1);
-	}
-
-	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		this.shooter.setShooter(speed);
+		this.intake.takeIn();
 	}
+
+	// Called every time the scheduler runs while the command is scheduled.
+	@Override
+	public void execute() {
+		if (this.intake.amps() > 5) {
+		}
+
+		// TODO: figure out how to end correctly
+	}
+
 
 	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
-		this.shooter.setShooter(0);
+		this.intake.stop();
 	}
 
 	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
-		return true;
+		return false;
 	}
 }
