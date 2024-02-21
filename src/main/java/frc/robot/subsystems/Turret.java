@@ -8,14 +8,17 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotMap;
+import frc.robot.Constants;
 
 public class Turret extends SubsystemBase {
 	private CANSparkMax motor;
 
 	public Turret() {
-		motor = new CANSparkMax(RobotMap.turretMotor, MotorType.kBrushless);
+		motor = new CANSparkMax(Constants.Ids.Turret, MotorType.kBrushless);
+
+		CommandScheduler.getInstance().registerSubsystem(this);
 	}
 
 	public void setAngle(double angle, double tolerance) {

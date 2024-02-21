@@ -9,8 +9,9 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotMap;
+import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
 	private CANSparkMax left;
@@ -18,11 +19,13 @@ public class Shooter extends SubsystemBase {
 
 	/** Creates a new Shooter. */
 	public Shooter() {
-		left = new CANSparkMax(RobotMap.leftShooterMotor, MotorType.kBrushless);
-		right = new CANSparkMax(RobotMap.rightShooterMotor, MotorType.kBrushless);
+		left = new CANSparkMax(Constants.Ids.Shoot.Left, MotorType.kBrushless);
+		right = new CANSparkMax(Constants.Ids.Shoot.Right, MotorType.kBrushless);
 
 		left.setIdleMode(IdleMode.kCoast);
 		right.setIdleMode(IdleMode.kCoast);
+
+		CommandScheduler.getInstance().registerSubsystem(this);
 	}
 
 	public void setShooter(double speed) {

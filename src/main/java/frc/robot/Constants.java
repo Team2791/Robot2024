@@ -77,19 +77,32 @@ public final class Constants {
 	}
 
 	public static final class Ids {
-		public static final class DrivingMotor {
+		public static final class Drive {
 			public static final int FrontLeft = 10;
 			public static final int RearLeft = 30;
 			public static final int FrontRight = 20;
 			public static final int RearRight = 40;
 		}
 
-		public static final class TurningMotor {
+		public static final class Turn {
 			public static final int FrontLeft = 15;
 			public static final int RearLeft = 35;
 			public static final int FrontRight = 25;
 			public static final int RearRight = 45;
 		}
+
+		public static final class Climb {
+			public static final int Left = 50;
+			public static final int Right = 60;
+		}
+
+		public static final class Shoot {
+			public static final int Left = 70;
+			public static final int Right = 80;
+		}
+
+		public static final int Turret = 90;
+		public static final int Intake = 100;
 	}
 
 

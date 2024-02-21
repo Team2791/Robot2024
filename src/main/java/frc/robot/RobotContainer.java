@@ -43,32 +43,15 @@ public class RobotContainer {
 	private Trigger driverX, driverY, driverA, driverB, driverLB, driverRB, driverLT, driverRT;
 	private Trigger driverDPadUp, driverDPadDown, driverDPadLeft, driverDPadRight, driverLeftStick;
 
-	// Commands
-	private final Command faceTag = new FaceTag(camera, drivetrain, false);
-	private final Command faceTagForever = new FaceTag(camera, drivetrain, true);
-	// private final Command climbUp = new Climb(climber, gyro, led, true);
-	// private final Command climbDown = new Climb(climber, gyro, led, false);
-	// private final Command shoot = new Shoot(shooter);
-	// private final Command aimTurret = new AimTurret(camera, turret);
-	// private final Command spitOut = new SpitOut(intake);
-	// private final Command takeIn = new TakeIn(intake, led);
 
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
 	 */
 	public RobotContainer() {
 		configureButtonBindings();
-		driverB.toggleOnTrue(faceTagForever);
-		// driverDPadUp.toggleOnTrue(climbUp);
-		// driverDPadDown.toggleOnTrue(climbDown);
-		// driverLT.toggleOnTrue(shoot);
+		driverB.toggleOnTrue(new FaceTag(camera, drivetrain, true));
 
-		// NamedCommands.registerCommand("Shoot", shoot);
-		// NamedCommands.registerCommand("Climb", climbUp);
-		// NamedCommands.registerCommand("AimTurret", aimTurret);
-		NamedCommands.registerCommand("FaceTag", faceTag);
-		// NamedCommands.registerCommand("SpitOut", spitOut);
-		// NamedCommands.registerCommand("TakeIn", takeIn);
+		NamedCommands.registerCommand("FaceTag", new FaceTag(camera, drivetrain, false));
 
 		this.drivetrain.setDefaultCommand(
 		    new RunCommand(
@@ -100,6 +83,7 @@ public class RobotContainer {
 		new JoystickButton(controller, Button.kR1.value).whileTrue(
 		    new RunCommand(() -> drivetrain.stopX(), drivetrain)
 		);
+
 		driverA = new JoystickButton(controller, XboxController.Button.kA.value);
 		driverB = new JoystickButton(controller, XboxController.Button.kB.value);
 		driverDPadUp = new POVButton(controller, 0);

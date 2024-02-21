@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.util.WPIUtilJNI;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.swerve.MAXSwerveModule;
@@ -27,26 +28,26 @@ public class Drivetrain extends SubsystemBase {
 
 	// Create MAXSwerveModules
 	private final MAXSwerveModule frontLeft = new MAXSwerveModule(
-	    Constants.Ids.DrivingMotor.FrontLeft,
-	    Constants.Ids.TurningMotor.FrontLeft,
+	    Constants.Ids.Drive.FrontLeft,
+	    Constants.Ids.Turn.FrontLeft,
 	    Constants.Drive.Dimensions.AngularOffsetFrontLeft
 	);
 
 	private final MAXSwerveModule frontRight = new MAXSwerveModule(
-	    Constants.Ids.DrivingMotor.FrontRight,
-	    Constants.Ids.TurningMotor.FrontRight,
+	    Constants.Ids.Drive.FrontRight,
+	    Constants.Ids.Turn.FrontRight,
 	    Constants.Drive.Dimensions.AngularOffsetFrontRight
 	);
 
 	private final MAXSwerveModule rearLeft = new MAXSwerveModule(
-	    Constants.Ids.DrivingMotor.RearLeft,
-	    Constants.Ids.TurningMotor.RearLeft,
+	    Constants.Ids.Drive.RearLeft,
+	    Constants.Ids.Turn.RearLeft,
 	    Constants.Drive.Dimensions.AngularOffsetRearLeft
 	);
 
 	private final MAXSwerveModule rearRight = new MAXSwerveModule(
-	    Constants.Ids.DrivingMotor.RearRight,
-	    Constants.Ids.TurningMotor.RearRight,
+	    Constants.Ids.Drive.RearRight,
+	    Constants.Ids.Turn.RearRight,
 	    Constants.Drive.Dimensions.AngularOffsetRearRight
 	);
 
@@ -111,6 +112,8 @@ public class Drivetrain extends SubsystemBase {
 		    },
 		    this
 		);
+
+		CommandScheduler.getInstance().registerSubsystem(this);
 	}
 
 	@Override
@@ -120,9 +123,6 @@ public class Drivetrain extends SubsystemBase {
 		});
 
 		// TODO: drivetrain is not in charge of the gyro. find somewhere else to put this
-		// SmartDashboard.putNumber("(Gyro) Yaw", gyro.getYaw());
-		// SmartDashboard.putNumber("(Gyro) Angle", gyro.getAngle());
-		// SmartDashboard.putString("(Gyro) Pose Translation", pose().getTranslation().toString());
 	}
 
 	/**
