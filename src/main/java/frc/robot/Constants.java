@@ -38,10 +38,10 @@ public final class Constants {
 			public static final double AngularOffsetFrontRight = 0;
 
 			/** Radians */
-			public static final double AngularOffsetBackLeft = Math.PI;
+			public static final double AngularOffsetRearLeft = Math.PI;
 
 			/** Radians */
-			public static final double AngularOffsetBackRight = Math.PI / 2;
+			public static final double AngularOffsetRearRight = Math.PI / 2;
 
 			/** Meters */
 			public static final double DriveBaseRadius = 0.39;
@@ -246,5 +246,18 @@ public final class Constants {
 	public static final class Game {
 		/** meters */
 		public static final double SpeakerHeight = 2;
+	}
+
+	public static final class Led {
+		public static final int Length = 60;
+
+		public static final int ShootSize = 3;
+		public static final int ShootSizeHole = 17;
+
+		public static final int FullRainbowLength = 3 * 256;
+		public static final int RainbowStep = FullRainbowLength / Length;
+
+		public static final double RotatingSpeed = 0.2;
+		public static final int ShiftSize = 1;
 	}
 }

@@ -7,17 +7,19 @@ package frc.robot.commands;
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkBase.IdleMode;
 
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.RGBLED;
+import frc.robot.subsystems.Led;
+import frc.robot.subsystems.Led.LedMode;
 
 public class Climb extends Command {
 	private boolean done = false;
 
 	private final Climber climber;
 	private final AHRS gyro;
-	private final RGBLED led;
+	private final Led led;
 
 	private final double multPosRoll;
 	private final double multNegRoll;
@@ -25,7 +27,7 @@ public class Climb extends Command {
 	/**
 	 * Creates a new Climb.
 	 */
-	public Climb(Climber climber, AHRS gyro, RGBLED led, boolean up) {
+	public Climb(Climber climber, AHRS gyro, Led led, boolean up) {
 		this.climber = climber;
 		this.gyro = gyro;
 		this.led = led;
@@ -54,7 +56,7 @@ public class Climb extends Command {
 		boolean enoughAmpsRight = this.climber.rightAmps() > Constants.Subsystem.ClimberCurrent;
 
 		if (enoughAmpsLeft && enoughAmpsRight) {
-			this.led.setColor(255, 0, 0);
+			this.led.set(LedMode.defaultMode().colorBase(Color.kGreen));
 
 			switch ((int) Math.signum(roll)) {
 				case 1:

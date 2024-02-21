@@ -41,13 +41,13 @@ public class Drivetrain extends SubsystemBase {
 	private final MAXSwerveModule rearLeft = new MAXSwerveModule(
 	    Constants.Ids.DrivingMotor.RearLeft,
 	    Constants.Ids.TurningMotor.RearLeft,
-	    Constants.Drive.Dimensions.AngularOffsetBackLeft
+	    Constants.Drive.Dimensions.AngularOffsetRearLeft
 	);
 
 	private final MAXSwerveModule rearRight = new MAXSwerveModule(
 	    Constants.Ids.DrivingMotor.RearRight,
 	    Constants.Ids.TurningMotor.RearRight,
-	    Constants.Drive.Dimensions.AngularOffsetBackRight
+	    Constants.Drive.Dimensions.AngularOffsetRearRight
 	);
 
 	private final SlewRateLimiter magLimiter = new SlewRateLimiter(Constants.Drive.Slew.Magnitude);
