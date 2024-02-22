@@ -5,39 +5,38 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
 
 public class TakeIn extends Command {
-	private final Intake intake;
+	private final Shooter shooter;
+	private boolean done;
 
-	public TakeIn(Intake intake) {
-		this.intake = intake;
+	public TakeIn(Shooter shooter) {
+		this.shooter = shooter;
+		this.done = false;
+
+		addRequirements(shooter);
 	}
 
 	@Override
 	public void initialize() {
-		this.intake.takeIn();
+		this.shooter.setIntake(0.5);
 	}
 
-	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		if (this.intake.amps() > 5) {
+		if (this.shooter.broken()) {
+			this.done = true;
 		}
-
-		// TODO: figure out how to end correctly
 	}
 
-
-	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
-		this.intake.stop();
+		this.shooter.setIntake(0);
 	}
 
-	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
-		return false;
+		return this.done;
 	}
 }

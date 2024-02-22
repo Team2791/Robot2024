@@ -71,6 +71,7 @@ public class RobotContainer {
 	 * Sets rgb leds to rainbow
 	 */
 	public void setRainbow() {
+		// this.led.set(LedMode.defaultMode().rotating());
 	}
 
 

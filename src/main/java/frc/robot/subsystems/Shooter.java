@@ -4,43 +4,52 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
-	private CANSparkMax left;
-	private CANSparkMax right;
+	private final CANSparkMax intake;
+	private final CANSparkMax top;
+	private final CANSparkMax bottom;
+	private final DigitalInput beam;
 
-	/** Creates a new Shooter. */
 	public Shooter() {
-		left = new CANSparkMax(Constants.Ids.Shoot.Left, MotorType.kBrushless);
-		right = new CANSparkMax(Constants.Ids.Shoot.Right, MotorType.kBrushless);
-
-		left.setIdleMode(IdleMode.kCoast);
-		right.setIdleMode(IdleMode.kCoast);
+		intake = new CANSparkMax(Constants.Ids.Note.Intake, MotorType.kBrushless);
+		top = new CANSparkMax(Constants.Ids.Note.ShooterTop, MotorType.kBrushless);
+		bottom = new CANSparkMax(Constants.Ids.Note.ShooterBottom, MotorType.kBrushless);
+		beam = new DigitalInput(Constants.Ids.Note.BeamBreak);
 
 		CommandScheduler.getInstance().registerSubsystem(this);
 	}
 
-	public void setShooter(double speed) {
-		left.set(speed);
-		right.set(speed);
+	public void setIntake(double speed) {
+		intake.set(speed);
 	}
 
-	public void setShooter(double leftSpeed, double rightSpeed) {
-		left.set(leftSpeed);
-		right.set(rightSpeed);
+	public void setTop(double speed) {
+		top.set(speed);
+	}
+
+	public void setBottom(double speed) {
+		bottom.set(speed);
+	}
+
+	public boolean broken() {
+		return !beam.get();
 	}
 
 	@Override
 	public void periodic() {
-		SmartDashboard.putNumber("(Shooter) Left Motor Speed", left.getEncoder().getVelocity());
-		SmartDashboard.putNumber("(Shooter) Right Motor Speed", right.getEncoder().getVelocity());
+		SmartDashboard.putBoolean("(Shooter) Beam Broken?", broken());
+		SmartDashboard.putNumber("(Shooter) Top", top.get());
+		SmartDashboard.putNumber("(Shooter) Bottom", bottom.get());
+		SmartDashboard.putNumber("(Shooter) Intake", intake.get());
 	}
+
 }

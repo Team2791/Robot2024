@@ -96,13 +96,12 @@ public final class Constants {
 			public static final int Right = 60;
 		}
 
-		public static final class Shoot {
-			public static final int Left = 70;
-			public static final int Right = 80;
+		public static final class Note {
+			public static final int ShooterTop = 70;
+			public static final int ShooterBottom = 80;
+			public static final int Intake = 90;
+			public static final int BeamBreak = 100;
 		}
-
-		public static final int Turret = 90;
-		public static final int Intake = 100;
 	}
 
 
@@ -246,6 +245,17 @@ public final class Constants {
 		    Limits.MaxAngularAcceleration
 		);
 	}
+
+	public static final class Shooter {
+		public static final class EqualSpeeds {
+			public static final double Intake = 0.5;
+			public static final double Top = 0.5;
+			public static final double Bottom = 0.5;
+		}
+
+		public static final double TimeToShoot = 0.5;
+	}
+
 
 	/** Miscellaneous subsystem constants */
 	public static final class Subsystem {
