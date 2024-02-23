@@ -126,6 +126,7 @@ public final class Constants {
 
 	public static final class OIConstants {
 		public static final int kDriverControllerPort = 0;
+		public static final int kOperatorControllerPort = 1;
 		public static final double kDriveDeadband = 0.05;
 	}
 	public static class VisionConstants {
@@ -162,12 +163,26 @@ public final class Constants {
 		public static final double kFreeSpeedRpm = 5676;
 	}
 
-	public static final class GameConstants{
+	public static final class RobotConstants{
 		public static final double climbVoltage = 5;
 		public static final double CAMERA_HEIGHT_METERS = .1;
 		public static final double TARGET_HEIGHT_METERS = 3;
 		public static final double CAMERA_PITCH_RADIANS = 0;
+
+		
 		public static final double SpeakerHeight = 2;
 		public static final double ShooterHeight = .5;
+
+		public static final double kShooterP = 1;
+		public static final double kShooterI = 1;
+		public static final double kShooterD = 1;
+
+		public static final double kATrotateP = .001;
+		public static final double kATrotateI = .0001;
+		public static final double kATrotateD = .00004;
+
+		public static final double kATtranslateP = .001;
+		public static final double kATtranslateI = .0001;
+		public static final double kATtranslateD = .00004;
 	}
 }

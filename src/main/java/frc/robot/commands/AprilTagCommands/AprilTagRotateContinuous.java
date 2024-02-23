@@ -2,73 +2,62 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.AprilTagCommands;
 
 import java.lang.annotation.Target;
 import java.util.List;
 
 import org.photonvision.PhotonCamera;
+import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 import org.photonvision.targeting.TargetCorner;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
+import frc.robot.Robot;
+import frc.robot.RobotContainer;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.RGBLED;
 
-public class AprilTagRotateCommand extends Command {
+public class AprilTagRotateContinuous extends Command {
 
   PhotonCamera camera;
-  DriveSubsystem drivetrain;
-  double pitch;
-  double area;
-  double skew;
-  AHRS gyro;
-  double x;
   boolean done = false;
-  double setPoint;
-  double p;
-  double i;
-  double d;
+
+  private PIDController rotctl;
   /** Creates a new TagAllign. */
-  public AprilTagRotateCommand(PhotonCamera camera, DriveSubsystem driveSubsystem) {
-    this.gyro = DriveSubsystem.m_gyro;
+  public AprilTagRotateContinuous(PhotonCamera camera) {
+    this.rotctl = new PIDController(Constants.RobotConstants.kATrotateP, Constants.RobotConstants.kATrotateI, Constants.RobotConstants.kATrotateD);
+    this.rotctl.setSetpoint(320);
+		this.rotctl.setTolerance(10);
     this.camera = camera;
-    this.drivetrain = driveSubsystem;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    var result = camera.getLatestResult();
-
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    var result = camera.getLatestResult();
-    boolean hasTargets = result.hasTargets();
+    PhotonPipelineResult result = camera.getLatestResult();
 
-    if(hasTargets){
-      PhotonTrackedTarget target = result.getBestTarget();
-      TargetCorner yaw1 = target.getDetectedCorners().get(0);
-      TargetCorner yaw2 = target.getDetectedCorners().get(1);
-      x = (yaw1.x + yaw2.x)/2;
-    }
+		if (!result.hasTargets()) return;
 
-    //setpoint = resolution/2
-    
-    setPoint = 640/2;
-    p=x-setPoint;
+		PhotonTrackedTarget target = result.getBestTarget();
+		List<TargetCorner> corners = target.getDetectedCorners();
 
-    while(p>setPoint+10 || p<setPoint-10){
-    p=x-setPoint;
-    drivetrain.drive(0,0,p*.5,true,true);}
+		double targetX = corners.parallelStream().mapToDouble(c -> c.x).sum() / 4;
+		double rPower = rotctl.calculate(targetX);
 
-    done=true;
+		Robot.drivetrain.drive(0, 0, rPower, false, false);
     
 
   }
@@ -76,7 +65,7 @@ public class AprilTagRotateCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    drivetrain.stopModules();
+    Robot.drivetrain.stopModules();
   }
 
   // Returns true when the command should end.

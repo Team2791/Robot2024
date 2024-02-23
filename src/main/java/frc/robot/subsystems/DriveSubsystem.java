@@ -29,7 +29,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
+import org.photonvision.PhotonCamera;
+
 public class DriveSubsystem extends SubsystemBase {
+
+	private final PhotonCamera camera1 = new PhotonCamera("2791camera");
 	// Create MAXSwerveModules
 	private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
 			DriveConstants.kFrontLeftDrivingCanId,
@@ -99,9 +103,9 @@ public class DriveSubsystem extends SubsystemBase {
 					// THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
 					var alliance = DriverStation.getAlliance();
-					//if (alliance == null || alliance != null) {
-					//	return alliance == DriverStation.Alliance.Red;
-					//}
+					if (alliance.isPresent()) {
+						return alliance.get() == DriverStation.Alliance.Red;
+					}
 					return false;
 				},
 				this // Reference to this subsystem to set requirements
@@ -125,6 +129,9 @@ public class DriveSubsystem extends SubsystemBase {
 		SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
 	}
 
+
+
+
 	/**
 	 * Returns the currently-estimated pose of the robot.
 	 *
@@ -133,6 +140,8 @@ public class DriveSubsystem extends SubsystemBase {
 	public Pose2d getPose() {
 		return m_odometry.getPoseMeters();
 	}
+
+
 
 	/**
 	 * Resets the odometry to the specified pose.

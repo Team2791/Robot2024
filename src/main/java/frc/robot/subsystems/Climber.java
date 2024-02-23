@@ -9,16 +9,20 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
+import frc.robot.commands.ClimbCommands.ClimberActivate;
 
 public class Climber extends SubsystemBase {
 
   private CANSparkMax leftMotor;
   private CANSparkMax rightMotor;
+  private AnalogPotentiometer leftPot, rightPot;
   AHRS gyro;
   public static DriveSubsystem drivetrain;
 
@@ -30,6 +34,8 @@ public class Climber extends SubsystemBase {
     gyro = new AHRS(Port.kMXP);
     leftMotor.setIdleMode(IdleMode.kBrake);
     rightMotor.setIdleMode(IdleMode.kBrake);
+    leftPot = new AnalogPotentiometer(0, 270, -148);
+    rightPot = new AnalogPotentiometer(1, 270, -148);
   }
 
   public double getRobotRoll(){
@@ -74,10 +80,21 @@ public class Climber extends SubsystemBase {
     leftMotor.setIdleMode(IdleMode.kCoast);
   }
 
+  public double getLeftPot(){
+    return leftPot.get();
+  }
+
+  public double getRightPot(){
+    return rightPot.get();
+  }
+
+
+
   public void periodic(){
     SmartDashboard.putNumber("Left Motor Current", Robot.climber.getLeftMotorCurrent());
     SmartDashboard.putNumber("Right Motor Current", Robot.climber.getRightMotorCurrent());
     SmartDashboard.putNumber("Gyro Roll", gyro.getRoll());
+    SmartDashboard.putBoolean("Climber Activation", ClimberActivate.isActive);
   }
 
 }

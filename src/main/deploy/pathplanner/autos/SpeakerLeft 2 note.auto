@@ -8,19 +8,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Example Path straight"
+            "pathName": "segment1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "segment 2"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "intake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "New Path"
           }
         },
         {

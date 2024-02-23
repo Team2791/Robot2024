@@ -9,16 +9,19 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.RobotMap;
 
 public class Shooter extends SubsystemBase {
 
   private CANSparkMax leftMotor;
   private CANSparkMax rightMotor;
+  ;
   /** Creates a new Shooter. */
   public Shooter() {
     leftMotor = new CANSparkMax(RobotMap.leftShooterMotor, MotorType.kBrushless);
@@ -41,6 +44,8 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("Left Motor Speed", leftMotor.getEncoder().getVelocity());
     SmartDashboard.putNumber("Right Motor Velocity", rightMotor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Left motor", leftMotor.get());
+    SmartDashboard.putNumber("Right Number", rightMotor.get());
   }
 
   
