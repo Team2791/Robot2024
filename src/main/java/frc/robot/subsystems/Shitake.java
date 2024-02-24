@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Robot;
 import frc.robot.RobotMap;
 
 public class Shitake extends SubsystemBase {
@@ -24,11 +23,14 @@ public class Shitake extends SubsystemBase {
   private CANSparkMax leftMotor;
   private CANSparkMax rightMotor;
   private DigitalInput beamBrake;
-  ;
+  public PIDController speedController;
+  double power;
   /** Creates a new Shooter. */
   public Shitake() {
     leftMotor = new CANSparkMax(RobotMap.leftShitakeMotor, MotorType.kBrushless);
     rightMotor = new CANSparkMax(RobotMap.rightShitakeeMotor, MotorType.kBrushless);
+    speedController = new PIDController(Constants.RobotConstants.kShooterP, Constants.RobotConstants.kShooterI, Constants.RobotConstants.kShooterD);
+    speedController.setTolerance(.01);
     leftMotor.setIdleMode(IdleMode.kCoast);
     rightMotor.setIdleMode(IdleMode.kCoast);
     beamBrake = new DigitalInput(RobotMap.beamBrakeChannel);
@@ -73,11 +75,12 @@ public class Shitake extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Left Motor Speed", leftMotor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Left Motor actual velocity", leftMotor.getEncoder().getVelocity());
     SmartDashboard.putNumber("Right Motor Velocity", rightMotor.getEncoder().getVelocity());
-    SmartDashboard.putNumber("Left motor", leftMotor.get());
-    SmartDashboard.putNumber("Right motor", rightMotor.get());
-    SmartDashboard.putBoolean("Beam Brake?", isItIn());
+    SmartDashboard.putNumber("Left motor set power", leftMotor.get());
+    SmartDashboard.putNumber("Right motor set power", rightMotor.get());
+    //SmartDashboard.putData("Speed PID", speedController);
+    SmartDashboard.putBoolean("Beam Break?", isItIn());
   }
 
   

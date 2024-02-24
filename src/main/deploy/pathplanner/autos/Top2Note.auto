@@ -8,7 +8,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "segment1"
+            "pathName": "topStart"
           }
         },
         {
@@ -20,7 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "segment 2"
+            "pathName": "fromspeakermidNote"
           }
         },
         {
@@ -52,6 +52,12 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "midNoteToSpeaker"
           }
         }
       ]

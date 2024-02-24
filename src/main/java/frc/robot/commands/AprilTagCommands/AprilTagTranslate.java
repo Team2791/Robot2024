@@ -1,6 +1,8 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+//Should theoretically translate left/right to center the april tag on camera
+//Will need to tune PID.
+//Button X
+
+
 
 package frc.robot.commands.AprilTagCommands;
 
@@ -21,16 +23,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.RobotContainer;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.RGBLED;
 
 public class AprilTagTranslate extends Command {
 
   PhotonCamera camera;
   DriveSubsystem drivetrain;
   boolean done = false;
+  double setPoint = 320;
 
   private PIDController rotctl;
   /** Creates a new TagAllign. */
@@ -57,13 +57,13 @@ public class AprilTagTranslate extends Command {
 		PhotonTrackedTarget target = result.getBestTarget();
 		List<TargetCorner> corners = target.getDetectedCorners();
 
-    Pose2d pose = new Pose2d(target.getBestCameraToTarget().getX(), target.getBestCameraToTarget().getY(), target.getBestCameraToTarget().getRotation().toRotation2d());
+    //Pose2d pose = new Pose2d(target.getBestCameraToTarget().getX(), target.getBestCameraToTarget().getY(), target.getBestCameraToTarget().getRotation().toRotation2d());
 
 		double targetX = corners.parallelStream().mapToDouble(c -> c.x).sum() / 4;
-		double rPower = rotctl.calculate(targetX);
-    SmartDashboard.putData("Translate PID controller", rotctl);
+		double rPower = rotctl.calculate(targetX, setPoint);
+    SmartDashboard.putData("Translation PID controller", rotctl);
 
-		drivetrain.drive(rPower, 0, 0, false, false);
+		Robot.drivetrain.drive(rPower, 0, 0, false, false);
     
 
     if(rotctl.atSetpoint()){

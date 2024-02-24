@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.AprilTagCommands.AprilTagDistance;
 import frc.robot.commands.AprilTagCommands.AprilTagRotateCommand;
 import frc.robot.commands.AprilTagCommands.AprilTagRotateContinuous;
 import frc.robot.commands.AprilTagCommands.AprilTagTranslate;
@@ -30,6 +31,7 @@ import frc.robot.commands.ClimbCommands.ManualClimb;
 import frc.robot.commands.IntakeCommands.spitOut;
 import frc.robot.commands.IntakeCommands.takeIn;
 import frc.robot.commands.ShooterCommands.Shoot;
+import frc.robot.commands.TurretCommands.ManualAngle;
 import frc.robot.commands.TurretCommands.TurretAngle;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveSubsystem;
@@ -92,47 +94,48 @@ public class RobotContainer {
 		m_driverController  = new XboxController(OIConstants.kDriverControllerPort);
 		m_operatorController = new XboxController(OIConstants.kOperatorControllerPort);
 
-		configureButtonBindings();
 
-		//driver buttons
-		driverB.whileTrue(new AprilTagRotateContinuous(camera1));
-		driverDPadUp.toggleOnTrue(new Climb());
-		driverDPadDown.toggleOnTrue(new ClimbRelease());
-		driverRT.toggleOnTrue(new SequentialCommandGroup(new ParallelCommandGroup(new AprilTagRotateCommand(camera1), new AprilTagTranslate(camera1)), new TurretAngle(camera1), new Shoot()));
-		driverA.whileTrue(new takeIn());
-		driverY.whileTrue(new spitOut());
-
-
-		//Operator buttons
-		operatorDPadUp.whileTrue(new ManualClimb());
-		operatorDPadDown.whileTrue(new ClimbRelease());
-
-
-		
 
 		NamedCommands.registerCommand("Shoot", new Shoot());
         NamedCommands.registerCommand("Climb", new Climb());
         NamedCommands.registerCommand("TurretAllign", new TurretAngle(camera1));
 		NamedCommands.registerCommand("TagAllignCommand", new AprilTagRotateCommand(camera1));
+
+		configureButtonBindings();
+
+		//driver buttons
+		driverB.whileTrue(new AprilTagRotateContinuous(camera1));
+		driverA.whileTrue(new AprilTagRotateCommand(camera1));
+		driverX.whileTrue(new AprilTagTranslate(camera1));
+		driverY.whileTrue(new AprilTagDistance(camera1));
+		//driverDPadUp.toggleOnTrue(new Climb());
+		//driverDPadDown.toggleOnTrue(new ClimbRelease());
+		//driverRT.toggleOnTrue(new SequentialCommandGroup(new ParallelCommandGroup(new AprilTagRotateCommand(camera1), new AprilTagTranslate(camera1)), new TurretAngle(camera1), new Shoot()));
+		//driverA.whileTrue(new takeIn());
+		//driverY.whileTrue(new spitOut());
+
+
+		//Operator buttons
+		//operatorDPadUp.whileTrue(new ManualAngle(true));
+		//operatorDPadDown.whileTrue(new ManualAngle(false));
+
+
 		
-		// Configure the button bindings
-		//driverB.whileTrue(chaseTagCommand);
+
+		
+	
 
 		// Configure default commands
 		m_robotDrive.setDefaultCommand(
 				// The left stick controls translation of the robot.
 				// Turning is controlled by the X axis of the right stick.
-				new RunCommand(
-						() -> m_robotDrive.drive(
-								-MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
-								-MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
-								-MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
-								true, true),
-						m_robotDrive));
+				new RunCommand(() -> m_robotDrive.drive(-MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),-MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),-MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),true, true),m_robotDrive));
 
 
 		autoChooser = AutoBuilder.buildAutoChooser();
 		SmartDashboard.putData("Auto Chooser", autoChooser);
+
+		
 	
 	}
 	

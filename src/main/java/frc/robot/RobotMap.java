@@ -7,10 +7,11 @@ public final class RobotMap {
     public static final int rightClimbMotor = 1;
     public static final int servoPort = 4;
 
-    public static final int turretMotor = 2;
+    public static final int turretLeft = 31;
+    public static final int turretRight = 32;
 
-    public static final int leftShitakeMotor = 4;
-    public static final int rightShitakeeMotor = 5;
+    public static final int leftShitakeMotor = 21;
+    public static final int rightShitakeeMotor = 22;
     public static final int beamBrakeChannel = 6;
 
     

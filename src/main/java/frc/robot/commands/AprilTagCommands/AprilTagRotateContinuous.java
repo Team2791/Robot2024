@@ -1,6 +1,5 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+//Continuously rotates to the april tag until button is released
+//Button : B
 
 package frc.robot.commands.AprilTagCommands;
 
@@ -29,12 +28,12 @@ public class AprilTagRotateContinuous extends Command {
 
   PhotonCamera camera;
   boolean done = false;
+  double setPoint = 320;
 
   private PIDController rotctl;
   /** Creates a new TagAllign. */
   public AprilTagRotateContinuous(PhotonCamera camera) {
     this.rotctl = new PIDController(Constants.RobotConstants.kATrotateP, Constants.RobotConstants.kATrotateI, Constants.RobotConstants.kATrotateD);
-    this.rotctl.setSetpoint(320);
 		this.rotctl.setTolerance(10);
     this.camera = camera;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -56,7 +55,8 @@ public class AprilTagRotateContinuous extends Command {
 		List<TargetCorner> corners = target.getDetectedCorners();
 
 		double targetX = corners.parallelStream().mapToDouble(c -> c.x).sum() / 4;
-		double rPower = rotctl.calculate(targetX);
+		double rPower = rotctl.calculate(targetX, setPoint);
+
     SmartDashboard.putData("Rotation PID controller", rotctl);
 
 		Robot.drivetrain.drive(0, 0, rPower, false, false);

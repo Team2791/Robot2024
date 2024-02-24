@@ -47,14 +47,16 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotInit() {
 
+		SmartDashboard.putString("Hello, if you cant find the autos, refer to the PathPlanner docs to remove the choosable sender","It should be a quick fix.");
+
 		m_robotContainer = new RobotContainer();
 		CameraServer.startAutomaticCapture();
 
-		climber = new Climber();
-		turret = new Turret();
-		shitake = new Shitake();
+		//climber = new Climber();
+		//turret = new Turret();
+		//shitake = new Shitake();
 		drivetrain = new DriveSubsystem();
-		led = new RGBLED();
+		//led = new RGBLED();
 		poseEstimator = new PoseEstimator(RobotContainer.camera1, drivetrain);
 
 		// Instantiate our RobotContainer. This will perform all our button bindings,

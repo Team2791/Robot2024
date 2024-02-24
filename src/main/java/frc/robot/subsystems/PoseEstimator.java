@@ -26,8 +26,8 @@ public class PoseEstimator extends SubsystemBase {
   DriveSubsystem drivetrain;
 
 
-  private static final Vector<N3> stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
-  private static final Vector<N3> visionMeasurementStdDevs = VecBuilder.fill(1.5, 1.5, 1.5);
+  private static final Vector<N3> stateStdDevs = VecBuilder.fill(1, 1, 1);
+  private static final Vector<N3> visionMeasurementStdDevs = VecBuilder.fill(.1, .1, .1);
 
   private final Field2d field2d = new Field2d();
   
@@ -78,7 +78,6 @@ public class PoseEstimator extends SubsystemBase {
   poseEstimator.update(drivetrain.getGyroscopeRotation(), drivetrain.getModulePositions());
   field2d.setRobotPose(getCurrentPose());
 
-  SmartDashboard.putString("Position", getCurrentPose().toString());
   
 }
 
