@@ -96,10 +96,10 @@ public class RobotContainer {
 
 
 
-		NamedCommands.registerCommand("Shoot", new Shoot());
+		/* NamedCommands.registerCommand("Shoot", new Shoot());
         NamedCommands.registerCommand("Climb", new Climb());
         NamedCommands.registerCommand("TurretAllign", new TurretAngle(camera1));
-		NamedCommands.registerCommand("TagAllignCommand", new AprilTagRotateCommand(camera1));
+		NamedCommands.registerCommand("TagAllignCommand", new AprilTagRotateCommand(camera1)); */
 
 		configureButtonBindings();
 
@@ -135,7 +135,7 @@ public class RobotContainer {
 		autoChooser = AutoBuilder.buildAutoChooser();
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 
-		
+
 	
 	}
 	
