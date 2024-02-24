@@ -11,23 +11,27 @@ import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.CAN;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.RobotMap;
 
-public class Shooter extends SubsystemBase {
+public class Shitake extends SubsystemBase {
 
   private CANSparkMax leftMotor;
   private CANSparkMax rightMotor;
+  private DigitalInput beamBrake;
   ;
   /** Creates a new Shooter. */
-  public Shooter() {
-    leftMotor = new CANSparkMax(RobotMap.leftShooterMotor, MotorType.kBrushless);
-    rightMotor = new CANSparkMax(RobotMap.rightShooterMotor, MotorType.kBrushless);
+  public Shitake() {
+    leftMotor = new CANSparkMax(RobotMap.leftShitakeMotor, MotorType.kBrushless);
+    rightMotor = new CANSparkMax(RobotMap.rightShitakeeMotor, MotorType.kBrushless);
     leftMotor.setIdleMode(IdleMode.kCoast);
     rightMotor.setIdleMode(IdleMode.kCoast);
+    beamBrake = new DigitalInput(RobotMap.beamBrakeChannel);
   }
 
   public void setShooter(double speed){
@@ -40,12 +44,40 @@ public class Shooter extends SubsystemBase {
     rightMotor.set(rightSpeed);
   }
 
+  public void takeIn(){
+    while(!beamBrake.get()){
+      leftMotor.set(.1);
+      rightMotor.set(.1);
+    }
+    stop();
+
+  }
+
+  public void spitOut(){
+    leftMotor.set(-.1);
+    rightMotor.set(-.1);
+  }
+
+  public void stop(){
+    leftMotor.set(0);
+    rightMotor.set(0);
+    leftMotor.setIdleMode(IdleMode.kBrake);
+    rightMotor.setIdleMode(IdleMode.kBrake);
+  }
+
+  public boolean isItIn(){
+    return beamBrake.get();
+  }
+
+
+
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Left Motor Speed", leftMotor.getEncoder().getVelocity());
     SmartDashboard.putNumber("Right Motor Velocity", rightMotor.getEncoder().getVelocity());
     SmartDashboard.putNumber("Left motor", leftMotor.get());
-    SmartDashboard.putNumber("Right Number", rightMotor.get());
+    SmartDashboard.putNumber("Right motor", rightMotor.get());
+    SmartDashboard.putBoolean("Beam Brake?", isItIn());
   }
 
   

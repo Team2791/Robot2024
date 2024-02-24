@@ -5,9 +5,11 @@
 package frc.robot.commands.ShooterCommands;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.commands.TurretCommands.TurretAngle;
 
 public class Shoot extends Command {
 
@@ -30,8 +32,40 @@ public class Shoot extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override 
   public void execute() {
-    power = setSpeed.calculate(1);
-    Robot.shooter.setShooter(power);
+
+
+    switch(TurretAngle.targetID){
+      case 4: // speaker tag
+        power = setSpeed.calculate(1);
+        SmartDashboard.putData("shooter PID controller", setSpeed);
+        Robot.shooter.setShooter(power);
+        if(setSpeed.atSetpoint()){
+          break;
+        }
+        
+      case 5: //amp tag
+        power = setSpeed.calculate(.4);
+        SmartDashboard.putData("shooter PID controller", setSpeed);
+        Robot.shooter.setShooter(power);
+        if(setSpeed.atSetpoint()){
+          break;
+        }
+      case 6: //amp tag
+        power = setSpeed.calculate(.4);
+        SmartDashboard.putData("shooter PID controller", setSpeed);
+        Robot.shooter.setShooter(power);
+        if(setSpeed.atSetpoint()){
+          break;
+        }
+      case 7: //speaker tag
+        power = setSpeed.calculate(1);
+        SmartDashboard.putData("shooter PID controller", setSpeed);
+        Robot.shooter.setShooter(power);
+        if(setSpeed.atSetpoint()){
+          break;
+        }
+    }
+
   }
 
   // Called once the command ends or is interrupted.

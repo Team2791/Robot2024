@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import frc.robot.subsystems.PoseEstimator;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -12,9 +13,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shitake;
 import frc.robot.subsystems.RGBLED;
-import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 
 /**
@@ -31,10 +31,11 @@ public class Robot extends TimedRobot {
 	public static Climber climber;
 	public static Turret turret;
 	private Command m_autonomousCommand;
-	public static Shooter shooter;
+	public static Shitake shooter;
 	public static DriveSubsystem drivetrain;
-	public static Intake intake;
+	public static Shitake shitake;
 	public static RGBLED led;
+	public static PoseEstimator poseEstimator;
 
 	private RobotContainer m_robotContainer;
 
@@ -45,18 +46,21 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
+
+		m_robotContainer = new RobotContainer();
 		CameraServer.startAutomaticCapture();
+
 		climber = new Climber();
 		turret = new Turret();
-		shooter = new Shooter();
+		shitake = new Shitake();
 		drivetrain = new DriveSubsystem();
-		intake = new Intake();
 		led = new RGBLED();
+		poseEstimator = new PoseEstimator(RobotContainer.camera1, drivetrain);
 
 		// Instantiate our RobotContainer. This will perform all our button bindings,
 		// and put our
 		// autonomous chooser on the dashboard.
-		m_robotContainer = new RobotContainer();
+		
 
 
 	}

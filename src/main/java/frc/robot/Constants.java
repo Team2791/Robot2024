@@ -7,6 +7,8 @@ package frc.robot;
 
 import com.revrobotics.CANSparkBase.IdleMode;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -130,9 +132,18 @@ public final class Constants {
 		public static final double kDriveDeadband = 0.05;
 	}
 	public static class VisionConstants {
-	public static final Transform3d CAMERA_TO_ROBOT =
-        new Transform3d(new Translation3d(-0.3425, 0.0, -0.233), new Rotation3d());
-    public static final Transform3d ROBOT_TO_CAMERA = CAMERA_TO_ROBOT.inverse();
+		/** Physical location of the apriltag camera on the robot, relative to the center of the robot. */
+		public static final Transform3d APRILTAG_CAMERA_TO_ROBOT = new Transform3d(new Translation3d(-0.06, 0.2, -0.2127),new Rotation3d(0.0, Units.degreesToRadians(15.0), Units.degreesToRadians(-3.0)));
+		
+		public static final double FIELD_LENGTH_METERS = 16.54;
+		public static final double FIELD_WIDTH_METERS = 8.21;
+	
+		// Pose on the opposite side of the field. Use with `relativeTo` to flip a pose to the opposite alliance
+		public static final Pose2d FLIPPING_POSE = new Pose2d(new Translation2d(FIELD_LENGTH_METERS, FIELD_WIDTH_METERS),new Rotation2d(Math.PI));
+	
+		/** Minimum target ambiguity. Targets with higher ambiguity will be discarded */
+		public static final double APRILTAG_AMBIGUITY_THRESHOLD = 0.2;
+
   	}
 
 	public static final class AutoConstants {
@@ -165,24 +176,34 @@ public final class Constants {
 
 	public static final class RobotConstants{
 		public static final double climbVoltage = 5;
-		public static final double CAMERA_HEIGHT_METERS = .1;
-		public static final double TARGET_HEIGHT_METERS = 3;
+		public static final double CAMERA_HEIGHT_METERS = .01;
 		public static final double CAMERA_PITCH_RADIANS = 0;
+		public static final double climbLocked = 90;
+		public static final int leftClimbPot = 3;
+		public static final int rightClimbPot = 4;
+
+		public static final int turretPot = 6;
 
 		
-		public static final double SpeakerHeight = 2;
+		public static final double SpeakerHeight = 2.045;
 		public static final double ShooterHeight = .5;
+
 
 		public static final double kShooterP = 1;
 		public static final double kShooterI = 1;
 		public static final double kShooterD = 1;
 
+
 		public static final double kATrotateP = .001;
 		public static final double kATrotateI = .0001;
 		public static final double kATrotateD = .00004;
 
+
 		public static final double kATtranslateP = .001;
 		public static final double kATtranslateI = .0001;
 		public static final double kATtranslateD = .00004;
+
 	}
+
+
 }

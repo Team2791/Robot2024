@@ -25,8 +25,9 @@ public class ClimbRelease extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    Robot.climber.unlock();
     timer = new Timer();
-    Robot.climber.climb(-.01);
+    Robot.climber.climb(.01);
     timer.start();
   }
 

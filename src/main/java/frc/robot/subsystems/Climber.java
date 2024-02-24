@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -24,6 +25,7 @@ public class Climber extends SubsystemBase {
   private CANSparkMax rightMotor;
   private AnalogPotentiometer leftPot, rightPot;
   AHRS gyro;
+  private Servo servo;
   public static DriveSubsystem drivetrain;
 
   /** Creates a new Climber. */
@@ -34,8 +36,9 @@ public class Climber extends SubsystemBase {
     gyro = new AHRS(Port.kMXP);
     leftMotor.setIdleMode(IdleMode.kBrake);
     rightMotor.setIdleMode(IdleMode.kBrake);
-    leftPot = new AnalogPotentiometer(0, 270, -148);
-    rightPot = new AnalogPotentiometer(1, 270, -148);
+    leftPot = new AnalogPotentiometer(Constants.RobotConstants.leftClimbPot, 270, -148);
+    rightPot = new AnalogPotentiometer(Constants.RobotConstants.rightClimbPot, 270, -148);
+    servo = new Servo(RobotMap.servoPort);
   }
 
   public double getRobotRoll(){
@@ -78,6 +81,18 @@ public class Climber extends SubsystemBase {
   public void setCoastMode(){
     rightMotor.setIdleMode(IdleMode.kCoast);
     leftMotor.setIdleMode(IdleMode.kCoast);
+  }
+
+  public boolean lockedIN(){
+    return servo.getAngle()>Constants.RobotConstants.climbLocked;
+  }
+
+  public void lockIN(){
+    servo.set(.8);
+  }
+
+  public void unlock(){
+    servo.set(-.8);
   }
 
   public double getLeftPot(){

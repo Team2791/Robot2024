@@ -36,6 +36,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Turret;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
@@ -97,9 +98,9 @@ public class RobotContainer {
 		driverB.whileTrue(new AprilTagRotateContinuous(camera1));
 		driverDPadUp.toggleOnTrue(new Climb());
 		driverDPadDown.toggleOnTrue(new ClimbRelease());
-		driverRT.toggleOnTrue(new SequentialCommandGroup(new AprilTagRotateCommand(camera1), new AprilTagTranslate(camera1), new TurretAngle(camera1), new Shoot()));
+		driverRT.toggleOnTrue(new SequentialCommandGroup(new ParallelCommandGroup(new AprilTagRotateCommand(camera1), new AprilTagTranslate(camera1)), new TurretAngle(camera1), new Shoot()));
 		driverA.whileTrue(new takeIn());
-		driverA.whileFalse(new spitOut());
+		driverY.whileTrue(new spitOut());
 
 
 		//Operator buttons
@@ -113,6 +114,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("Climb", new Climb());
         NamedCommands.registerCommand("TurretAllign", new TurretAngle(camera1));
 		NamedCommands.registerCommand("TagAllignCommand", new AprilTagRotateCommand(camera1));
+		
 		// Configure the button bindings
 		//driverB.whileTrue(chaseTagCommand);
 
@@ -146,13 +148,24 @@ public class RobotContainer {
 	 */
 	private void configureButtonBindings() {
 		new JoystickButton(m_driverController, Button.kR1.value).whileTrue(new RunCommand(() -> m_robotDrive.setX(),m_robotDrive));
+
+		//driver initializations
 		driverA = new JoystickButton(m_driverController, XboxController.Button.kA.value);
 		driverB = new JoystickButton(m_driverController, XboxController.Button.kB.value);
+		driverX = new JoystickButton(m_driverController, XboxController.Button.kX.value);
+		driverY = new JoystickButton(m_driverController, XboxController.Button.kY.value);
+		
 		driverDPadUp = new POVButton(m_driverController, 0);
 		driverDPadDown = new POVButton(m_driverController, 180);
+		driverDPadRight = new POVButton(m_driverController, 90);
+		driverDPadLeft = new POVButton(m_driverController, 270);
+
 		driverRT = new JoystickButton(m_driverController, XboxController.Axis.kRightTrigger.value);
+		driverLT = new JoystickButton(m_driverController, XboxController.Axis.kLeftTrigger.value);
 
 
+
+		//operator initializations
 		operatorDPadUp = new POVButton(m_operatorController, 0);
 		operatorDPadDown = new POVButton(m_operatorController, 180);
 	}

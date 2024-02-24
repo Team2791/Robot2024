@@ -16,6 +16,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -56,6 +57,7 @@ public class AprilTagRotateContinuous extends Command {
 
 		double targetX = corners.parallelStream().mapToDouble(c -> c.x).sum() / 4;
 		double rPower = rotctl.calculate(targetX);
+    SmartDashboard.putData("Rotation PID controller", rotctl);
 
 		Robot.drivetrain.drive(0, 0, rPower, false, false);
     

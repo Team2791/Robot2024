@@ -32,9 +32,9 @@ public class Climb extends Command {
   @Override
   public void initialize() {
   
-    if(!ClimberActivate.isActive)new ClimberActivate();
+    if(!ClimberActivate.isActive && !Robot.climber.lockedIN())new ClimberActivate();
     
-    Robot.climber.climb(.5);
+    Robot.climber.climb(-.5);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -43,15 +43,16 @@ public class Climb extends Command {
     robotRoll = Robot.climber.drivetrain.m_gyro.getRoll();
 
 
-    Robot.climber.climb(.1);
+    Robot.climber.climb(-.1);
 
     while(Robot.climber.getLeftMotorCurrent() > Constants.RobotConstants.climbVoltage && Robot.climber.getRightMotorCurrent() > Constants.RobotConstants.climbVoltage){
       Robot.led.setColor(0,0,255);
-      robotRoll = Robot.climber.drivetrain.m_gyro.getRoll();
+      robotRoll = -Robot.climber.drivetrain.m_gyro.getRoll();
 
-      if(robotRoll>0)Robot.climber.climb(robotRoll*.1, robotRoll*.5);
-      else if(robotRoll<0) Robot.climber.climb(robotRoll*.5, robotRoll*.1);
+      if(robotRoll>0)Robot.climber.climb(robotRoll*.01, robotRoll*.05);
+      else if(robotRoll<0) Robot.climber.climb(robotRoll*.05, robotRoll*.01);
       else Robot.climber.climb(.1);
+
 
 
     }

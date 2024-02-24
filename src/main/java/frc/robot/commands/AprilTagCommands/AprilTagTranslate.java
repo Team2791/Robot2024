@@ -15,7 +15,9 @@ import org.photonvision.targeting.TargetCorner;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -55,11 +57,15 @@ public class AprilTagTranslate extends Command {
 		PhotonTrackedTarget target = result.getBestTarget();
 		List<TargetCorner> corners = target.getDetectedCorners();
 
+    Pose2d pose = new Pose2d(target.getBestCameraToTarget().getX(), target.getBestCameraToTarget().getY(), target.getBestCameraToTarget().getRotation().toRotation2d());
+
 		double targetX = corners.parallelStream().mapToDouble(c -> c.x).sum() / 4;
 		double rPower = rotctl.calculate(targetX);
+    SmartDashboard.putData("Translate PID controller", rotctl);
 
 		drivetrain.drive(rPower, 0, 0, false, false);
     
+
     if(rotctl.atSetpoint()){
       done = true;
     }

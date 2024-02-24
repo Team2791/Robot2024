@@ -18,19 +18,18 @@ public class takeIn extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    Robot.led.setColor(255,0,0);
-    Robot.intake.takeIn();
+    Robot.led.setColor(0,0,255);
+    Robot.shitake.takeIn();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    if(Robot.intake.Intakemotor.getOutputCurrent() > 5){
+    if(Robot.shitake.isItIn()){
       Robot.led.setColor(0,255,0);
-	  intaked=true;
+	    intaked=true;
     }
-    
 
   }
 
@@ -38,7 +37,7 @@ public class takeIn extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    Robot.intake.stop();
+    Robot.shitake.stop();
   }
 
   // Returns true when the command should end.

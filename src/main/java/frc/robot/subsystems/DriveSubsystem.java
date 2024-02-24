@@ -23,11 +23,13 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.Constants.DriveConstants;
 import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.Arrays;
 import java.util.stream.IntStream;
+
 
 import org.photonvision.PhotonCamera;
 
@@ -84,7 +86,7 @@ public class DriveSubsystem extends SubsystemBase {
 		m_gyro.reset();
 
 		AutoBuilder.configureHolonomic(
-				this::getPose, // Robot pose supplier
+				this::getVisionPose, // Robot pose supplier
 				this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
 				this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
 				this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
@@ -140,6 +142,11 @@ public class DriveSubsystem extends SubsystemBase {
 	public Pose2d getPose() {
 		return m_odometry.getPoseMeters();
 	}
+	
+	public Pose2d getVisionPose(){
+		return Robot.poseEstimator.getCurrentPose();
+	}
+
 
 
 
@@ -316,14 +323,12 @@ public class DriveSubsystem extends SubsystemBase {
 
 
 
- 	public SwerveModulePosition[] getModulePositions() {
-		SwerveModulePosition arr[] = new SwerveModulePosition[4];
-		arr[0] = m_frontLeft.getPosition();
-		arr[1] = m_frontRight.getPosition();
-		arr[2] = m_rearLeft.getPosition();
-		arr[3] = m_rearRight.getPosition();
-    	return arr;
-  }
+	public SwerveModulePosition[] getModulePositions() {
+		MAXSwerveModule[] mods = new MAXSwerveModule[]{m_frontLeft, m_frontRight, m_rearLeft, m_rearRight};
+		
+		return Arrays.stream(mods).map(MAXSwerveModule::getPosition).toArray(SwerveModulePosition[]::new);
+	}
+
 
   public Rotation2d getGyroscopeRotation() {
     return Rotation2d.fromDegrees(m_gyro.getAngle());
