@@ -28,14 +28,9 @@ import frc.robot.Constants.DriveConstants;
 import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.Arrays;
-import java.util.stream.IntStream;
-
-
-import org.photonvision.PhotonCamera;
 
 public class DriveSubsystem extends SubsystemBase {
 
-	private final PhotonCamera camera1 = new PhotonCamera("2791camera");
 	// Create MAXSwerveModules
 	private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
 			DriveConstants.kFrontLeftDrivingCanId,
@@ -86,7 +81,7 @@ public class DriveSubsystem extends SubsystemBase {
 		m_gyro.reset();
 
 		AutoBuilder.configureHolonomic(
-				this::getVisionPose, // Robot pose supplier
+				this::getPose, // Robot pose supplier
 				this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
 				this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
 				this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
