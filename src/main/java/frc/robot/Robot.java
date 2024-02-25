@@ -4,10 +4,11 @@
 
 package frc.robot;
 
+import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.cameraserver.CameraServer;
 import frc.robot.subsystems.PoseEstimator;
+import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -36,6 +37,7 @@ public class Robot extends TimedRobot {
 	public static Shintake shintake;
 	public static RGBLED led;
 	public static PoseEstimator poseEstimator;
+	public static AHRS gyro;
 
 	private RobotContainer m_robotContainer;
 
@@ -58,6 +60,7 @@ public class Robot extends TimedRobot {
 		drivetrain = new DriveSubsystem();
 		led = new RGBLED();
 		poseEstimator = new PoseEstimator(RobotContainer.camera1, drivetrain);
+		gyro = new AHRS(Port.kMXP);
 
 		// Instantiate our RobotContainer. This will perform all our button bindings,
 		// and put our

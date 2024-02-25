@@ -3,7 +3,6 @@
 package frc.robot;
 
 public final class RobotMap {
-	// PDP 14 = wrist motor
 
     public static final int leftClimbMotor = 61;
     public static final int rightClimbMotor = 61;
