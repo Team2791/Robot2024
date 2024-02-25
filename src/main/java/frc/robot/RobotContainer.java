@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.PathFinder;
 import frc.robot.commands.AprilTagCommands.AprilTagDistance;
 import frc.robot.commands.AprilTagCommands.AprilTagRotateCommand;
 import frc.robot.commands.AprilTagCommands.AprilTagRotateContinuous;
@@ -53,6 +54,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.photonvision.PhotonCamera;
 import java.security.spec.KeySpec;
 import java.util.List;
+import java.util.logging.Level;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -74,13 +76,16 @@ public class RobotContainer {
 	private final XboxController m_operatorController;
 	public static PhotonCamera camera1 = new PhotonCamera("2791camera");
 
+	public static PathFinder pathToAmp = new PathFinder(new Pose2d(14.57,7.21,new Rotation2d(90)));
+	public static PathFinder pathToSpeaker = new PathFinder(new Pose2d(15.15,5.52, new Rotation2d(0)));
+
 	// The robot's subsystems
 	//private final DriveSubsystem m_robotDrive = new DriveSubsystem();
 
 
 	// The driver's controller
 	
-	private Trigger driverX, driverY, driverA, driverB, driverLB, driverRB, driverLT, driverRT;
+	private Trigger driverX, driverY, driverA, driverB, driverLB, driverRB, driverLT, driverRT, driverStart, driverBack;
 	private Trigger operatorX, opeY, operatorA, operatorB, operatorLB, operatorRB, operatorLT, operatorRT;
 
 	private Trigger driverDPadUp, driverDPadDown, driverDPadLeft, driverDPadRight, driverLeftStick;
@@ -107,6 +112,9 @@ public class RobotContainer {
 		driverA.whileTrue(new AprilTagRotateCommand(camera1));
 		driverX.whileTrue(new AprilTagTranslate(camera1));
 		driverY.whileTrue(new AprilTagDistance(camera1));
+		driverStart.toggleOnTrue(pathToAmp);
+		driverBack.toggleOnTrue(pathToSpeaker);
+		
 		//driverDPadUp.toggleOnTrue(new Climb());
 		//driverDPadDown.toggleOnTrue(new ClimbRelease());
 		//driverRT.toggleOnTrue(new SequentialCommandGroup(new ParallelCommandGroup(new AprilTagRotateCommand(camera1), new AprilTagTranslate(camera1)), new TurretAngle(camera1), new Shoot()));
@@ -165,7 +173,8 @@ public class RobotContainer {
 		driverRT = new JoystickButton(m_driverController, XboxController.Axis.kRightTrigger.value);
 		driverLT = new JoystickButton(m_driverController, XboxController.Axis.kLeftTrigger.value);
 
-
+		driverStart = new JoystickButton(m_driverController, XboxController.Button.kStart.value);
+		driverBack = new JoystickButton(m_driverController, XboxController.Button.kBack.value);
 
 		//operator initializations
 		operatorDPadUp = new POVButton(m_operatorController, 0);
