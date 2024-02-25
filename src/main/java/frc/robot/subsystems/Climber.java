@@ -36,8 +36,8 @@ public class Climber extends SubsystemBase {
     gyro = new AHRS(Port.kMXP);
     leftMotor.setIdleMode(IdleMode.kBrake);
     rightMotor.setIdleMode(IdleMode.kBrake);
-    leftPot = new AnalogPotentiometer(Constants.RobotConstants.leftClimbPot, 270, -148);
-    rightPot = new AnalogPotentiometer(Constants.RobotConstants.rightClimbPot, 270, -148);
+    leftPot = new AnalogPotentiometer(Constants.ClimberConstants.leftClimbPot, 270, -148);
+    rightPot = new AnalogPotentiometer(Constants.ClimberConstants.rightClimbPot, 270, -148);
     servo = new Servo(RobotMap.servoPort);
   }
 
@@ -84,7 +84,7 @@ public class Climber extends SubsystemBase {
   }
 
   public boolean lockedIN(){
-    return servo.getAngle()>Constants.RobotConstants.climbLocked;
+    return servo.getAngle()>Constants.ClimberConstants.climbLocked;
   }
 
   public void lockIN(){

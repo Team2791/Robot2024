@@ -33,7 +33,7 @@ public class AprilTagRotateContinuous extends Command {
   private PIDController rotctl;
   /** Creates a new TagAllign. */
   public AprilTagRotateContinuous(PhotonCamera camera) {
-    this.rotctl = new PIDController(Constants.RobotConstants.kATrotateP, Constants.RobotConstants.kATrotateI, Constants.RobotConstants.kATrotateD);
+    this.rotctl = new PIDController(Constants.AprilTagCommandsConstants.kATrotateP, Constants.AprilTagCommandsConstants.kATrotateI, Constants.AprilTagCommandsConstants.kATrotateD);
 		this.rotctl.setTolerance(10);
     this.camera = camera;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -59,7 +59,7 @@ public class AprilTagRotateContinuous extends Command {
 
     SmartDashboard.putData("Rotation PID controller", rotctl);
 
-		Robot.drivetrain.drive(0, 0, rPower, false, false);
+		Robot.m_robotDrive.drive(0, 0, rPower, false, false);
     
 
   }
@@ -67,7 +67,7 @@ public class AprilTagRotateContinuous extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    Robot.drivetrain.stopModules();
+    Robot.m_robotDrive.stopModules();
   }
 
   // Returns true when the command should end.

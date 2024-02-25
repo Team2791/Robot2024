@@ -32,7 +32,7 @@ public class AprilTagRotateCommand extends Command {
   private PIDController rotctl;
   /** Creates a new TagAllign. */
   public AprilTagRotateCommand(PhotonCamera camera) {
-    this.rotctl = new PIDController(Constants.RobotConstants.kATrotateP, Constants.RobotConstants.kATrotateI, Constants.RobotConstants.kATrotateD);
+    this.rotctl = new PIDController(Constants.AprilTagCommandsConstants.kATrotateP, Constants.AprilTagCommandsConstants.kATrotateI, Constants.AprilTagCommandsConstants.kATrotateD);
 		this.rotctl.setTolerance(10);
     this.camera = camera;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -57,7 +57,7 @@ public class AprilTagRotateCommand extends Command {
 		double targetX = corners.parallelStream().mapToDouble(c -> c.x).sum() / 4;
 		double rPower = rotctl.calculate(targetX, setPoint);
 
-		Robot.drivetrain.drive(0, 0, rPower, false, false);
+		Robot.m_robotDrive.drive(0, 0, rPower, false, false);
 
     if(rotctl.atSetpoint()){
       done=true;
@@ -70,7 +70,7 @@ public class AprilTagRotateCommand extends Command {
   @Override
   public void end(boolean interrupted) {
     Robot.led.setColor(0,255,0);
-    Robot.drivetrain.stopModules();
+    Robot.m_robotDrive.stopModules();
   }
 
   // Returns true when the command should end.

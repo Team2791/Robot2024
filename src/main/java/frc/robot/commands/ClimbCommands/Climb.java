@@ -39,7 +39,7 @@ public class Climb extends Command {
 
     Robot.climber.climb(-.1);
 
-    while(Robot.climber.getLeftMotorCurrent() > Constants.RobotConstants.climbVoltage && Robot.climber.getRightMotorCurrent() > Constants.RobotConstants.climbVoltage){
+    while(Robot.climber.getLeftMotorCurrent() > Constants.ClimberConstants.climbVoltage && Robot.climber.getRightMotorCurrent() > Constants.ClimberConstants.climbVoltage){
       Robot.led.setColor(0,0,255);
       robotRoll = -Robot.gyro.getRoll();
 

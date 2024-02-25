@@ -10,9 +10,11 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -30,6 +32,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.Arrays;
 
 public class DriveSubsystem extends SubsystemBase {
+
 
 	// Create MAXSwerveModules
 	private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
@@ -53,7 +56,7 @@ public class DriveSubsystem extends SubsystemBase {
 			DriveConstants.kBackRightChassisAngularOffset);
 
 	// The gyro sensor
-	public static AHRS m_gyro = new AHRS(Port.kMXP);
+	public AHRS m_gyro = new AHRS(Port.kMXP);
 
 	// Slew rate filter variables for controlling lateral acceleration
 	private double m_currentRotation = 0.0;
@@ -68,12 +71,7 @@ public class DriveSubsystem extends SubsystemBase {
 	SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
 			DriveConstants.kDriveKinematics,
 			Rotation2d.fromDegrees(m_gyro.getAngle()),
-			new SwerveModulePosition[] {
-					m_frontLeft.getPosition(),
-					m_frontRight.getPosition(),
-					m_rearLeft.getPosition(),
-					m_rearRight.getPosition()
-			});
+			new SwerveModulePosition[] {m_frontLeft.getPosition(),m_frontRight.getPosition(),m_rearLeft.getPosition(),m_rearRight.getPosition()}); // initializes initial robot position.
 
 	/** Creates a new DriveSubsystem. */
 	public DriveSubsystem() {
@@ -298,6 +296,7 @@ public class DriveSubsystem extends SubsystemBase {
 	public void zeroHeading() {
 		m_gyro.reset();
 	}
+
 
 	/**
 	 * Returns the heading of the robot.

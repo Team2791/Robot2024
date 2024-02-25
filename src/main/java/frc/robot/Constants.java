@@ -86,13 +86,12 @@ public final class Constants {
 
 		// Calculations required for driving motor conversion factors and feed forward
 		public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
-		public static final double kWheelDiameterMeters = 0.0762;
+		public static final double kWheelDiameterMeters = 0.0762; //0.08636 on new bot
 		public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
 		// 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
 		// teeth on the bevel pinion
 		public static final double kDrivingMotorReduction = (45.0 * 22) / (kDrivingMotorPinionTeeth * 15);
-		public static final double kDriveWheelFreeSpeedRps = (kDrivingMotorFreeSpeedRps * kWheelCircumferenceMeters)
-				/ kDrivingMotorReduction;
+		public static final double kDriveWheelFreeSpeedRps = (kDrivingMotorFreeSpeedRps * kWheelCircumferenceMeters)/ kDrivingMotorReduction;
 
 		public static final double kDrivingEncoderPositionFactor = (kWheelDiameterMeters * Math.PI)
 				/ kDrivingMotorReduction; // meters
@@ -174,48 +173,58 @@ public final class Constants {
 		public static final double kFreeSpeedRpm = 5676;
 	}
 
-	public static final class RobotConstants{
+	public static final class ClimberConstants{
 		public static final double climbVoltage = 5;
-		public static final double CAMERA_HEIGHT_METERS = .01;
-		public static final double CAMERA_PITCH_RADIANS = 0;
 		public static final double climbLocked = 90;
 		public static final int leftClimbPot = 3;
 		public static final int rightClimbPot = 4;
-
-		public static final int turretPot = 6;
-
-		
-		public static final double SpeakerHeight = 2.045;
-		public static final double ShooterHeight = .5;
-
-
-		public static final double kShooterP = 1;
-		public static final double kShooterI = 1;
-		public static final double kShooterD = 1;
-
-
-		public static final double kATrotateP = .001;
-		public static final double kATrotateI = .0001;
-		public static final double kATrotateD = .00004;
-
-
-		public static final double kATtranslateP = .001;
-		public static final double kATtranslateI = .0001;
-		public static final double kATtranslateD = .00004;
-
-		public static final double turretLeftP = 1;
-		public static final double turretLeftI = 0;
-		public static final double turretLeftD = 0;
-		public static final double turretLeftFF = 0;
-
-		public static final double turretRightP = 0;
-		public static final double turretRightI = 0;
-		public static final double turretRightD = 0;
-		public static final double turretRightFF = 1;
-
-
-
 	}
 
+		public static final class ArmConstants{
 
+			public static final int armPot = 6;
+
+			public static final double armLP = 1;
+			public static final double armLI = 0;
+			public static final double armLD = 0;
+			public static final double armLFF = 0;
+
+			public static final double armRP = 0;
+			public static final double armRI = 0;
+			public static final double armRD = 0;
+			public static final double armRFF = 1;
+
+			
+			public static final double SpeakerHeight = 2.045;
+			public static final double ShooterHeight = .5;
+
+		}
+
+		public static final class ShintakeConstants{
+
+
+			public static final double kShooterP = 1;
+			public static final double kShooterI = 1;
+			public static final double kShooterD = 1;
+		}
+
+
+
+		public static final class AprilTagCommandsConstants{
+
+			public static final double CAMERA_HEIGHT_METERS = .01;
+			public static final double CAMERA_PITCH_RADIANS = 0;
+
+			public static final double kATrotateP = .001;
+			public static final double kATrotateI = .0001;
+			public static final double kATrotateD = .00004;
+
+
+			public static final double kATtranslateP = .001;
+			public static final double kATtranslateI = .0001;
+			public static final double kATtranslateD = .00004;
+		}
 }
+
+
+		

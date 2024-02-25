@@ -32,10 +32,10 @@ public class Arm extends SubsystemBase {
   public Arm() {
     turretLeft = new CANSparkMax(RobotMap.turretLeft, MotorType.kBrushless);
     turretRight = new CANSparkMax(RobotMap.turretRight, MotorType.kBrushless);
-    turretpot = new AnalogPotentiometer(Constants.RobotConstants.turretPot,90,244);
+    turretpot = new AnalogPotentiometer(Constants.ArmConstants.armPot,90,244);
 
-    leftPID = new PIDController(Constants.RobotConstants.turretLeftP, Constants.RobotConstants.turretLeftI, Constants.RobotConstants.turretLeftD);
-    rightPID = new PIDController(Constants.RobotConstants.turretRightP, Constants.RobotConstants.turretRightI, Constants.RobotConstants.turretRightD);
+    leftPID = new PIDController(Constants.ArmConstants.armLP, Constants.ArmConstants.armLI, Constants.ArmConstants.armLD);
+    rightPID = new PIDController(Constants.ArmConstants.armRP, Constants.ArmConstants.armRI, Constants.ArmConstants.armRD);
     setAngle = turretpot.get();
 
     turretLeft.setIdleMode(IdleMode.kBrake);
@@ -93,8 +93,8 @@ public class Arm extends SubsystemBase {
     SmartDashboard.putData("Left Turret PID", leftPID);
     SmartDashboard.putData("Right Turret PID", rightPID);
 
-    turretLeft.set(leftPID.calculate(turretpot.get(),setAngle)+Fg*Constants.RobotConstants.turretLeftFF);
-    turretRight.set(rightPID.calculate(turretpot.get(),setAngle)+Fg*Constants.RobotConstants.turretRightFF);
+    turretLeft.set(leftPID.calculate(turretpot.get(),setAngle)+Fg*Constants.ArmConstants.armLFF);
+    turretRight.set(rightPID.calculate(turretpot.get(),setAngle)+Fg*Constants.ArmConstants.armRFF);
 
     // This method will be called once per scheduler run
   }

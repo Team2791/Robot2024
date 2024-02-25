@@ -26,14 +26,13 @@ import frc.robot.subsystems.DriveSubsystem;
 public class AprilTagTranslate extends Command {
 
   PhotonCamera camera;
-  DriveSubsystem drivetrain;
   boolean done = false;
   double setPoint = 320;
 
   private PIDController rotctl;
   /** Creates a new TagAllign. */
   public AprilTagTranslate(PhotonCamera camera) {
-    this.rotctl = new PIDController(Constants.RobotConstants.kATtranslateP, Constants.RobotConstants.kATtranslateI, Constants.RobotConstants.kATtranslateD);
+    this.rotctl = new PIDController(Constants.AprilTagCommandsConstants.kATtranslateP, Constants.AprilTagCommandsConstants.kATtranslateI, Constants.AprilTagCommandsConstants.kATtranslateD);
     this.rotctl.setSetpoint(320);
 		this.rotctl.setTolerance(10);
     this.camera = camera;
@@ -61,7 +60,7 @@ public class AprilTagTranslate extends Command {
 		double rPower = rotctl.calculate(targetX, setPoint);
     SmartDashboard.putData("Translation PID controller", rotctl);
 
-		Robot.drivetrain.drive(rPower, 0, 0, false, false);
+		Robot.m_robotDrive.drive(rPower, 0, 0, false, false);
     
 
     if(rotctl.atSetpoint()){
@@ -73,7 +72,7 @@ public class AprilTagTranslate extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    drivetrain.stopModules();
+    Robot.m_robotDrive.stopModules();
   }
 
   // Returns true when the command should end.

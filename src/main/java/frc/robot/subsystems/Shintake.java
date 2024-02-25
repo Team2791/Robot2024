@@ -26,7 +26,7 @@ public class Shintake extends SubsystemBase {
   public Shintake() {
     leftMotor = new CANSparkMax(RobotMap.leftShitakeMotor, MotorType.kBrushless);
     rightMotor = new CANSparkMax(RobotMap.rightShitakeeMotor, MotorType.kBrushless);
-    speedController = new PIDController(Constants.RobotConstants.kShooterP, Constants.RobotConstants.kShooterI, Constants.RobotConstants.kShooterD);
+    speedController = new PIDController(Constants.ShintakeConstants.kShooterP, Constants.ShintakeConstants.kShooterI, Constants.ShintakeConstants.kShooterD);
     speedController.setTolerance(.01);
     leftMotor.setIdleMode(IdleMode.kCoast);
     rightMotor.setIdleMode(IdleMode.kCoast);

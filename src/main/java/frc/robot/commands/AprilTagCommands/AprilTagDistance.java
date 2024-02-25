@@ -36,8 +36,7 @@ public class AprilTagDistance extends Command {
 
 		if (!result.hasTargets()) return;
 
-		PhotonTrackedTarget target = result.getBestTarget();
-    range = PhotonUtils.calculateDistanceToTargetMeters(Constants.RobotConstants.CAMERA_HEIGHT_METERS,1.32,Constants.RobotConstants.CAMERA_PITCH_RADIANS,Units.degreesToRadians(result.getBestTarget().getPitch()));
+    range = PhotonUtils.calculateDistanceToTargetMeters(Constants.AprilTagCommandsConstants.CAMERA_HEIGHT_METERS,1.32,Constants.AprilTagCommandsConstants.CAMERA_PITCH_RADIANS,Units.degreesToRadians(result.getBestTarget().getPitch()));
     SmartDashboard.putNumber("Distance", range);
 
   }

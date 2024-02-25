@@ -6,7 +6,11 @@ package frc.robot;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.hal.AllianceStationID;
+import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.subsystems.PoseEstimator;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -33,12 +37,12 @@ public class Robot extends TimedRobot {
 	public static Arm arm;
 	private Command m_autonomousCommand;
 	public static Shintake shooter;
-	public static DriveSubsystem drivetrain;
+	public static DriveSubsystem m_robotDrive;
 	public static Shintake shintake;
 	public static RGBLED led;
 	public static PoseEstimator poseEstimator;
 	public static AHRS gyro;
-
+	DriverStation.Alliance color;
 	private RobotContainer m_robotContainer;
 
 	/**
@@ -49,6 +53,8 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotInit() {
 
+		
+
 		SmartDashboard.putString("Hello, if you cant find the autos, refer to the PathPlanner docs to remove the choosable sender","It should be a quick fix.");
 
 		m_robotContainer = new RobotContainer();
@@ -57,10 +63,17 @@ public class Robot extends TimedRobot {
 		climber = new Climber();
 		arm = new Arm();
 		shintake = new Shintake();
-		drivetrain = new DriveSubsystem();
+		m_robotDrive = new DriveSubsystem();
 		led = new RGBLED();
-		poseEstimator = new PoseEstimator(RobotContainer.camera1, drivetrain);
-		gyro = new AHRS(Port.kMXP);
+		poseEstimator = new PoseEstimator(RobotContainer.camera1, m_robotDrive);
+		gyro = m_robotDrive.m_gyro;
+
+	
+		m_robotDrive.resetOdometry(poseEstimator.getCurrentPose());
+
+		
+		color = DriverStation.getAlliance().get();
+		
 
 		// Instantiate our RobotContainer. This will perform all our button bindings,
 		// and put our
@@ -158,4 +171,5 @@ public class Robot extends TimedRobot {
 	@Override
 	public void testPeriodic() {
 	}
+
 }

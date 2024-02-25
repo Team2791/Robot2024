@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.hal.AllianceStationID;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -16,6 +17,8 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
@@ -24,6 +27,8 @@ import frc.robot.commands.AprilTagCommands.AprilTagDistance;
 import frc.robot.commands.AprilTagCommands.AprilTagRotateCommand;
 import frc.robot.commands.AprilTagCommands.AprilTagRotateContinuous;
 import frc.robot.commands.AprilTagCommands.AprilTagTranslate;
+import frc.robot.commands.ArmCommands.ManualAngle;
+import frc.robot.commands.ArmCommands.TurretAngle;
 import frc.robot.commands.ClimbCommands.Climb;
 import frc.robot.commands.ClimbCommands.ClimbRelease;
 import frc.robot.commands.ClimbCommands.ClimberActivate;
@@ -31,8 +36,6 @@ import frc.robot.commands.ClimbCommands.ManualClimb;
 import frc.robot.commands.IntakeCommands.spitOut;
 import frc.robot.commands.IntakeCommands.takeIn;
 import frc.robot.commands.ShooterCommands.Shoot;
-import frc.robot.commands.TurretCommands.ManualAngle;
-import frc.robot.commands.TurretCommands.TurretAngle;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Arm;
@@ -72,12 +75,8 @@ public class RobotContainer {
 	public static PhotonCamera camera1 = new PhotonCamera("2791camera");
 
 	// The robot's subsystems
-	private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+	//private final DriveSubsystem m_robotDrive = new DriveSubsystem();
 
-
-
-	//commands
-	private final Climber climb = new Climber();
 
 	// The driver's controller
 	
@@ -126,10 +125,10 @@ public class RobotContainer {
 	
 
 		// Configure default commands
-		m_robotDrive.setDefaultCommand(
+		Robot.m_robotDrive.setDefaultCommand(
 				// The left stick controls translation of the robot.
 				// Turning is controlled by the X axis of the right stick.
-				new RunCommand(() -> m_robotDrive.drive(-MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),-MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),-MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),true, true),m_robotDrive));
+				new RunCommand(() -> Robot.m_robotDrive.drive(-MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),-MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),-MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),true, true),Robot.m_robotDrive));
 
 
 		autoChooser = AutoBuilder.buildAutoChooser();
@@ -150,7 +149,7 @@ public class RobotContainer {
 	 * {@link JoystickButton}.
 	 */
 	private void configureButtonBindings() {
-		new JoystickButton(m_driverController, Button.kR1.value).whileTrue(new RunCommand(() -> m_robotDrive.setX(),m_robotDrive));
+		new JoystickButton(m_driverController, Button.kR1.value).whileTrue(new RunCommand(() -> Robot.m_robotDrive.setX(),Robot.m_robotDrive));
 
 		//driver initializations
 		driverA = new JoystickButton(m_driverController, XboxController.Button.kA.value);
@@ -174,8 +173,9 @@ public class RobotContainer {
 	}
 
 
-
 	public Command getAutonomousCommand() {
 		return autoChooser.getSelected();
 	}
+
+	
 }
