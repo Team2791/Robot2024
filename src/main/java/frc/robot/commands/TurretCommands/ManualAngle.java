@@ -22,15 +22,15 @@ public class ManualAngle extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(direction)Robot.turret.moveUp();
-    else { Robot.turret.moveDown();}
+    if(direction)Robot.arm.moveUp();
+    else { Robot.arm.moveDown();}
     
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    Robot.turret.hold();
+    Robot.arm.hold();
   }
 
   // Returns true when the command should end.

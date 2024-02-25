@@ -32,24 +32,24 @@ public class Shoot extends Command {
       case 4: // speaker tag
 
         Robot.shooter.setShooter(1);
-        if(Robot.shitake.speedController.atSetpoint()){
+        if(Robot.shintake.speedController.atSetpoint()){
           break;
         }
         
       case 5: //amp tag
         Robot.shooter.setShooter(.4);
-        if(Robot.shitake.speedController.atSetpoint()){
+        if(Robot.shintake.speedController.atSetpoint()){
           break;
         }
       case 6: //amp tag
         Robot.shooter.setShooter(.4);
-        if(Robot.shitake.speedController.atSetpoint()){
+        if(Robot.shintake.speedController.atSetpoint()){
           break;
         }
       case 7: //speaker tag
 
         Robot.shooter.setShooter(1);
-        if(Robot.shitake.speedController.atSetpoint()){
+        if(Robot.shintake.speedController.atSetpoint()){
           break;
         }
     }

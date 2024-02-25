@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotMap;
 
-public class Shitake extends SubsystemBase {
+public class Shintake extends SubsystemBase {
 
   private CANSparkMax leftMotor;
   private CANSparkMax rightMotor;
@@ -26,7 +26,7 @@ public class Shitake extends SubsystemBase {
   public PIDController speedController;
   double power;
   /** Creates a new Shooter. */
-  public Shitake() {
+  public Shintake() {
     leftMotor = new CANSparkMax(RobotMap.leftShitakeMotor, MotorType.kBrushless);
     rightMotor = new CANSparkMax(RobotMap.rightShitakeeMotor, MotorType.kBrushless);
     speedController = new PIDController(Constants.RobotConstants.kShooterP, Constants.RobotConstants.kShooterI, Constants.RobotConstants.kShooterD);

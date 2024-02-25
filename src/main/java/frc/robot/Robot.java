@@ -13,9 +13,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.Shitake;
+import frc.robot.subsystems.Shintake;
 import frc.robot.subsystems.RGBLED;
-import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.Arm;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -29,11 +29,11 @@ import frc.robot.subsystems.Turret;
 public class Robot extends TimedRobot {
 
 	public static Climber climber;
-	public static Turret turret;
+	public static Arm arm;
 	private Command m_autonomousCommand;
-	public static Shitake shooter;
+	public static Shintake shooter;
 	public static DriveSubsystem drivetrain;
-	public static Shitake shitake;
+	public static Shintake shintake;
 	public static RGBLED led;
 	public static PoseEstimator poseEstimator;
 
@@ -53,8 +53,8 @@ public class Robot extends TimedRobot {
 		CameraServer.startAutomaticCapture();
 
 		climber = new Climber();
-		turret = new Turret();
-		shitake = new Shitake();
+		arm = new Arm();
+		shintake = new Shintake();
 		drivetrain = new DriveSubsystem();
 		led = new RGBLED();
 		poseEstimator = new PoseEstimator(RobotContainer.camera1, drivetrain);

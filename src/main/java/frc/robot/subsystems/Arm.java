@@ -17,7 +17,7 @@ import frc.robot.Constants;
 import frc.robot.RobotMap;
 
 
-public class Turret extends SubsystemBase {
+public class Arm extends SubsystemBase {
   PhotonCamera camera;
 
   private CANSparkMax turretLeft;
@@ -29,7 +29,7 @@ public class Turret extends SubsystemBase {
   private double Fg;
   public double setAngle;
   /** Creates a new Turret. */
-  public Turret() {
+  public Arm() {
     turretLeft = new CANSparkMax(RobotMap.turretLeft, MotorType.kBrushless);
     turretRight = new CANSparkMax(RobotMap.turretRight, MotorType.kBrushless);
     turretpot = new AnalogPotentiometer(Constants.RobotConstants.turretPot,90,244);

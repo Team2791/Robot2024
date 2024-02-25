@@ -10,7 +10,6 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -52,7 +51,7 @@ public class TurretAngle extends Command {
 
         range = PhotonUtils.calculateDistanceToTargetMeters(Constants.RobotConstants.CAMERA_HEIGHT_METERS,AprilTagFields.k2024Crescendo.loadAprilTagLayoutField().getTagPose(targetID).get().getZ(),Constants.RobotConstants.CAMERA_PITCH_RADIANS,Units.degreesToRadians(result.getBestTarget().getPitch()));
         angle = Math.atan(Constants.RobotConstants.SpeakerHeight-Constants.RobotConstants.ShooterHeight/range);
-        Robot.turret.setAngle(angle);
+        Robot.arm.setAngle(angle);
         Robot.led.setColor(0,255,0);
         angleSet = true;
       break;
@@ -60,21 +59,21 @@ public class TurretAngle extends Command {
         range = PhotonUtils.calculateDistanceToTargetMeters(Constants.RobotConstants.CAMERA_HEIGHT_METERS,AprilTagFields.k2024Crescendo.loadAprilTagLayoutField().getTagPose(targetID).get().getZ(),Constants.RobotConstants.CAMERA_PITCH_RADIANS,Units.degreesToRadians(result.getBestTarget().getPitch()));
         angle = Math.atan(Constants.RobotConstants.SpeakerHeight-Constants.RobotConstants.ShooterHeight/range);
 
-        Robot.turret.setAngle(angle);
+        Robot.arm.setAngle(angle);
         Robot.led.setColor(0,255,0);
         angleSet = true;
       case 6:
         range = PhotonUtils.calculateDistanceToTargetMeters(Constants.RobotConstants.CAMERA_HEIGHT_METERS,AprilTagFields.k2024Crescendo.loadAprilTagLayoutField().getTagPose(targetID).get().getZ(),Constants.RobotConstants.CAMERA_PITCH_RADIANS,Units.degreesToRadians(result.getBestTarget().getPitch()));
         angle = Math.atan(Constants.RobotConstants.SpeakerHeight-Constants.RobotConstants.ShooterHeight/range);
 
-        Robot.turret.setAngle(angle);
+        Robot.arm.setAngle(angle);
         Robot.led.setColor(0,255,0);
         angleSet = true;
       case 7:
         range = PhotonUtils.calculateDistanceToTargetMeters(Constants.RobotConstants.CAMERA_HEIGHT_METERS,AprilTagFields.k2024Crescendo.loadAprilTagLayoutField().getTagPose(targetID).get().getZ(),Constants.RobotConstants.CAMERA_PITCH_RADIANS,Units.degreesToRadians(result.getBestTarget().getPitch()));
         angle = Math.atan(Constants.RobotConstants.SpeakerHeight-Constants.RobotConstants.ShooterHeight/range);
 
-        Robot.turret.setAngle(angle);
+        Robot.arm.setAngle(angle);
         Robot.led.setColor(0,255,0);
         angleSet = true;
       default :
