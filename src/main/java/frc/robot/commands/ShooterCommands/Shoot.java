@@ -5,6 +5,7 @@
 package frc.robot.commands.ShooterCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.ArmCommands.TurretAngle;
 
@@ -31,25 +32,26 @@ public class Shoot extends Command {
     switch(TurretAngle.targetID){
       case 4: // speaker tag
 
-        Robot.shooter.setShooter(1);
+        Robot.shooter.setShooter(Constants.ShintakeConstants.speakerSpeed);
         if(Robot.shintake.speedController.atSetpoint()){
           break;
         }
         
       case 5: //amp tag
-        Robot.shooter.setShooter(.4);
+        Robot.shooter.setShooter(Constants.ShintakeConstants.ampSpeed);
         if(Robot.shintake.speedController.atSetpoint()){
           break;
         }
       case 6: //amp tag
-        Robot.shooter.setShooter(.4);
+        Robot.shooter.setShooter(Constants.ShintakeConstants.ampSpeed);
         if(Robot.shintake.speedController.atSetpoint()){
           break;
         }
       case 7: //speaker tag
 
-        Robot.shooter.setShooter(1);
+        Robot.shooter.setShooter(Constants.ShintakeConstants.speakerSpeed);
         if(Robot.shintake.speedController.atSetpoint()){
+          
           break;
         }
     }

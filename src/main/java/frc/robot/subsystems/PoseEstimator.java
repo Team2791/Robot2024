@@ -47,7 +47,7 @@ public class PoseEstimator extends SubsystemBase {
     
     poseEstimator = new SwerveDrivePoseEstimator(Constants.DriveConstants.kDriveKinematics, drivetrain.getGyroscopeRotation(), drivetrain.getModulePositions(), new Pose2d(), stateStdDevs, visionMeasurementStdDevs);
   }
-  
+
 
   public void setAlliance(Alliance alliance) {
     boolean allianceChanged = false;
@@ -96,6 +96,7 @@ public class PoseEstimator extends SubsystemBase {
         SmartDashboard.putNumber("April Tag X", targetPose.getX());
         SmartDashboard.putNumber("April Tag Y", targetPose.getY());
         SmartDashboard.putNumber("April Tag Z", targetPose.getZ());
+        SmartDashboard.putNumber("April Tag ID", fiducialld);
 
         SmartDashboard.putString("April Tag Rotation", targetPose.getRotation().toString());
         

@@ -27,8 +27,12 @@ public class Climb extends Command {
   public void initialize() {
   
     if(!ClimberActivate.isActive && !Robot.climber.lockedIN())new ClimberActivate();
-    
-    Robot.climber.climb(-.5);
+    else if(!ClimberActivate.isActive && Robot.climber.lockedIN()){
+      Robot.climber.unlock();
+      new ClimberActivate();
+    }
+    else if(ClimberActivate.isActive && !Robot.climber.lockedIN())Robot.climber.climb(-.5);
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -46,6 +50,8 @@ public class Climb extends Command {
       if(robotRoll>0)Robot.climber.climb(robotRoll*.01, robotRoll*.05);
       else if(robotRoll<0) Robot.climber.climb(robotRoll*.05, robotRoll*.01);
       else Robot.climber.climb(.1);
+
+      
 
 
 

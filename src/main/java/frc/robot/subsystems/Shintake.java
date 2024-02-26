@@ -68,12 +68,19 @@ public class Shintake extends SubsystemBase {
     return beamBrake.get();
   }
 
+  public void index(){
+    while(!isItIn()){
+    leftMotor.set(.1);
+    rightMotor.set(.1);
+    }
+  }
+
 
 
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Left Motor actual velocity", leftMotor.getEncoder().getVelocity());
-    SmartDashboard.putNumber("Right Motor Velocity", rightMotor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Right Motor actual Velocity", rightMotor.getEncoder().getVelocity());
     SmartDashboard.putNumber("Left motor set power", leftMotor.get());
     SmartDashboard.putNumber("Right motor set power", rightMotor.get());
     //SmartDashboard.putData("Speed PID", speedController);

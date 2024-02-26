@@ -33,7 +33,7 @@ public class Climber extends SubsystemBase {
 
     leftMotor = new CANSparkMax(RobotMap.leftClimbMotor, MotorType.kBrushless);
     rightMotor = new CANSparkMax(RobotMap.rightClimbMotor, MotorType.kBrushless);
-    gyro = new AHRS(Port.kMXP);
+    gyro = Robot.m_robotDrive.m_gyro;
     leftMotor.setIdleMode(IdleMode.kBrake);
     rightMotor.setIdleMode(IdleMode.kBrake);
     leftPot = new AnalogPotentiometer(Constants.ClimberConstants.leftClimbPot, 270, -148);
@@ -106,8 +106,8 @@ public class Climber extends SubsystemBase {
 
 
   public void periodic(){
-    SmartDashboard.putNumber("Left Motor Current", Robot.climber.getLeftMotorCurrent());
-    SmartDashboard.putNumber("Right Motor Current", Robot.climber.getRightMotorCurrent());
+    SmartDashboard.putNumber("Left Climb Motor Current", Robot.climber.getLeftMotorCurrent());
+    SmartDashboard.putNumber("Right Climb Motor Current", Robot.climber.getRightMotorCurrent());
     SmartDashboard.putNumber("Gyro Roll", gyro.getRoll());
     SmartDashboard.putBoolean("Climber Activation", ClimberActivate.isActive);
   }
