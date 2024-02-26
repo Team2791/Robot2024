@@ -3,16 +3,16 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Shintake;
 
 public class Shoot extends Command {
-	private final Shooter shooter;
+	private final Shintake shooter;
 
 	private Timer timer;
 	private boolean done;
 	private boolean ready;
 
-	public Shoot(Shooter shooter) {
+	public Shoot(Shintake shooter) {
 		this.shooter = shooter;
 
 		this.timer = new Timer();

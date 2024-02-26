@@ -13,13 +13,13 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Shooter extends SubsystemBase {
+public class Shintake extends SubsystemBase {
 	private final CANSparkMax intake;
 	private final CANSparkMax top;
 	private final CANSparkMax bottom;
 	private final DigitalInput beam;
 
-	public Shooter() {
+	public Shintake() {
 		intake = new CANSparkMax(Constants.Ids.Note.Intake, MotorType.kBrushless);
 		top = new CANSparkMax(Constants.Ids.Note.ShooterTop, MotorType.kBrushless);
 		bottom = new CANSparkMax(Constants.Ids.Note.ShooterBottom, MotorType.kBrushless);

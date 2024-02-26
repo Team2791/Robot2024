@@ -5,13 +5,13 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Shintake;
 
 public class TakeIn extends Command {
-	private final Shooter shooter;
+	private final Shintake shooter;
 	private boolean done;
 
-	public TakeIn(Shooter shooter) {
+	public TakeIn(Shintake shooter) {
 		this.shooter = shooter;
 		this.done = false;
 
