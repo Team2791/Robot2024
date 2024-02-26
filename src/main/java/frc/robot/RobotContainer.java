@@ -2,6 +2,9 @@ package frc.robot;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.auto.AutoBuilder;
+import org.photonvision.PhotonCamera;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
@@ -13,18 +16,21 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.*;
+
 import frc.robot.commands.Vision.AprilRotate;
 import frc.robot.commands.Vision.AprilTelemetry;
 import frc.robot.subsystems.*;
-import org.photonvision.PhotonCamera;
-import com.pathplanner.lib.auto.AutoBuilder;
 
-/*
+/**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot
  * (including subsystems, commands, and button mappings) should be declared here.
+ * 
+ * edit: paradigm? what paradigm? java has no paradigm except for the "do whatever you want, i dont care"
+ * paradigm. at least C has `volatile` and compiler warnings. what does java have to make my life easier? 
+ * nothing! the day java has a paradigm and basic memory safety is the day i use it in a project.
+ *                                                                             - Angad Tendulkar, 2024
  */
 public class RobotContainer {
 	private final XboxController driverctl = new XboxController(Constants.Controller.Ports.Driver);
@@ -61,10 +67,10 @@ public class RobotContainer {
 	public RobotContainer() {
 		initTriggers();
 
-		driverB.toggleOnTrue(new FaceTag(camera, drivetrain, true));
+		driverB.toggleOnTrue(new AprilRotate(camera, drivetrain));
 		driverY.whileTrue(new AprilTelemetry(camera));
 
-		NamedCommands.registerCommand("FaceTag", new FaceTag(camera, drivetrain, false));
+		NamedCommands.registerCommand("FaceTag", new AprilRotate(camera, drivetrain));
 
 		this.drivetrain.setDefaultCommand(
 		    new RunCommand(
