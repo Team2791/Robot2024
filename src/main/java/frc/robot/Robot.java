@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
 import edu.wpi.first.cameraserver.CameraServer;
@@ -9,87 +5,47 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
-/**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the
- * name of this class or
- * the package after creating this project, you must also update the
- * build.gradle file in the
- * project.
- */
 public class Robot extends TimedRobot {
 	private final RobotContainer container = new RobotContainer();
-	private Command autoCommand = container.getAutonomousCommand();
+	private Command autonomous = container.autoCommand();
 
-	/**
-	 * This function is run when the robot is first started up and should be used
-	 * for any initialization code.
-	 */
-	@Override
+	/** Run once on startup */
 	public void robotInit() {
 		CameraServer.startAutomaticCapture();
 	}
 
-	/**
-	 * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
-	 * that you want ran during disabled, autonomous, teleoperated and test.
-	 * 
-	 * This runs after the mode specific periodic functions, but before LiveWindow and
-	 * SmartDashboard integrated updating.
-	 */
-	@Override
+	/** Run every 20ms after startup */
 	public void robotPeriodic() {
 		CommandScheduler.getInstance().run();
 	}
 
-	/** This function is called once each time the robot enters Disabled mode. */
-	@Override
+	/** Run once after disabling */
 	public void disabledInit() {
-		container.setRainbow();
+		// container.setRainbow();
 	}
 
-	@Override
-	public void disabledPeriodic() {
-	}
-
-	/**
-	 * This autonomous runs the autonomous command selected by your
-	 * {@link RobotContainer} class.
-	 */
-	@Override
+	/** Runs once after switching to autonomous mode. Used to schedule auto commands */
 	public void autonomousInit() {
-		autoCommand = container.getAutonomousCommand();
+		autonomous = container.autoCommand();
 
-		if (autoCommand != null) {
-			autoCommand.schedule();
+		if (autonomous != null) {
+			autonomous.schedule();
 		}
 	}
 
-	/** This function is called periodically during autonomous. */
-	@Override
-	public void autonomousPeriodic() {
-	}
-
-	@Override
+	/** Runs once after switching to teleop mode */
 	public void teleopInit() {
-		if (autoCommand != null) {
-			autoCommand.cancel();
+		if (autonomous != null) {
+			autonomous.cancel();
 		}
 	}
 
-	/** This function is called periodically during operator control. */
-	@Override
-	public void teleopPeriodic() {
-	}
 
-	@Override
 	public void testInit() {
 		CommandScheduler.getInstance().cancelAll();
 	}
 
 	/** This function is called periodically during test mode. */
-	@Override
 	public void testPeriodic() {
 	}
 }

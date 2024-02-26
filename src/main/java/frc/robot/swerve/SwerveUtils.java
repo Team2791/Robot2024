@@ -3,7 +3,6 @@ package frc.robot.swerve;
 import frc.robot.Constants;
 
 public class SwerveUtils {
-
 	/**
 	 * Steps a value towards a target with a specified step size.
 	 * @param current The current or starting value.  Can be positive or negative.

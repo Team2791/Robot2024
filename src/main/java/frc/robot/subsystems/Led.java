@@ -25,11 +25,11 @@ public class Led extends SubsystemBase {
 			this.rotating = false;
 		}
 
-		public static LedMode defaultMode() {
+		public static LedMode init() {
 			return new LedMode();
 		}
 
-		public LedMode colorBase(Color color) {
+		public LedMode base(Color color) {
 			this.base = Optional.of(color);
 			return this;
 		}
@@ -87,7 +87,7 @@ public class Led extends SubsystemBase {
 	private final AddressableLEDBuffer buffer = new AddressableLEDBuffer(Constants.Led.Length);
 	private final AddressableLED led = new AddressableLED(9);
 
-	private LedMode mode = LedMode.defaultMode().colorBase(Color.kBlack);
+	private LedMode mode = LedMode.init().base(Color.kBlack);
 	private double accumulator = 0;
 
 	public Led() {

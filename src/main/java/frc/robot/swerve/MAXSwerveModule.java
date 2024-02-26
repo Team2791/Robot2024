@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.swerve;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -79,19 +75,19 @@ public class MAXSwerveModule {
 
 		// Set the PID gains for the driving motor. Note these are example gains, and you
 		// may need to tune them for your own robot!
-		drivectl.setP(Constants.Module.PID.Driving.P);
-		drivectl.setI(Constants.Module.PID.Driving.I);
-		drivectl.setD(Constants.Module.PID.Driving.D);
-		drivectl.setFF(Constants.Module.PID.Driving.FF);
-		drivectl.setOutputRange(Constants.Module.PID.Driving.MinOutput, Constants.Module.PID.Driving.MaxOutput);
+		drivectl.setP(Constants.PID.Module.Driving.P);
+		drivectl.setI(Constants.PID.Module.Driving.I);
+		drivectl.setD(Constants.PID.Module.Driving.D);
+		drivectl.setFF(Constants.PID.Module.Driving.FF);
+		drivectl.setOutputRange(Constants.PID.Module.Driving.MinOutput, Constants.PID.Module.Driving.MaxOutput);
 
 		// Set the PID gains for the turning motor. Note these are example gains, and you
 		// may need to tune them for your own robot!
-		turnctl.setP(Constants.Module.PID.Turning.P);
-		turnctl.setI(Constants.Module.PID.Turning.I);
-		turnctl.setD(Constants.Module.PID.Turning.D);
-		turnctl.setFF(Constants.Module.PID.Turning.FF);
-		turnctl.setOutputRange(Constants.Module.PID.Turning.MinOutput, Constants.Module.PID.Turning.MaxOutput);
+		turnctl.setP(Constants.PID.Module.Turning.P);
+		turnctl.setI(Constants.PID.Module.Turning.I);
+		turnctl.setD(Constants.PID.Module.Turning.D);
+		turnctl.setFF(Constants.PID.Module.Turning.FF);
+		turnctl.setOutputRange(Constants.PID.Module.Turning.MinOutput, Constants.PID.Module.Turning.MaxOutput);
 
 		driving.setIdleMode(Constants.Module.Idle.Driving);
 		turning.setIdleMode(Constants.Module.Idle.Turning);

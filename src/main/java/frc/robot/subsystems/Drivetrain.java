@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -77,22 +73,20 @@ public class Drivetrain extends SubsystemBase {
 		);
 
 		AutoBuilder.configureHolonomic(
-		    this::pose, // Robot pose supplier
+		    this::pose,
 		    this::reset,
-		    // Method to reset odometry (will be called if your auto has a starting pose)
-		    this::speeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+		    this::speeds,
 		    this::drive,
-		    // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
 		    new HolonomicPathFollowerConfig(
 		        new PIDConstants(
-		            Constants.Auto.PID.Translation.P,
-		            Constants.Auto.PID.Translation.I,
-		            Constants.Auto.PID.Translation.D
+		            Constants.PID.Auto.Translation.P,
+		            Constants.PID.Auto.Translation.I,
+		            Constants.PID.Auto.Translation.D
 		        ),
 		        new PIDConstants(
-		            Constants.Auto.PID.Rotation.P,
-		            Constants.Auto.PID.Rotation.I,
-		            Constants.Auto.PID.Rotation.D
+		            Constants.PID.Auto.Rotation.P,
+		            Constants.PID.Auto.Rotation.I,
+		            Constants.PID.Auto.Rotation.D
 		        ),
 		        Constants.Drive.Limits.MaxSpeed,
 		        Constants.Drive.Dimensions.DriveBaseRadius,
@@ -121,8 +115,6 @@ public class Drivetrain extends SubsystemBase {
 		odometry.update(Rotation2d.fromDegrees(gyro.getAngle()), new SwerveModulePosition[]{
 		    frontLeft.getPosition(), frontRight.getPosition(), rearLeft.getPosition(), rearRight.getPosition()
 		});
-
-		// TODO: drivetrain is not in charge of the gyro. find somewhere else to put this
 	}
 
 	/**

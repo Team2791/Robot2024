@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -20,10 +16,10 @@ public class Shintake extends SubsystemBase {
 	private final DigitalInput beam;
 
 	public Shintake() {
-		intake = new CANSparkMax(Constants.Ids.Note.Intake, MotorType.kBrushless);
-		top = new CANSparkMax(Constants.Ids.Note.ShooterTop, MotorType.kBrushless);
-		bottom = new CANSparkMax(Constants.Ids.Note.ShooterBottom, MotorType.kBrushless);
-		beam = new DigitalInput(Constants.Ids.Note.BeamBreak);
+		intake = new CANSparkMax(Constants.Ids.Shintake.Intake, MotorType.kBrushless);
+		top = new CANSparkMax(Constants.Ids.Shintake.ShooterTop, MotorType.kBrushless);
+		bottom = new CANSparkMax(Constants.Ids.Shintake.ShooterBottom, MotorType.kBrushless);
+		beam = new DigitalInput(Constants.Ids.Shintake.BeamBreak);
 
 		CommandScheduler.getInstance().registerSubsystem(this);
 	}
@@ -51,5 +47,4 @@ public class Shintake extends SubsystemBase {
 		SmartDashboard.putNumber("(Shooter) Bottom", bottom.get());
 		SmartDashboard.putNumber("(Shooter) Intake", intake.get());
 	}
-
 }

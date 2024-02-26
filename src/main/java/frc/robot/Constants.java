@@ -1,12 +1,10 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
 
 import com.revrobotics.CANSparkBase.IdleMode;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -94,13 +92,20 @@ public final class Constants {
 		public static final class Climb {
 			public static final int Left = 50;
 			public static final int Right = 60;
+			public static final int Servo = 140;
 		}
 
-		public static final class Note {
+		public static final class Shintake {
 			public static final int ShooterTop = 70;
 			public static final int ShooterBottom = 80;
 			public static final int Intake = 90;
 			public static final int BeamBreak = 100;
+		}
+
+		public static final class Arm {
+			public static final int LeftMotor = 110;
+			public static final int RightMotor = 120;
+			public static final int Potentiometer = 130;
 		}
 	}
 
@@ -156,26 +161,6 @@ public final class Constants {
 			public static final boolean TurningInverted = true;
 		}
 
-		public static final class PID {
-			public static final class Driving {
-				public static final double P = 0.15;
-				public static final double I = 0.0001;
-				public static final double D = 0.01;
-				public static final double FF = 1 / Limits.DrivingWheelFreeSpeed;
-				public static final double MinOutput = -1;
-				public static final double MaxOutput = 1;
-			}
-
-			public static final class Turning {
-				public static final double P = 4;
-				public static final double I = 0.0001;
-				public static final double D = 0.02;
-				public static final double FF = 0;
-				public static final double MinOutput = -1;
-				public static final double MaxOutput = 1;
-			}
-		}
-
 		public static final class Idle {
 			public static final IdleMode Driving = IdleMode.kBrake;
 			public static final IdleMode Turning = IdleMode.kBrake;
@@ -183,7 +168,11 @@ public final class Constants {
 	}
 
 	public static final class Controller {
-		public static final int Port = 0;
+		public static final class Ports {
+			public static final int Driver = 0;
+			public static final int Operator = 1;
+		}
+
 		public static final double Deadband = 0.05;
 	}
 
@@ -196,29 +185,32 @@ public final class Constants {
 		public static final Transform3d RobotToCamera = CameraToRobot.inverse();
 
 		/** Meters */
-		public static final double CameraHeight = 0.1;
+		public static final double CameraHeight = 0.01;
 
 		/** Meters */
 		public static final double TargetHeight = 3;
 
 		/** Radians */
 		public static final double CameraPitch = 0;
+
+		/** Meters */
+		public static final double FieldLength = 16.54;
+
+		/** Meters */
+		public static final double FieldWidth = 8.21;
+
+		// Pose on the opposite side of the field. Use with `relativeTo` to flip a pose to the opposite alliance
+		public static final Pose2d FlippingPose = new Pose2d(
+		    new Translation2d(FieldLength, FieldWidth),
+		    new Rotation2d(Math.PI)
+		);
+
+		/** Minimum target ambiguity. Targets with higher ambiguity will be discarded */
+		public static final double AmbiguityThreshold = 0.2;
 	}
 
 	public static final class Auto {
-		public static final class PID {
-			public static final class Rotation {
-				public static final double P = 0.0000001;
-				public static final double I = 0;
-				public static final double D = 0;
-			}
 
-			public static final class Translation {
-				public static final double P = 3.35;
-				public static final double I = .8;
-				public static final double D = .1;
-			}
-		}
 
 		public static final class Limits {
 			/** Meters per second */
@@ -283,4 +275,90 @@ public final class Constants {
 		public static final double RotatingSpeed = 0.2;
 		public static final int ShiftSize = 1;
 	}
+
+	public static final class PID {
+		public static final class Auto {
+			public static final class Rotation {
+				public static final double P = 0.0000001;
+				public static final double I = 0;
+				public static final double D = 0;
+			}
+
+			public static final class Translation {
+				public static final double P = 3.35;
+				public static final double I = .8;
+				public static final double D = .1;
+			}
+		}
+
+		public static final class Arm {
+			public static final class Left {
+				public static final double P = 1;
+				public static final double I = 0;
+				public static final double D = 0;
+				public static final double FF = 0;
+			}
+
+			public static final class Right {
+				public static final double P = 1;
+				public static final double I = 0;
+				public static final double D = 0;
+				public static final double FF = 0;
+			}
+		}
+
+		public static final class Module {
+			public static final class Driving {
+				public static final double P = 0.15;
+				public static final double I = 0.0001;
+				public static final double D = 0.01;
+				public static final double FF = 1 / Constants.Module.Limits.DrivingWheelFreeSpeed;
+				public static final double MinOutput = -1;
+				public static final double MaxOutput = 1;
+			}
+
+			public static final class Turning {
+				public static final double P = 4;
+				public static final double I = 0.0001;
+				public static final double D = 0.02;
+				public static final double FF = 0;
+				public static final double MinOutput = -1;
+				public static final double MaxOutput = 1;
+			}
+		}
+
+		public static final class Shintake {
+			public static final int P = 1;
+			public static final int I = 0;
+			public static final int D = 0;
+		}
+
+		public static final class Vision {
+			public static final class Rotation {
+				public static final double P = 0.0000001;
+				public static final double I = 0;
+				public static final double D = 0;
+			}
+
+			public static final class Translation {
+				public static final double P = 3.35;
+				public static final double I = .8;
+				public static final double D = .1;
+			}
+		}
+	}
+
+	public static final class Arm {
+		public static final double SpeakerHeight = 2.045;
+		public static final double ShooterHeight = .5;
+	}
+
+	public static final class Climber {
+		/** Voltage while climbing in amps */
+		public static final double Voltage = 5;
+
+		/** The distance at which the linear servo is locked */
+		public static final double DistanceLocked = 90;
+	}
 }
+
