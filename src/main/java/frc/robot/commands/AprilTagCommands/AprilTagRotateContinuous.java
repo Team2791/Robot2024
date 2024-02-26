@@ -59,7 +59,7 @@ public class AprilTagRotateContinuous extends Command {
 
     SmartDashboard.putData("Rotation PID controller", rotctl);
 
-		Robot.m_robotDrive.drive(0, 0, rPower, false, false);
+		Robot.m_robotDrive.drive(0, 0, rPower, false, false,false);
     
 
   }

@@ -57,7 +57,7 @@ public class AprilTagRotateCommand extends Command {
 		double targetX = corners.parallelStream().mapToDouble(c -> c.x).sum() / 4;
 		double rPower = rotctl.calculate(targetX, setPoint);
 
-		Robot.m_robotDrive.drive(0, 0, rPower, false, false);
+		Robot.m_robotDrive.drive(0, 0, rPower, false, false, false);
 
     if(rotctl.atSetpoint()){
       done=true;

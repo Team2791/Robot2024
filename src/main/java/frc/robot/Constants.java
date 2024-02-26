@@ -5,6 +5,9 @@
 package frc.robot;
 
 
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -167,6 +170,13 @@ public final class Constants {
 		// Constraint for the motion profiled robot angle controller
 		public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
 				kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+
+		public static final HolonomicPathFollowerConfig kPathFollowerConfig = new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+   		new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+    	new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
+    	4.8, // Max module speed, in m/s
+    	Units.inchesToMeters(15.20), // Drive base radius in meters. Distance from robot center to furthest module.
+    	new ReplanningConfig());
 	}
 
 	public static final class NeoMotorConstants {

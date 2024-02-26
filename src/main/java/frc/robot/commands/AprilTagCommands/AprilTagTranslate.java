@@ -60,7 +60,7 @@ public class AprilTagTranslate extends Command {
 		double rPower = rotctl.calculate(targetX, setPoint);
     SmartDashboard.putData("Translation PID controller", rotctl);
 
-		Robot.m_robotDrive.drive(rPower, 0, 0, false, false);
+		Robot.m_robotDrive.drive(rPower, 0, 0, false, false,false);
     
 
     if(rotctl.atSetpoint()){

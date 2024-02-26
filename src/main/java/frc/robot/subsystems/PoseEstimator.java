@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.Robot;
 
 public class PoseEstimator extends SubsystemBase {
 
@@ -114,8 +115,9 @@ public class PoseEstimator extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  poseEstimator.update(drivetrain.getGyroscopeRotation(), drivetrain.getModulePositions());
+  poseEstimator.updateWithTime(resultTimestamp, drivetrain.getGyroscopeRotation(), drivetrain.getModulePositions());
   field2d.setRobotPose(getCurrentPose());
+  SmartDashboard.putData(field2d);
 
   
 }
@@ -124,6 +126,7 @@ public class PoseEstimator extends SubsystemBase {
     return poseEstimator.getEstimatedPosition();
   }
 
+  
 
 
 }
