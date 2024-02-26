@@ -41,7 +41,7 @@ public class AprilTagRotateCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    Robot.led.setColor(255,0,0);
+    //Robot.led.setColor(255,0,0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -69,7 +69,7 @@ public class AprilTagRotateCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    Robot.led.setColor(0,255,0);
+    //Robot.led.setColor(0,255,0);
     Robot.m_robotDrive.stopModules();
   }
 

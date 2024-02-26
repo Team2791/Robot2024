@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.Climber;
+//import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Shintake;
 import frc.robot.subsystems.RGBLED;
@@ -33,13 +33,13 @@ import frc.robot.subsystems.Arm;
  */
 public class Robot extends TimedRobot {
 
-	public static Climber climber;
-	public static Arm arm;
+	//public static Climber climber;
+	//public static Arm arm;
 	private Command m_autonomousCommand;
-	public static Shintake shooter;
+	//public static Shintake shooter;
 	public static DriveSubsystem m_robotDrive;
-	public static Shintake shintake;
-	public static RGBLED led;
+	//public static Shintake shintake;
+	//public static RGBLED led;
 	public static PoseEstimator poseEstimator;
 	public static AHRS gyro;
 	DriverStation.Alliance color;
@@ -60,11 +60,11 @@ public class Robot extends TimedRobot {
 		m_robotContainer = new RobotContainer();
 		CameraServer.startAutomaticCapture();
 
-		climber = new Climber();
-		arm = new Arm();
-		shintake = new Shintake();
+		//climber = new Climber();
+		//arm = new Arm();
+		//shintake = new Shintake();
 		m_robotDrive = new DriveSubsystem();
-		led = new RGBLED();
+		//led = new RGBLED();
 		poseEstimator = new PoseEstimator(RobotContainer.camera1, m_robotDrive);
 		gyro = m_robotDrive.m_gyro;
 
@@ -125,7 +125,7 @@ public class Robot extends TimedRobot {
 
 
 		m_robotDrive.resetOdometry(Robot.poseEstimator.getCurrentPose());
-		
+
 		m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
 		/*

@@ -11,6 +11,7 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -72,6 +73,7 @@ public class DriveSubsystem extends SubsystemBase {
 			DriveConstants.kDriveKinematics,
 			Rotation2d.fromDegrees(m_gyro.getAngle()),
 			new SwerveModulePosition[] {m_frontLeft.getPosition(),m_frontRight.getPosition(),m_rearLeft.getPosition(),m_rearRight.getPosition()}); // initializes initial robot position.
+
 
 	/** Creates a new DriveSubsystem. */
 	public DriveSubsystem() {
@@ -141,6 +143,18 @@ public class DriveSubsystem extends SubsystemBase {
 	
 	public Pose2d getVisionPose(){
 		return Robot.poseEstimator.getCurrentPose();
+	}
+
+	public void resetVisionOdometry(Pose2d pose){
+		Robot.poseEstimator.poseEstimator.resetPosition(Rotation2d.fromDegrees(m_gyro.getAngle()),
+				new SwerveModulePosition[] {
+						m_frontLeft.getPosition(),
+						m_frontRight.getPosition(),
+						m_rearLeft.getPosition(),
+						m_rearRight.getPosition()
+				},
+				pose);
+
 	}
 
 

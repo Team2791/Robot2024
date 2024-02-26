@@ -14,7 +14,9 @@ import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -90,7 +92,7 @@ public class PoseEstimator extends SubsystemBase {
       var fiducialld = target.getFiducialId();  
 
 
-      if (target.getPoseAmbiguity() <= 2 && fiducialld >= 0){
+      if (target.getPoseAmbiguity() <= .2 && fiducialld >= 0){
         var targetPose = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField().getTagPose(fiducialld).get();
 
         SmartDashboard.putNumber("April Tag X", targetPose.getX());
@@ -99,12 +101,13 @@ public class PoseEstimator extends SubsystemBase {
         SmartDashboard.putNumber("April Tag ID", fiducialld);
 
         SmartDashboard.putString("April Tag Rotation", targetPose.getRotation().toString());
+        SmartDashboard.putString("Translation", targetPose.getTranslation().toString());
         
         Transform3d camToTarget = target.getBestCameraToTarget();
         Pose3d camPose = targetPose.transformBy(camToTarget.inverse());
 
         var visionMeasurement = camPose.transformBy(Constants.VisionConstants.APRILTAG_CAMERA_TO_ROBOT);
-        poseEstimator.addVisionMeasurement(visionMeasurement.toPose2d(), previousTimeStamp);
+        poseEstimator.addVisionMeasurement(visionMeasurement.toPose2d(), previousTimeStamp,visionMeasurementStdDevs);
 
       }
 
@@ -120,6 +123,7 @@ public class PoseEstimator extends SubsystemBase {
   public Pose2d getCurrentPose(){
     return poseEstimator.getEstimatedPosition();
   }
+
 
 
 }
