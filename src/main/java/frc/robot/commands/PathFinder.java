@@ -30,7 +30,7 @@ public class PathFinder extends Command {
 
     PathConstraints constraints = new PathConstraints(3.0, 1.5,Units.degreesToRadians(360), Units.degreesToRadians(180));
     pathFindingCommand = AutoBuilder.pathfindToPose(targetPose,constraints,0.0, 1);
-    
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.

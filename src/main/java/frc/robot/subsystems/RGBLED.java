@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import java.lang.*;
 
 public class RGBLED extends SubsystemBase {
 	public static AddressableLEDBuffer rBuffer;
@@ -120,6 +121,15 @@ public class RGBLED extends SubsystemBase {
 		}
 		rgbled.setData(buffer);
 
+	}
+
+	public void cook(){
+		while(true){
+			for(int i=0; i<60; i++){
+			rBuffer.setRGB(i, 255,0,0);
+			//forgot how to do random
+			}
+		}
 	}
 
 	@Override

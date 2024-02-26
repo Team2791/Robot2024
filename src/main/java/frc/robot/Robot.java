@@ -124,6 +124,8 @@ public class Robot extends TimedRobot {
 	public void autonomousInit() {
 
 
+		m_robotDrive.resetOdometry(Robot.poseEstimator.getCurrentPose());
+		
 		m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
 		/*

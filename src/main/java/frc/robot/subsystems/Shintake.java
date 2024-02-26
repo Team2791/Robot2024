@@ -34,27 +34,27 @@ public class Shintake extends SubsystemBase {
   }
 
   public void setShooter(double speed){
-    leftMotor.set(speed);
-    rightMotor.set(speed);
+    leftMotor.set(speedController.calculate(leftMotor.getEncoder().getVelocity(),speed));
+    rightMotor.set(speedController.calculate(leftMotor.getEncoder().getVelocity(),speed));
   }
 
   public void setShooter(double leftSpeed, double rightSpeed){
-    leftMotor.set(leftSpeed);
-    rightMotor.set(rightSpeed);
+    leftMotor.set(speedController.calculate(leftMotor.getEncoder().getVelocity(),leftSpeed));
+    rightMotor.set(speedController.calculate(leftMotor.getEncoder().getVelocity(),rightSpeed));
   }
 
   public void takeIn(){
     while(!beamBrake.get()){
-      leftMotor.set(.1);
-      rightMotor.set(.1);
+      leftMotor.set(speedController.calculate(leftMotor.getEncoder().getVelocity(),Constants.ShintakeConstants.intakeSpeed));
+      rightMotor.set(speedController.calculate(leftMotor.getEncoder().getVelocity(),Constants.ShintakeConstants.intakeSpeed));
     }
     stop();
 
   }
 
   public void spitOut(){
-    leftMotor.set(-.1);
-    rightMotor.set(-.1);
+    leftMotor.set(Constants.ShintakeConstants.outtakeSpeed);
+    rightMotor.set(Constants.ShintakeConstants.outtakeSpeed);
   }
 
   public void stop(){

@@ -206,6 +206,11 @@ public final class Constants {
 			public static final double kShooterP = 1;
 			public static final double kShooterI = 1;
 			public static final double kShooterD = 1;
+
+			public static final double speakerSpeed =25;
+			public static final double ampSpeed = 10;
+			public static final double intakeSpeed = 1;
+			public static final double outtakeSpeed = -1;
 		}
 
 
