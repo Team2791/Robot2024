@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import java.lang.reflect.Field;
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -77,6 +78,11 @@ public class DriveSubsystem extends SubsystemBase {
 	}
 
 	public void auto() {
+		try {
+			AutoBuilder.class.getDeclaredField("configured").set(new AutoBuilder(), false);
+		} catch (Exception e) {
+		}
+
 		AutoBuilder.configureHolonomic(this::getPose, // Robot pose supplier
 				this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
 				this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
