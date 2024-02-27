@@ -80,6 +80,7 @@ public class RobotContainer {
 				.whileTrue(new RunCommand(
 						() -> m_robotDrive.setX(),
 						m_robotDrive));
+
 	}
 
 	/**
@@ -131,6 +132,6 @@ public class RobotContainer {
 	 */
 
 	public Command getAutonomousCommand() {
-		return new PathPlannerAuto("Example Auto");
+		return new PathPlannerAuto("New Auto");
 	}
 }

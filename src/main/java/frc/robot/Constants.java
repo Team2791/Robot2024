@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.geometry.Translation2d;
@@ -53,15 +52,15 @@ public final class Constants {
 		public static final double kBackRightChassisAngularOffset = Math.PI / 2;
 
 		// SPARK MAX CAN IDs (DONE)
-		public static final int kFrontLeftDrivingCanId = 10;
-		public static final int kRearLeftDrivingCanId = 30;
-		public static final int kFrontRightDrivingCanId = 20;
-		public static final int kRearRightDrivingCanId = 40;
+		public static final int kFrontLeftDrivingCanId = 40; //10
+		public static final int kRearLeftDrivingCanId = 20; //30
+		public static final int kFrontRightDrivingCanId = 30; //20
+		public static final int kRearRightDrivingCanId = 10; //40
 
-		public static final int kFrontLeftTurningCanId = 15;
-		public static final int kRearLeftTurningCanId = 35;
-		public static final int kFrontRightTurningCanId = 25;
-		public static final int kRearRightTurningCanId = 45;
+		public static final int kFrontLeftTurningCanId = 45; //15
+		public static final int kRearLeftTurningCanId = 25; //35
+		public static final int kFrontRightTurningCanId = 35; //25
+		public static final int kRearRightTurningCanId = 15; //45
 
 		public static final boolean kGyroReversed = false;
 	}

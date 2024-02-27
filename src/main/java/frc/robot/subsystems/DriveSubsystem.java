@@ -21,6 +21,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C.Port;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DriveConstants;
 import frc.utils.SwerveUtils;
@@ -60,6 +61,11 @@ public class DriveSubsystem extends SubsystemBase {
 	private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
 	private double m_prevTime = WPIUtilJNI.now() * 1e-6;
 
+	public static PIDConstants trans = new PIDConstants(.5, 0, 1); // Translation PID constants
+	public static PIDConstants rot = new PIDConstants(0.1, 0.0, 0.0);
+
+	private Field2d field;
+
 	// Odometry class for tracking robot pose
 	SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
 			DriveConstants.kDriveKinematics,
@@ -73,19 +79,20 @@ public class DriveSubsystem extends SubsystemBase {
 
 	/** Creates a new DriveSubsystem. */
 	public DriveSubsystem() {
+		field = new Field2d();
 
 		m_gyro.reset();
+
 		AutoBuilder.configureHolonomic(
 				this::getPose, // Robot pose supplier
 				this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
 				this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
 				this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
 				new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your
-													// Constants class
-						new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-						new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
+						trans, rot, // Constants class
+						// Rotation PID constants
 						4.5, // Max module speed, in m/s
-						0.4, // Drive base radius in meters. Distance from robot center to furthest module.
+						0.38608, // Drive base radius in meters. Distance from robot center to furthest module.
 						new ReplanningConfig() // Default path replanning config. See the API for the options here
 				),
 				() -> {
@@ -118,7 +125,14 @@ public class DriveSubsystem extends SubsystemBase {
 				});
 		SmartDashboard.putNumber("yaw:", m_gyro.getYaw());
 		SmartDashboard.putNumber("angle:", m_gyro.getAngle());
-		SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
+		SmartDashboard.putString("Robot X", m_odometry.getPoseMeters().toString());
+		putField(m_odometry.getPoseMeters());
+		SmartDashboard.putData("Field", field);
+
+	}
+
+	public void putField(Pose2d pose) {
+		field.setRobotPose(pose);
 	}
 
 	/**
@@ -215,7 +229,7 @@ public class DriveSubsystem extends SubsystemBase {
 			} else if (angleDif > 0.85 * Math.PI) {
 				if (m_currentTranslationMag > 1e-4) { // some small number to avoid floating-point errors with equality
 														// checking
-					// keep currentTranslationDir unchanged
+														// keep currentTranslationDir unchanged
 					m_currentTranslationMag = m_magLimiter.calculate(0.0);
 				} else {
 					m_currentTranslationDir = SwerveUtils.WrapAngle(m_currentTranslationDir + Math.PI);
