@@ -5,7 +5,7 @@
 package frc.robot;
 
 import java.lang.reflect.Field;
-
+import com.pathplanner.lib.util.PIDConstants;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -13,12 +13,9 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.DriveSubsystem;
 
 /**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the
- * name of this class or
- * the package after creating this project, you must also update the
- * build.gradle file in the
+ * The VM is configured to automatically run this class, and to call the functions corresponding to
+ * each mode, as described in the TimedRobot documentation. If you change the name of this class or
+ * the package after creating this project, you must also update the build.gradle file in the
  * project.
  */
 public class Robot extends TimedRobot {
@@ -71,12 +68,10 @@ public class Robot extends TimedRobot {
 
 	/** This function is called once each time the robot enters Disabled mode. */
 	@Override
-	public void disabledInit() {
-	}
+	public void disabledInit() {}
 
 	@Override
-	public void disabledPeriodic() {
-	}
+	public void disabledPeriodic() {}
 
 	/**
 	 * This autonomous runs the autonomous command selected by your
@@ -84,6 +79,19 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		double tp = SmartDashboard.getNumber("auto trans kp", DriveSubsystem.rot.kP);
+		double ti = SmartDashboard.getNumber("auto trans ki", DriveSubsystem.rot.kI);
+		double td = SmartDashboard.getNumber("auto trans kd", DriveSubsystem.rot.kD);
+
+		double rp = SmartDashboard.getNumber("auto rot kp", DriveSubsystem.rot.kP);
+		double ri = SmartDashboard.getNumber("auto rot ki", DriveSubsystem.rot.kI);
+		double rd = SmartDashboard.getNumber("auto rot kd", DriveSubsystem.rot.kD);
+
+		DriveSubsystem.trans = new PIDConstants(tp, ti, td);
+		DriveSubsystem.rot = new PIDConstants(rp, ri, rd);
+
+		this.m_robotContainer.autocfg();
+
 		m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
 		/*
@@ -101,8 +109,7 @@ public class Robot extends TimedRobot {
 
 	/** This function is called periodically during autonomous. */
 	@Override
-	public void autonomousPeriodic() {
-	}
+	public void autonomousPeriodic() {}
 
 	@Override
 	public void teleopInit() {
@@ -117,8 +124,7 @@ public class Robot extends TimedRobot {
 
 	/** This function is called periodically during operator control. */
 	@Override
-	public void teleopPeriodic() {
-	}
+	public void teleopPeriodic() {}
 
 	@Override
 	public void testInit() {
@@ -128,6 +134,5 @@ public class Robot extends TimedRobot {
 
 	/** This function is called periodically during test mode. */
 	@Override
-	public void testPeriodic() {
-	}
+	public void testPeriodic() {}
 }
