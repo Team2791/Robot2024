@@ -61,7 +61,7 @@ public class DriveSubsystem extends SubsystemBase {
 	private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
 	private double m_prevTime = WPIUtilJNI.now() * 1e-6;
 
-	public static PIDConstants trans = new PIDConstants(.5, 0, 1); // Translation PID constants
+	public static PIDConstants trans = new PIDConstants(.4, 0, 1.1); // Translation PID constants
 	public static PIDConstants rot = new PIDConstants(0.1, 0.0, 0.0);
 
 	private Field2d field;
