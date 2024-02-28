@@ -58,7 +58,7 @@ public class DriveSubsystem extends SubsystemBase {
 	private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
 	private double m_prevTime = WPIUtilJNI.now() * 1e-6;
 
-	public static PIDConstants trans = new PIDConstants(.4, 0, 1.1); // Translation PID constants
+	public static PIDConstants trans = new PIDConstants(5, 0.02, 0.0325); // Translation PID constants
 	public static PIDConstants rot = new PIDConstants(0.1, 0.0, 0.0);
 
 	private Field2d field;
@@ -90,7 +90,7 @@ public class DriveSubsystem extends SubsystemBase {
 				new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your
 						trans, rot, // Constants class
 						// Rotation PID constants
-						4.5, // Max module speed, in m/s
+						1, // Max module speed, in m/s
 						0.38608, // Drive base radius in meters. Distance from robot center to furthest module.
 						new ReplanningConfig() // Default path replanning config. See the API for the options here
 				), () -> {

@@ -35,13 +35,6 @@ public class Robot extends TimedRobot {
 		// autonomous chooser on the dashboard.
 		m_robotContainer = new RobotContainer();
 
-		SmartDashboard.putNumber("auto trans kp", DriveSubsystem.trans.kP);
-		SmartDashboard.putNumber("auto trans ki", DriveSubsystem.trans.kI);
-		SmartDashboard.putNumber("auto trans kd", DriveSubsystem.trans.kD);
-
-		SmartDashboard.putNumber("auto rot kp", DriveSubsystem.rot.kP);
-		SmartDashboard.putNumber("auto rot ki", DriveSubsystem.rot.kI);
-		SmartDashboard.putNumber("auto rot kd", DriveSubsystem.rot.kD);
 	}
 
 	/**
@@ -79,18 +72,8 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		double tp = SmartDashboard.getNumber("auto trans kp", DriveSubsystem.rot.kP);
-		double ti = SmartDashboard.getNumber("auto trans ki", DriveSubsystem.rot.kI);
-		double td = SmartDashboard.getNumber("auto trans kd", DriveSubsystem.rot.kD);
 
-		double rp = SmartDashboard.getNumber("auto rot kp", DriveSubsystem.rot.kP);
-		double ri = SmartDashboard.getNumber("auto rot ki", DriveSubsystem.rot.kI);
-		double rd = SmartDashboard.getNumber("auto rot kd", DriveSubsystem.rot.kD);
 
-		DriveSubsystem.trans = new PIDConstants(tp, ti, td);
-		DriveSubsystem.rot = new PIDConstants(rp, ri, rd);
-
-		this.m_robotContainer.autocfg();
 
 		m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
