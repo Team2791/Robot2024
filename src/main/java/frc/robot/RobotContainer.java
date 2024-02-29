@@ -11,11 +11,12 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.PhotonVisionFollow;
 import frc.robot.commands.TagAlign;
 import frc.robot.commands.TagAlignTagCentric;
-import frc.robot.commands.TestDrive;
+import frc.robot.commands.TagAllignTranslate;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.PoseEstimatorSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -32,19 +33,7 @@ public class RobotContainer {
 	private final XboxController m_driverController;
 	private final PhotonCamera camera1 = new PhotonCamera("2791camera");
 
-	// The robot's subsystems
-	private final DriveSubsystem m_robotDrive = new DriveSubsystem();
-	private final PoseEstimatorSubsystem poseEstimator =
-			new PoseEstimatorSubsystem(camera1, m_robotDrive);
 
-	//commands
-	private final PhotonVisionFollow chaseTagCommand =
-			new PhotonVisionFollow(camera1, m_robotDrive, poseEstimator::getCurrentPose);
-
-	private final Command tagAlign = new TagAlignTagCentric(camera1, m_robotDrive);
-	private final TestDrive testDrive = new TestDrive(m_robotDrive);
-
-	// The driver's controller
 
 	private Trigger driverX, driverY, driverA, driverB, driverLB, driverRB, driverLT, driverRT;
 
@@ -54,25 +43,25 @@ public class RobotContainer {
 	public RobotContainer() {
 		m_driverController = new XboxController(OIConstants.kDriverControllerPort);
 		configureButtonBindings();
-		driverA.toggleOnTrue(chaseTagCommand);
-		driverB.toggleOnTrue(tagAlign);
-		driverX.toggleOnTrue(testDrive);
+		driverA.toggleOnTrue(new TagAlign(camera1));
+		driverB.toggleOnTrue(new TagAllignTranslate(camera1));
+		driverRT.toggleOnTrue(new SequentialCommandGroup(new TagAlign(camera1), new TagAllignTranslate(camera1)));
 
 		// Configure the button bindings
 		//driverB.whileTrue(chaseTagCommand);
 
 		// Configure default commands
-		m_robotDrive.setDefaultCommand(
+		Robot.m_robotDrive.setDefaultCommand(
 				// The left stick controls translation of the robot.
 				// Turning is controlled by the X axis of the right stick.
-				new RunCommand(() -> m_robotDrive.drive(
+				new RunCommand(() -> Robot.m_robotDrive.drive(
 						-MathUtil.applyDeadband(m_driverController.getLeftY(),
 								OIConstants.kDriveDeadband),
 						-MathUtil.applyDeadband(m_driverController.getLeftX(),
 								OIConstants.kDriveDeadband),
 						-MathUtil.applyDeadband(m_driverController.getRightX(),
 								OIConstants.kDriveDeadband),
-						true, true), m_robotDrive));
+						true, true), Robot.m_robotDrive));
 
 	}
 
@@ -87,7 +76,7 @@ public class RobotContainer {
 	 */
 	private void configureButtonBindings() {
 		new JoystickButton(m_driverController, Button.kR1.value)
-				.whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));
+				.whileTrue(new RunCommand(() -> Robot.m_robotDrive.setX(), Robot.m_robotDrive));
 		driverA = new JoystickButton(m_driverController, XboxController.Button.kA.value);
 		driverB = new JoystickButton(m_driverController, XboxController.Button.kB.value);
 		driverX = new JoystickButton(m_driverController, XboxController.Button.kX.value);

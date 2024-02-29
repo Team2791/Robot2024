@@ -15,16 +15,15 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
-public class TagAlign extends Command {
+public class TagAllignTranslate extends Command {
 
-	double setpoint = 320;
 	PhotonCamera camera;
-	PIDController pid = new PIDController(
-	    VisionConstants.kP, VisionConstants.kI, VisionConstants.kD
-	);
+	PIDController pid = new PIDController(VisionConstants.kP, VisionConstants.kI, VisionConstants.kD);
+  double setpoint = 320;
+
 	AHRS gyro;
 
-	public TagAlign(PhotonCamera camera) {
+	public TagAllignTranslate(PhotonCamera camera) {
 		this.gyro = DriveSubsystem.m_gyro;
 		this.camera = camera;
 	}
@@ -50,11 +49,12 @@ public class TagAlign extends Command {
 		    .sum() / 4;
 
 		double power = this.pid.calculate(average_x, setpoint);
-		Robot.m_robotDrive.drive(0, 0, power, false, false);
+		Robot.m_robotDrive.drive(power, 0, 0, false, false);
 
 		SmartDashboard.putNumber("April Tag Position", average_x);
 		SmartDashboard.putNumber("Power", power);
 	}
+
 
 	@Override
 	public void end(boolean interrupted) {
