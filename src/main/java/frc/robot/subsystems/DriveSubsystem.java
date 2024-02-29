@@ -58,8 +58,8 @@ public class DriveSubsystem extends SubsystemBase {
 	private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
 	private double m_prevTime = WPIUtilJNI.now() * 1e-6;
 
-	public static PIDConstants trans = new PIDConstants(5, 0.02, 0.0325); // Translation PID constants
-	public static PIDConstants rot = new PIDConstants(0.1, 0.0, 0.0);
+	public static PIDConstants trans = new PIDConstants(3, 0.02, 0.0315); // 5, 0.02, 0.03235
+	public static PIDConstants rot = new PIDConstants(0.75, 0.015, 0.5);
 
 	private Field2d field;
 
@@ -111,8 +111,9 @@ public class DriveSubsystem extends SubsystemBase {
 	@Override
 	public void periodic() {
 
+
 		// Update the odometry in the periodic block
-		m_odometry.update(Rotation2d.fromDegrees(m_gyro.getAngle()),
+		m_odometry.update(m_gyro.getRotation2d(),
 				new SwerveModulePosition[] {m_frontLeft.getPosition(), m_frontRight.getPosition(),
 						m_rearLeft.getPosition(), m_rearRight.getPosition()});
 		SmartDashboard.putNumber("yaw:", m_gyro.getYaw());
