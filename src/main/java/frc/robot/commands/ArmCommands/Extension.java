@@ -5,11 +5,13 @@
 package frc.robot.commands.ArmCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Robot;
 
 public class Extension extends Command {
+  boolean inout = false;
   /** Creates a new Extension. */
-  public Extension() {
-    // Use addRequirements() here to declare subsystem dependencies.
+  public Extension(boolean i) {
+    this.inout = i;
   }
 
   // Called when the command is initially scheduled.
@@ -18,7 +20,10 @@ public class Extension extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    if(inout)Robot.arm.manualRetract();
+    else Robot.arm.manualRetract();
+  }
 
   // Called once the command ends or is interrupted.
   @Override

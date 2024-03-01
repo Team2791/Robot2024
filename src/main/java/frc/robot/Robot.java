@@ -34,7 +34,7 @@ import frc.robot.subsystems.Arm;
 public class Robot extends TimedRobot {
 
 	//public static Climber climber;
-	//public static Arm arm;
+	public static Arm arm;
 	private Command m_autonomousCommand;
 	//public static Shintake shooter;
 	public static DriveSubsystem m_robotDrive;

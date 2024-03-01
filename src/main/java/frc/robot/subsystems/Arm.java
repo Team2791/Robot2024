@@ -11,6 +11,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
+import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -20,19 +21,23 @@ import frc.robot.RobotMap;
 public class Arm extends SubsystemBase {
   PhotonCamera camera;
 
-  private CANSparkMax turretLeft;
-  private CANSparkMax turretRight;
+  private CANSparkMax armLeft;
+  private CANSparkMax armRight;
+  private CANSparkMax extensionMotor;
 
   // private final PIDController leftPID;
   // private final PIDController rightPID;
   private AnalogPotentiometer armLeftPot;
   private AnalogPotentiometer armRightPot;
+  private AnalogPotentiometer extensionPot;
+
   private double Fg;
   public double setAngle;
   /** Creates a new Turret. */
   public Arm() {
-    turretLeft = new CANSparkMax(RobotMap.turretLeft, MotorType.kBrushless);
-    turretRight = new CANSparkMax(RobotMap.turretRight, MotorType.kBrushless);
+    armLeft = new CANSparkMax(RobotMap.armLeft, MotorType.kBrushless);
+    armRight = new CANSparkMax(RobotMap.armRight, MotorType.kBrushless);
+    extensionMotor = new CANSparkMax(RobotMap.extension, MotorType.kBrushless);
     armLeftPot = new AnalogPotentiometer(Constants.ArmConstants.LeftArmPot,90,244);
     armRightPot = new AnalogPotentiometer(Constants.ArmConstants.RightArmPot, 90,244);
 
@@ -41,51 +46,63 @@ public class Arm extends SubsystemBase {
     setAngle = armLeftPot.get()+armRightPot.get();
 
 
-    turretLeft.setIdleMode(IdleMode.kBrake);
-    turretRight.setIdleMode(IdleMode.kBrake);
+    armLeft.setIdleMode(IdleMode.kBrake);
+    armRight.setIdleMode(IdleMode.kBrake);
 
   }
 
 
   // public void setAngle(double angle){
-  //   turretLeft.setIdleMode(IdleMode.kCoast);
-  //   turretRight.setIdleMode(IdleMode.kCoast);
+  //   armLeft.setIdleMode(IdleMode.kCoast);
+  //   armRight.setIdleMode(IdleMode.kCoast);
   //   setAngle = angle;
   //   while(!leftPID.atSetpoint() && !rightPID.atSetpoint()){
   //     Fg = Math.cos(angle);
-  //     turretLeft.set(leftPID.calculate(turretpot.get(),angle));
-  //     turretRight.set(rightPID.calculate(turretpot.get(),angle));
+  //     armLeft.set(leftPID.calculate(turretpot.get(),angle));
+  //     armRight.set(rightPID.calculate(turretpot.get(),angle));
   //   }
 
   // }
 
   public void moveUp(){
-    turretLeft.setIdleMode(IdleMode.kBrake);
-    turretRight.setIdleMode(IdleMode.kBrake);
-    turretLeft.set(.01);
-    turretRight.set(.01);
+    armLeft.setIdleMode(IdleMode.kBrake);
+    armRight.setIdleMode(IdleMode.kBrake);
+    armLeft.set(.01);
+    armRight.set(.01);
 
-    setAngle = turretpot.get();
+    setAngle = (armLeftPot.get()+armRightPot.get())/2;
   }
 
   public void moveDown(){
-    turretLeft.setIdleMode(IdleMode.kCoast);
-    turretRight.setIdleMode(IdleMode.kCoast);
-    turretLeft.set(-.01);
-    turretRight.set(-.01);
-    setAngle = turretpot.get();
+    armLeft.setIdleMode(IdleMode.kCoast);
+    armRight.setIdleMode(IdleMode.kCoast);
+    armLeft.set(-.01);
+    armRight.set(-.01);
+    setAngle = (armLeftPot.get() + armRightPot.get())/2;
   }
 
   public void hold(){
-    turretLeft.set(0);
-    turretRight.set(0);
-    turretLeft.setIdleMode(IdleMode.kBrake);
-    turretRight.setIdleMode(IdleMode.kBrake);
+    armLeft.set(0);
+    armRight.set(0);
+    armLeft.setIdleMode(IdleMode.kBrake);
+    armRight.setIdleMode(IdleMode.kBrake);
   }
 
 
   public double getAngle(){
-    return turretpot.get();
+    return (armLeftPot.get()+armRightPot.get())/2;
+  }
+
+  public void manualExtend(){
+    extensionMotor.set(.01);
+  }
+
+  public void manualRetract(){
+    extensionMotor.set(-.01);
+  }
+
+  public double getExtensionAngle(){
+    return extensionPot.get();
   }
 
 
@@ -93,13 +110,14 @@ public class Arm extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Turret Angle", getAngle());
+    SmartDashboard.putNumber("Extension Angle", getExtensionAngle());
+    
     //SmartDashboard.putData("Left Turret PID", leftPID);
     //SmartDashboard.putData("Right Turret PID", rightPID);
 
-    SmartDashboard.putNumber(getName(), Fg);
 
-    //turretLeft.set(leftPID.calculate(turretpot.get(),setAngle)+Fg*Constants.ArmConstants.armLFF);
-    //turretRight.set(rightPID.calculate(turretpot.get(),setAngle)+Fg*Constants.ArmConstants.armRFF);
+    //armLeft.set(leftPID.calculate(turretpot.get(),setAngle)+Fg*Constants.ArmConstants.armLFF);
+    //armRight.set(rightPID.calculate(turretpot.get(),setAngle)+Fg*Constants.ArmConstants.armRFF);
 
     // This method will be called once per scheduler run
   }

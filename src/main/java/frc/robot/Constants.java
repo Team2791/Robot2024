@@ -192,7 +192,8 @@ public final class Constants {
 
 		public static final class ArmConstants{
 
-			public static final int armPot = 6;
+			public static final int LeftArmPot = 6;
+			public static final int RightArmPot = 7;
 
 			public static final double armLP = 1;
 			public static final double armLI = 0;
