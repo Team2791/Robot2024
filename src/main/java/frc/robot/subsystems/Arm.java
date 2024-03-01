@@ -34,7 +34,7 @@ public class Arm extends SubsystemBase {
     turretRight = new CANSparkMax(RobotMap.turretRight, MotorType.kBrushless);
     turretpot = new AnalogPotentiometer(Constants.ArmConstants.armPot,90,244);
 
-    leftPID = new PIDController(Constants.ArmConstants.armLP, Constants.ArmConstants.armLI, Constants.ArmConstants.armLD);
+    //leftPID = new PIDController(Constants.ArmConstants.armLP, Constants.ArmConstants.armLI, Constants.ArmConstants.armLD);
     rightPID = new PIDController(Constants.ArmConstants.armRP, Constants.ArmConstants.armRI, Constants.ArmConstants.armRD);
     setAngle = turretpot.get();
 
