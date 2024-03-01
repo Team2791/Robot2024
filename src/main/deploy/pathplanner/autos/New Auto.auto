@@ -16,6 +16,12 @@
           "data": {
             "pathName": "New Path"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Allign"
+          }
         }
       ]
     }

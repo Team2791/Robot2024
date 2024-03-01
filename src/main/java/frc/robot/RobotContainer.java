@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.TagAllign;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -25,10 +26,14 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import java.security.spec.KeySpec;
 import java.util.List;
 
+import org.photonvision.PhotonCamera;
+
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 /*
@@ -41,6 +46,9 @@ public class RobotContainer {
 
 	// The robot's subsystems
 	private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+	private final PhotonCamera camera1 = new PhotonCamera("2791camera");
+	private final TagAllign tagallign = new TagAllign(camera1, m_robotDrive);
+	private Trigger driverB;
 
 	// The driver's controller
 	XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -50,8 +58,11 @@ public class RobotContainer {
 	 */
 	public RobotContainer() {
 
+		NamedCommands.registerCommand("Allign", tagallign);
+
 		// Configure the button bindings
 		configureButtonBindings();
+		driverB.whileTrue(tagallign);
 
 		// Configure default commands
 		m_robotDrive.setDefaultCommand(
@@ -83,6 +94,7 @@ public class RobotContainer {
 	private void configureButtonBindings() {
 		new JoystickButton(m_driverController, Button.kR1.value)
 				.whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));
+		driverB = new JoystickButton(m_driverController,XboxController.Button.kA.value);
 	}
 
 	/**
