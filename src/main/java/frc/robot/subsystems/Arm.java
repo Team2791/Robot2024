@@ -23,20 +23,23 @@ public class Arm extends SubsystemBase {
   private CANSparkMax turretLeft;
   private CANSparkMax turretRight;
 
-  private final PIDController leftPID;
-  private final PIDController rightPID;
-  private AnalogPotentiometer turretpot;
+  // private final PIDController leftPID;
+  // private final PIDController rightPID;
+  private AnalogPotentiometer armLeftPot;
+  private AnalogPotentiometer armRightPot;
   private double Fg;
   public double setAngle;
   /** Creates a new Turret. */
   public Arm() {
     turretLeft = new CANSparkMax(RobotMap.turretLeft, MotorType.kBrushless);
     turretRight = new CANSparkMax(RobotMap.turretRight, MotorType.kBrushless);
-    turretpot = new AnalogPotentiometer(Constants.ArmConstants.armPot,90,244);
+    armLeftPot = new AnalogPotentiometer(Constants.ArmConstants.LeftArmPot,90,244);
+    armRightPot = new AnalogPotentiometer(Constants.ArmConstants.RightArmPot, 90,244);
 
     //leftPID = new PIDController(Constants.ArmConstants.armLP, Constants.ArmConstants.armLI, Constants.ArmConstants.armLD);
-    rightPID = new PIDController(Constants.ArmConstants.armRP, Constants.ArmConstants.armRI, Constants.ArmConstants.armRD);
-    setAngle = turretpot.get();
+    //rightPID = new PIDController(Constants.ArmConstants.armRP, Constants.ArmConstants.armRI, Constants.ArmConstants.armRD);
+    setAngle = armLeftPot.get()+armRightPot.get();
+
 
     turretLeft.setIdleMode(IdleMode.kBrake);
     turretRight.setIdleMode(IdleMode.kBrake);
@@ -44,21 +47,21 @@ public class Arm extends SubsystemBase {
   }
 
 
-  public void setAngle(double angle){
-    turretLeft.setIdleMode(IdleMode.kCoast);
-    turretRight.setIdleMode(IdleMode.kCoast);
-    setAngle = angle;
-    while(!leftPID.atSetpoint() && !rightPID.atSetpoint()){
-      Fg = Math.cos(angle);
-      turretLeft.set(leftPID.calculate(turretpot.get(),angle));
-      turretRight.set(rightPID.calculate(turretpot.get(),angle));
-    }
+  // public void setAngle(double angle){
+  //   turretLeft.setIdleMode(IdleMode.kCoast);
+  //   turretRight.setIdleMode(IdleMode.kCoast);
+  //   setAngle = angle;
+  //   while(!leftPID.atSetpoint() && !rightPID.atSetpoint()){
+  //     Fg = Math.cos(angle);
+  //     turretLeft.set(leftPID.calculate(turretpot.get(),angle));
+  //     turretRight.set(rightPID.calculate(turretpot.get(),angle));
+  //   }
 
-  }
+  // }
 
   public void moveUp(){
-    turretLeft.setIdleMode(IdleMode.kCoast);
-    turretRight.setIdleMode(IdleMode.kCoast);
+    turretLeft.setIdleMode(IdleMode.kBrake);
+    turretRight.setIdleMode(IdleMode.kBrake);
     turretLeft.set(.01);
     turretRight.set(.01);
 
@@ -90,11 +93,13 @@ public class Arm extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Turret Angle", getAngle());
-    SmartDashboard.putData("Left Turret PID", leftPID);
-    SmartDashboard.putData("Right Turret PID", rightPID);
+    //SmartDashboard.putData("Left Turret PID", leftPID);
+    //SmartDashboard.putData("Right Turret PID", rightPID);
 
-    turretLeft.set(leftPID.calculate(turretpot.get(),setAngle)+Fg*Constants.ArmConstants.armLFF);
-    turretRight.set(rightPID.calculate(turretpot.get(),setAngle)+Fg*Constants.ArmConstants.armRFF);
+    SmartDashboard.putNumber(getName(), Fg);
+
+    //turretLeft.set(leftPID.calculate(turretpot.get(),setAngle)+Fg*Constants.ArmConstants.armLFF);
+    //turretRight.set(rightPID.calculate(turretpot.get(),setAngle)+Fg*Constants.ArmConstants.armRFF);
 
     // This method will be called once per scheduler run
   }
