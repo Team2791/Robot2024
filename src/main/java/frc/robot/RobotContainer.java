@@ -18,7 +18,8 @@ import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.TagAllign;
+import frc.robot.commands.ManualAngle;
+import frc.robot.commands.TagAllignContinuous;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -44,14 +45,25 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
  */
 public class RobotContainer {
 
+	XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+
 	// The robot's subsystems
 	private final DriveSubsystem m_robotDrive = new DriveSubsystem();
 	private final PhotonCamera camera1 = new PhotonCamera("2791camera");
-	private final TagAllign tagallign = new TagAllign(camera1, m_robotDrive);
-	private Trigger driverB;
+	private final TagAllignContinuous tagallign = new TagAllignContinuous(camera1, m_robotDrive, m_driverController);
+	private final ManualAngle armup = new ManualAngle(true);
+	private final ManualAngle armdown = new ManualAngle(false);
+
+	private Trigger driverX, driverY, driverA, driverB, driverLB, driverRB, driverLT, driverRT, driverStart, driverBack;
+	private Trigger operatorX, opeY, operatorA, operatorB, operatorLB, operatorRB, operatorLT, operatorRT;
+
+	private Trigger driverDPadUp, driverDPadDown, driverDPadLeft, driverDPadRight, driverLeftStick;
+	private Trigger operatorDPadUp, operatorDPadDown, operatorDPadLeft, operatorDPadRight, operatorLeftStick;
+
+	
 
 	// The driver's controller
-	XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+	
 
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -63,6 +75,9 @@ public class RobotContainer {
 		// Configure the button bindings
 		configureButtonBindings();
 		driverB.whileTrue(tagallign);
+		driverDPadUp.whileTrue(armup);
+		driverDPadDown.whileTrue(armdown);
+		
 
 		// Configure default commands
 		m_robotDrive.setDefaultCommand(

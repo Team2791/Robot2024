@@ -143,4 +143,25 @@ public final class Constants {
 	public static final class NeoMotorConstants {
 		public static final double kFreeSpeedRpm = 5676;
 	}
+
+	public static final class ArmConstants{
+
+		public static final int LeftArmPot = 6;
+		public static final int RightArmPot = 7;
+
+		public static final double armLP = 1;
+		public static final double armLI = 0;
+		public static final double armLD = 0;
+		public static final double armLFF = 0;
+
+		public static final double armRP = 0;
+		public static final double armRI = 0;
+		public static final double armRD = 0;
+		public static final double armRFF = 1;
+
+		
+		public static final double SpeakerHeight = 2.045;
+		public static final double ShooterHeight = .5;
+
+	}
 }
