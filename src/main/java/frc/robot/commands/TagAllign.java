@@ -27,15 +27,15 @@ public class TagAllign extends Command {
   double area;
   double skew;
   boolean done = false;
-  AHRS gyro;
   double x;
-  double setPoint;
+  double setPoint = 400;
+  public static double  power;
   double p,i,d,lastError = 0;
   /** Creates a new TagAllign. */
   public TagAllign(PhotonCamera camera, DriveSubsystem driveSubsystem) {
-    this.gyro = DriveSubsystem.m_gyro;
     this.camera = camera;
     this.drivetrain = driveSubsystem;
+    addRequirements(driveSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -49,7 +49,6 @@ public class TagAllign extends Command {
 
     if(hasTargets){
       PhotonTrackedTarget target = result.getBestTarget();
-      yaw = target.getDetectedCorners().get(0);
     }
 
 
@@ -67,16 +66,19 @@ public class TagAllign extends Command {
       // 0 - 640
       x = target.getDetectedCorners().stream().mapToDouble((a) -> a.x).sum() / 4;
       SmartDashboard.putNumber("avg april tag position", x);
+      SmartDashboard.putNumber("April tag yaw", target.getYaw());
 
-    setPoint = 640/2;
-    p = setPoint-x;
-    i += p;
-    d=p-lastError;
-    double power = .001*p + i*.0001 + d*.00004;
-    SmartDashboard.putNumber("power", power);
-    drivetrain.drive(0,0,power,false,false);
+      p = setPoint-x;
+      i += p;
+      d=p-lastError;
+      lastError = p;
+      power = .001*p + i*0.00001 + d*.0002;
+      SmartDashboard.putNumber("p", p); 
+      SmartDashboard.putNumber("x", x);
+      drivetrain.drive(0,0,power,false,false);
 
     }
+    else drivetrain.drive(0,0,0,false,false);
 
   }
 
@@ -91,6 +93,6 @@ public class TagAllign extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return this.done;
+    return false;
   }
 }

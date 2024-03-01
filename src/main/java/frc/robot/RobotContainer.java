@@ -20,7 +20,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.PhotonVisionFollow;
 import frc.robot.commands.TagAllign;
-import frc.robot.commands.TestDrive;
+import frc.robot.commands.setO;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.PoseEstimatorSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -57,7 +57,7 @@ public class RobotContainer {
 	//commands
 	private final PhotonVisionFollow chaseTagCommand = new PhotonVisionFollow(camera1, m_robotDrive, poseEstimator::getCurrentPose);
 	private final TagAllign tagAllign = new TagAllign(camera1, m_robotDrive);
-	private final TestDrive testDrive = new TestDrive(m_robotDrive);
+	private final setO seto = new setO(m_robotDrive);
 
 	// The driver's controller
 	
@@ -70,8 +70,8 @@ public class RobotContainer {
 		m_driverController  = new XboxController(OIConstants.kDriverControllerPort);
 			configureButtonBindings();
 		driverA.toggleOnTrue(chaseTagCommand);
-		driverB.toggleOnTrue(tagAllign);
-		driverX.toggleOnTrue(testDrive);
+		driverB.whileTrue(tagAllign);
+		driverX.whileTrue(seto);
 
 		
 
@@ -79,7 +79,7 @@ public class RobotContainer {
 		// Configure the button bindings
 		//driverB.whileTrue(chaseTagCommand);
 
-		// Configure default commands
+		//Configure default commands
 		m_robotDrive.setDefaultCommand(
 				// The left stick controls translation of the robot.
 				// Turning is controlled by the X axis of the right stick.
