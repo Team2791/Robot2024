@@ -123,6 +123,7 @@ public final class Constants {
 
 	public static final class OIConstants {
 		public static final int kDriverControllerPort = 0;
+		public static final int kOperatorControllerPort = 1;
 		public static final double kDriveDeadband = 0.05;
 	}
 
@@ -165,4 +166,10 @@ public final class Constants {
 	// 	public static final double ShooterHeight = .5;
 
 	// }
+
+	public static final class ShintakeConstants{
+		public static final double kShooterP=0;
+		public static final double kShooterI=0;
+		public static final double kShooterD=0;
+	}
 }

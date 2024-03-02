@@ -30,6 +30,7 @@
 //   private AnalogPotentiometer armLeftPot;
 //   private AnalogPotentiometer armRightPot;
 //   private AnalogPotentiometer extensionPot;
+//   private PIDController pid;
 
 //   private double Fg;
 //   public double setAngle;
@@ -38,13 +39,15 @@
 //     armLeft = new CANSparkMax(RobotMap.armLeft, MotorType.kBrushless);
 //     armRight = new CANSparkMax(RobotMap.armRight, MotorType.kBrushless);
 //     extensionMotor = new CANSparkMax(RobotMap.extension, MotorType.kBrushless);
+
 //     armLeftPot = new AnalogPotentiometer(Constants.ArmConstants.LeftArmPot,90,244);
 //     armRightPot = new AnalogPotentiometer(Constants.ArmConstants.RightArmPot, 90,244);
 
 //     //leftPID = new PIDController(Constants.ArmConstants.armLP, Constants.ArmConstants.armLI, Constants.ArmConstants.armLD);
 //     //rightPID = new PIDController(Constants.ArmConstants.armRP, Constants.ArmConstants.armRI, Constants.ArmConstants.armRD);
-//     setAngle = armLeftPot.get()+armRightPot.get();
+//     setAngle = (armLeftPot.get()+armRightPot.get())/2;
 
+//     pid = new PIDController(0,0,0);
 
 //     armLeft.setIdleMode(IdleMode.kBrake);
 //     armRight.setIdleMode(IdleMode.kBrake);
@@ -52,17 +55,17 @@
 //   }
 
 
-//   // public void setAngle(double angle){
-//   //   armLeft.setIdleMode(IdleMode.kCoast);
-//   //   armRight.setIdleMode(IdleMode.kCoast);
-//   //   setAngle = angle;
-//   //   while(!leftPID.atSetpoint() && !rightPID.atSetpoint()){
-//   //     Fg = Math.cos(angle);
-//   //     armLeft.set(leftPID.calculate(turretpot.get(),angle));
-//   //     armRight.set(rightPID.calculate(turretpot.get(),angle));
-//   //   }
+//   public void setAngle(double angle){
+//     armLeft.setIdleMode(IdleMode.kCoast);
+//     armRight.setIdleMode(IdleMode.kCoast);
+//     setAngle = angle;
+//     while(!pid.atSetpoint()){
+//       Fg = Math.cos(angle);
+//       armLeft.set(pid.calculate(armLeftPot.get(),angle));
+//       armRight.set(pid.calculate(armRightPot.get(),angle));
+//     }
 
-//   // }
+//   }
 
 //   public void moveUp(){
 //     armLeft.setIdleMode(IdleMode.kBrake);
@@ -94,11 +97,11 @@
 //   }
 
 //   public void manualExtend(){
-//     extensionMotor.set(.01);
+//     extensionMotor.set(.1);
 //   }
 
 //   public void manualRetract(){
-//     extensionMotor.set(-.01);
+//     extensionMotor.set(-.1);
 //   }
 
 //   public double getExtensionAngle(){
@@ -116,8 +119,8 @@
 //     //SmartDashboard.putData("Right Turret PID", rightPID);
 
 
-//     //armLeft.set(leftPID.calculate(turretpot.get(),setAngle)+Fg*Constants.ArmConstants.armLFF);
-//     //armRight.set(rightPID.calculate(turretpot.get(),setAngle)+Fg*Constants.ArmConstants.armRFF);
+//     armLeft.set(leftPID.calculate(turretpot.get(),setAngle)+Fg*Constants.ArmConstants.armLFF);
+//     armRight.set(rightPID.calculate(turretpot.get(),setAngle)+Fg*Constants.ArmConstants.armRFF);
 
 //     // This method will be called once per scheduler run
 //   }

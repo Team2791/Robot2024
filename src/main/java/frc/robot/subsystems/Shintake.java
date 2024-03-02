@@ -8,7 +8,7 @@ import com.revrobotics.CANDigitalInput;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkMaxLimitSwitch;
+import com.revrobotics.SparkLimitSwitch;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -20,47 +20,44 @@ import frc.robot.RobotMap;
 
 public class Shintake extends SubsystemBase {
 
-  // private CANSparkMax leftMotor;
-  // private CANSparkMax rightMotor;
+  private CANSparkMax leftMotor;
+  private CANSparkMax rightMotor;
   private CANSparkMax intakeMotor;
-  private DigitalInput beamBrake;
+  private SparkLimitSwitch beamBrake;
   public PIDController speedController;
   double power;
   Timer timer = new Timer();
   /** Creates a new Shooter. */
   public Shintake() {
-    // leftMotor = new CANSparkMax(RobotMap.leftShitakeMotor, MotorType.kBrushless);
-    // rightMotor = new CANSparkMax(RobotMap.rightShitakeeMotor, MotorType.kBrushless);
+    leftMotor = new CANSparkMax(RobotMap.leftShoot, MotorType.kBrushless);
+    rightMotor = new CANSparkMax(RobotMap.rightShoot, MotorType.kBrushless);
     intakeMotor = new CANSparkMax(RobotMap.intakeMotor, MotorType.kBrushless);
-    //speedController = new PIDController(Constants.ShintakeConstants.kShooterP, Constants.ShintakeConstants.kShooterI, Constants.ShintakeConstants.kShooterD);
-    //speedController.setTolerance(.01);
-    // leftMotor.setIdleMode(IdleMode.kCoast);
-    // rightMotor.setIdleMode(IdleMode.kCoast);
-    //beamBrake = new DigitalInput(RobotMap.beamBrakeChannel);
-    
+    speedController = new PIDController(Constants.ShintakeConstants.kShooterP, Constants.ShintakeConstants.kShooterI, Constants.ShintakeConstants.kShooterD);
+    speedController.setTolerance(.01);
+    leftMotor.setIdleMode(IdleMode.kCoast);
+    rightMotor.setIdleMode(IdleMode.kCoast);
+    beamBrake = intakeMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
+    }
+
+  public void setShooter(double speed){
+    leftMotor.set(speedController.calculate(leftMotor.getEncoder().getVelocity(),speed));
+    rightMotor.set(speedController.calculate(leftMotor.getEncoder().getVelocity(),speed));
   }
 
-  // public void setShooter(double speed){
-  //   leftMotor.set(speedController.calculate(leftMotor.getEncoder().getVelocity(),speed));
-  //   rightMotor.set(speedController.calculate(leftMotor.getEncoder().getVelocity(),speed));
-  // }
-
-  // public void setShooter(double leftSpeed, double rightSpeed){
-  //   leftMotor.set(speedController.calculate(leftMotor.getEncoder().getVelocity(),leftSpeed));
-  //   rightMotor.set(speedController.calculate(leftMotor.getEncoder().getVelocity(),rightSpeed));
-  // }
+  public void setShooter(double leftSpeed, double rightSpeed){
+    leftMotor.set(speedController.calculate(leftMotor.getEncoder().getVelocity(),leftSpeed));
+    rightMotor.set(speedController.calculate(leftMotor.getEncoder().getVelocity(),rightSpeed));
+  }
 
   public void takeIn(){
-    intakeMotor.set(-.5);
-    // while(intakeMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen)){
-
-    // }
-    // }
-    // timer.start();
-    // while(timer.get()<.1){
-    //   intakeMotor.set(-.01);
-    // }
-    // intakeMotor.set(0);
+    while(!beamBrake.isLimitSwitchEnabled()){
+      intakeMotor.set(-.5);
+    }
+    timer.start();
+    while(timer.get()<.1){
+      intakeMotor.set(.1);
+    }
+    intakeMotor.set(0);
 
   }
 
@@ -68,27 +65,17 @@ public class Shintake extends SubsystemBase {
     intakeMotor.set(.5);
   }
 
-  public void stop(){
+  public void stopIntake(){
     intakeMotor.set(0);
   }
 
+  public void index(){
+    intakeMotor.set(-.3);
+  }
 
-  // public void stop(){
-  //   leftMotor.set(0);
-  //   rightMotor.set(0);
-  //   leftMotor.setIdleMode(IdleMode.kBrake);
-  //   rightMotor.setIdleMode(IdleMode.kBrake);
-  // }
-
-  // public boolean isItIn(){
-  //   return beamBrake.get();
-  // }
-
-  // public void index(){
-  //   while(!isItIn()){
-  //   intakeMotor.set(1);
-  //   }
-  // }
+  public boolean inout(){
+    return !beamBrake.isLimitSwitchEnabled();
+  }
 
 
 

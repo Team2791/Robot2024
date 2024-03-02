@@ -11,11 +11,10 @@ public final class RobotMap {
 
 //     public static final int armLeft = 61;
 //     public static final int armRight = 61;
-//     public static final int extension = 61;
+//     public static final int extensionPot = 61;
 
-    // public static final int leftShitakeMotor = 61;
-    // public static final int rightShitakeeMotor = 61;
-    // public static final int beamBrakeChannel = 61;
+    public static final int leftShoot = 61;
+    public static final int rightShoot = 61;
     public static final int intakeMotor = 11;
 
     
