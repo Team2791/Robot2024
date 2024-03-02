@@ -13,13 +13,15 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.ManualAngle;
+// import frc.robot.commands.ManualAngle;
 import frc.robot.commands.TagAllignContinuous;
+// import frc.robot.commands.servocontrol;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -51,8 +53,9 @@ public class RobotContainer {
 	private final DriveSubsystem m_robotDrive = new DriveSubsystem();
 	private final PhotonCamera camera1 = new PhotonCamera("2791camera");
 	private final TagAllignContinuous tagallign = new TagAllignContinuous(camera1, m_robotDrive, m_driverController);
-	private final ManualAngle armup = new ManualAngle(true);
-	private final ManualAngle armdown = new ManualAngle(false);
+	private final Servo servo = new Servo(0);
+	// private final ManualAngle armup = new ManualAngle(true);
+	// private final ManualAngle armdown = new ManualAngle(false);
 
 	private Trigger driverX, driverY, driverA, driverB, driverLB, driverRB, driverLT, driverRT, driverStart, driverBack;
 	private Trigger operatorX, opeY, operatorA, operatorB, operatorLB, operatorRB, operatorLT, operatorRT;
@@ -69,14 +72,37 @@ public class RobotContainer {
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
 	 */
 	public RobotContainer() {
+		servo.setBoundsMicroseconds(2000, 0, 0, 0, 1000);
+
 
 		NamedCommands.registerCommand("Allign", tagallign);
 
 		// Configure the button bindings
 		configureButtonBindings();
 		driverB.whileTrue(tagallign);
-		driverDPadUp.whileTrue(armup);
-		driverDPadDown.whileTrue(armdown);
+		driverA.whileTrue(new Command() {
+			@Override
+			public void execute() {
+				if (servo.getSpeed() != 1) servo.setSpeed(1);
+			}
+		});
+		driverX.whileTrue(new Command() {
+			@Override
+			public void execute() {
+				if (servo.getSpeed() != -1) servo.setSpeed(-1);
+			}
+
+			
+			/* before:
+			 * void initialize {
+			 * 	servo set speed -/+ 1
+			 * }
+			 * 
+			 * changed to allow for whiletrue (test)
+			 */
+		});
+		// driverDPadUp.whileTrue(armup);
+		// driverDPadDown.whileTrue(armdown);
 		
 
 		// Configure default commands
@@ -109,7 +135,9 @@ public class RobotContainer {
 	private void configureButtonBindings() {
 		new JoystickButton(m_driverController, Button.kR1.value)
 				.whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));
-		driverB = new JoystickButton(m_driverController,XboxController.Button.kA.value);
+		driverB = new JoystickButton(m_driverController,XboxController.Button.kB.value);
+		driverA = new JoystickButton(m_driverController, XboxController.Button.kA.value);
+		driverX = new JoystickButton(m_driverController, XboxController.Button.kX.value);
 	}
 
 	/**

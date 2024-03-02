@@ -19,6 +19,7 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.*;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
@@ -39,7 +40,7 @@ public class TagAllignContinuous extends Command {
     this.controller = drivController;
     this.camera = camera;
     this.drivetrain = driveSubsystem;
-    this.pid = new PIDController(.001, 0.00001, .0002);
+    this.pid = new PIDController(.1, 0.00001, .0002);
     addRequirements(driveSubsystem);
 
     // Use addRequirements() here to declare subsystem dependencies.
@@ -55,8 +56,9 @@ public class TagAllignContinuous extends Command {
   @Override
   public void execute() {
     var res = camera.getLatestResult();
-
+  
     if (res.hasTargets()) {
+      controller.setRumble(RumbleType.kBothRumble,.1);
       var target = res.getBestTarget();
     
       // average as stream
@@ -66,16 +68,17 @@ public class TagAllignContinuous extends Command {
       SmartDashboard.putNumber("April tag yaw", target.getYaw());
 
 
-      drivetrain.drive(-MathUtil.applyDeadband(controller.getLeftY(), OIConstants.kDriveDeadband), -MathUtil.applyDeadband(controller.getLeftX(), OIConstants.kDriveDeadband), pid.calculate(x, 320), false, false);
+      drivetrain.drive(-MathUtil.applyDeadband(controller.getLeftY(), OIConstants.kDriveDeadband), -MathUtil.applyDeadband(controller.getLeftX(), OIConstants.kDriveDeadband), pid.calculate(x, setPoint), false, false);
 
     }
-    else drivetrain.drive(-MathUtil.applyDeadband(controller.getLeftY(), OIConstants.kDriveDeadband), -MathUtil.applyDeadband(controller.getLeftX(), OIConstants.kDriveDeadband), -MathUtil.applyDeadband(controller.getRightX(),OIConstants.kDriveDeadband), false, false);
+    else {drivetrain.drive(-MathUtil.applyDeadband(controller.getLeftY(), OIConstants.kDriveDeadband), -MathUtil.applyDeadband(controller.getLeftX(), OIConstants.kDriveDeadband), -MathUtil.applyDeadband(controller.getRightX(),OIConstants.kDriveDeadband), false, false);controller.setRumble(RumbleType.kBothRumble, 0);}
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    controller.setRumble(RumbleType.kBothRumble, 0);
     drivetrain.stopModules();
   }
 
