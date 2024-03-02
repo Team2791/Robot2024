@@ -91,7 +91,7 @@ public class DriveSubsystem extends SubsystemBase {
 						trans, rot, // Constants class
 						// Rotation PID constants
 						1, // Max module speed, in m/s
-						0.38608, // Drive base radius in meters. Distance from robot center to furthest module.
+						.440, // Drive base radius in meters. Distance from robot center to furthest module. (.368)
 						new ReplanningConfig() // Default path replanning config. See the API for the options here
 				), () -> {
 					// Boolean supplier that controls when the path will be mirrored for the red

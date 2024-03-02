@@ -35,9 +35,9 @@ public final class Constants {
 		public static final double kRotationalSlewRate = 10; // percent per second (1 = 100%) 2.0
 
 		// Chassis configuration (meters)
-		public static final double kTrackWidth = Units.inchesToMeters(21.5);
+		public static final double kTrackWidth = Units.inchesToMeters(24.5);
 		// Distance between centers of right and left wheels on robot
-		public static final double kWheelBase = Units.inchesToMeters(21.5);
+		public static final double kWheelBase = Units.inchesToMeters(24.5);
 		// Distance between front and back wheels on robot
 		public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
 				new Translation2d(kWheelBase / 2, kTrackWidth / 2),
@@ -80,7 +80,8 @@ public final class Constants {
 
 		// Calculations required for driving motor conversion factors and feed forward
 		public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
-		public static final double kWheelDiameterMeters = 0.0762;
+		public static final double kWheelDiameterInches = 3;
+		public static final double kWheelDiameterMeters = Units.inchesToMeters(kWheelDiameterInches);
 		public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
 		// 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
 		// teeth on the bevel pinion
@@ -144,24 +145,24 @@ public final class Constants {
 		public static final double kFreeSpeedRpm = 5676;
 	}
 
-	public static final class ArmConstants{
+	// public static final class ArmConstants{
 
-		public static final int LeftArmPot = 6;
-		public static final int RightArmPot = 7;
+	// 	public static final int LeftArmPot = 6;
+	// 	public static final int RightArmPot = 7;
 
-		public static final double armLP = 1;
-		public static final double armLI = 0;
-		public static final double armLD = 0;
-		public static final double armLFF = 0;
+	// 	public static final double armLP = 1;
+	// 	public static final double armLI = 0;
+	// 	public static final double armLD = 0;
+	// 	public static final double armLFF = 0;
 
-		public static final double armRP = 0;
-		public static final double armRI = 0;
-		public static final double armRD = 0;
-		public static final double armRFF = 1;
+	// 	public static final double armRP = 0;
+	// 	public static final double armRI = 0;
+	// 	public static final double armRD = 0;
+	// 	public static final double armRFF = 1;
 
 		
-		public static final double SpeakerHeight = 2.045;
-		public static final double ShooterHeight = .5;
+	// 	public static final double SpeakerHeight = 2.045;
+	// 	public static final double ShooterHeight = .5;
 
-	}
+	// }
 }

@@ -19,6 +19,8 @@ import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.Intake;
+import frc.robot.commands.SpitOut;
 // import frc.robot.commands.ManualAngle;
 import frc.robot.commands.TagAllignContinuous;
 // import frc.robot.commands.servocontrol;
@@ -54,6 +56,8 @@ public class RobotContainer {
 	private final PhotonCamera camera1 = new PhotonCamera("2791camera");
 	private final TagAllignContinuous tagallign = new TagAllignContinuous(camera1, m_robotDrive, m_driverController);
 	private final Servo servo = new Servo(0);
+	private final Intake intake = new Intake();
+	private final SpitOut spitout = new SpitOut();
 	// private final ManualAngle armup = new ManualAngle(true);
 	// private final ManualAngle armdown = new ManualAngle(false);
 
@@ -80,29 +84,10 @@ public class RobotContainer {
 		// Configure the button bindings
 		configureButtonBindings();
 		driverB.whileTrue(tagallign);
-		driverA.whileTrue(new Command() {
-			@Override
-			public void execute() {
-				if (servo.getSpeed() != 1) servo.setSpeed(1);
-			}
-		});
-		driverX.whileTrue(new Command() {
-			@Override
-			public void execute() {
-				if (servo.getSpeed() != -1) servo.setSpeed(-1);
-			}
-
-			
-			/* before:
-			 * void initialize {
-			 * 	servo set speed -/+ 1
-			 * }
-			 * 
-			 * changed to allow for whiletrue (test)
-			 */
-		});
-		// driverDPadUp.whileTrue(armup);
-		// driverDPadDown.whileTrue(armdown);
+		driverA.whileTrue(intake);
+		driverX.whileTrue(spitout);
+		//driverDPadUp.whileTrue(armup);
+		//driverDPadDown.whileTrue(armdown);
 		
 
 		// Configure default commands
