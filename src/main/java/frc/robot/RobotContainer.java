@@ -19,22 +19,20 @@ import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.ClimbRelease;
-import frc.robot.commands.LinearLock;
-import frc.robot.commands.climb;
-import frc.robot.commands.linearunlock;
+import frc.robot.commands.*;
 import frc.robot.commands.AprilTagCommands.TagAllignContinuous;
 import frc.robot.commands.ArmCommands.Extension;
 import frc.robot.commands.ArmCommands.ManualAngleDown;
 import frc.robot.commands.ArmCommands.ManualAngleUp;
 import frc.robot.commands.ArmCommands.Retraction;
+import frc.robot.commands.ClimberCommands.actuator.LinearLock;
 import frc.robot.commands.PitstickCommands.LeftClimbUp;
 import frc.robot.commands.PitstickCommands.LeftRelease;
 import frc.robot.commands.PitstickCommands.RightClimbUp;
 import frc.robot.commands.PitstickCommands.RightRelease;
 import frc.robot.commands.ShintakeCommands.Intake;
 import frc.robot.commands.ShintakeCommands.Shoot;
-//import frc.robot.commands.ShintakeCommands.Shoot;
+// import frc.robot.commands.ShintakeCommands.Shoot;
 import frc.robot.commands.ShintakeCommands.SpitOut;
 // import frc.robot.commands.servocontrol;
 import frc.robot.subsystems.DriveSubsystem;
@@ -46,7 +44,6 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
 import java.security.spec.KeySpec;
 import java.util.List;
 
@@ -63,16 +60,20 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
  */
 public class RobotContainer {
 
-	public static XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
-	public static XboxController m_operatorController = new XboxController(OIConstants.kOperatorControllerPort);
-	public static XboxController m_pitController = new XboxController(OIConstants.kPitStickControllerPort);
+	public static XboxController m_driverController =
+			new XboxController(OIConstants.kDriverControllerPort);
+	public static XboxController m_operatorController =
+			new XboxController(OIConstants.kOperatorControllerPort);
+	public static XboxController m_pitController =
+			new XboxController(OIConstants.kPitStickControllerPort);
 	// The robot's subsystems
 	private final DriveSubsystem m_robotDrive = Robot.m_drivetrain;
 	private final PhotonCamera camera1 = new PhotonCamera("2791camera");
 
 
 	//Commands
-	private final TagAllignContinuous tagallign = new TagAllignContinuous(camera1, m_robotDrive, m_driverController);
+	private final TagAllignContinuous tagallign =
+			new TagAllignContinuous(camera1, m_robotDrive, m_driverController);
 	private final Intake intake = new Intake();
 	private final SpitOut spitout = new SpitOut();
 	private final ManualAngleUp manualangleup = new ManualAngleUp();
@@ -86,18 +87,21 @@ public class RobotContainer {
 	// private final ManualAngle armup = new ManualAngle(true);
 	// private final ManualAngle armdown = new ManualAngle(false);
 
-	private Trigger driverX, driverY, driverA, driverB, driverLB, driverRB, driverLT, driverRT, driverStart, driverBack;
-	private Trigger operatorX, operatorY, operatorA, operatorB, operatorLB, operatorRB, operatorLT, operatorRT;
+	private Trigger driverX, driverY, driverA, driverB, driverLB, driverRB, driverLT, driverRT,
+			driverStart, driverBack;
+	private Trigger operatorX, operatorY, operatorA, operatorB, operatorLB, operatorRB, operatorLT,
+			operatorRT;
 
 	private Trigger driverDPadUp, driverDPadDown, driverDPadLeft, driverDPadRight, driverLeftStick;
-	private Trigger operatorDPadUp, operatorDPadDown, operatorDPadLeft, operatorDPadRight, operatorLeftStick;
+	private Trigger operatorDPadUp, operatorDPadDown, operatorDPadLeft, operatorDPadRight,
+			operatorLeftStick;
 
 	private Trigger pitStickRB, pitStickLB, pitDpadRight, pitDpadLeft;
 
-	
+
 
 	// The driver's controller
-	
+
 
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -107,13 +111,12 @@ public class RobotContainer {
 		NamedCommands.registerCommand("Allign", tagallign);
 
 
-		
 
 		// Configure the button bindings
 		configureButtonBindings();
 		//driverB.whileTrue(tagallign);
-		driverRB.whileTrue(new climb());
-		driverLB.whileTrue(new ClimbRelease());
+		driverRB.whileTrue(new frc.robot.commands.ClimberCommands.climbing.ClimbUp());
+		driverLB.whileTrue(new frc.robot.commands.ClimberCommands.ClimbRelease());
 		driverX.whileTrue(new Shoot());
 		driverA.whileTrue(intake);
 		driverY.whileTrue(spitout);
@@ -127,12 +130,6 @@ public class RobotContainer {
 		pitStickRB.whileTrue(leftrelease);
 		pitDpadLeft.whileTrue(rightclimbup);
 		pitDpadRight.whileTrue(rightrelease);
-
-
-
-
-
-
 
 
 
@@ -166,7 +163,7 @@ public class RobotContainer {
 
 		//driver configs
 		driverA = new JoystickButton(m_driverController, XboxController.Button.kA.value);
-		driverB = new JoystickButton(m_driverController,XboxController.Button.kB.value);
+		driverB = new JoystickButton(m_driverController, XboxController.Button.kB.value);
 		driverX = new JoystickButton(m_driverController, XboxController.Button.kX.value);
 		driverY = new JoystickButton(m_driverController, XboxController.Button.kY.value);
 		driverDPadUp = new POVButton(m_driverController, 180);
@@ -180,7 +177,7 @@ public class RobotContainer {
 
 		//operator configs
 		operatorA = new JoystickButton(m_operatorController, XboxController.Button.kA.value);
-		operatorB = new JoystickButton(m_operatorController,XboxController.Button.kB.value);
+		operatorB = new JoystickButton(m_operatorController, XboxController.Button.kB.value);
 		operatorX = new JoystickButton(m_operatorController, XboxController.Button.kX.value);
 		operatorY = new JoystickButton(m_operatorController, XboxController.Button.kY.value);
 		operatorDPadUp = new POVButton(m_operatorController, 180);

@@ -1,39 +1,14 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+package frc.robot.commands.ClimberCommands;
 
-package frc.robot.commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.ClimberCommands.actuator.LinearLock;
+import frc.robot.commands.ClimberCommands.actuator.LinearUnlock;
+import frc.robot.commands.ClimberCommands.climbing.ClimbDown;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Robot;
-
-public class ClimbRelease extends Command {
-  /** Creates a new climb. */
-  public ClimbRelease() {
-    // Use addRequirements() here to declare subsystem dependencies.
-  }
-
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    Robot.climber.climb(-.1,-.1);
-  }
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    Robot.climber.climb(0.0);
-  }
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
+public class ClimbRelease extends SequentialCommandGroup {
+	public ClimbRelease() {
+		addCommands(new LinearUnlock());
+		addCommands(new ClimbDown());
+		addCommands(new LinearLock());
+	}
 }
