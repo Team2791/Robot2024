@@ -124,18 +124,19 @@ public final class Constants {
 	public static final class OIConstants {
 		public static final int kDriverControllerPort = 0;
 		public static final int kOperatorControllerPort = 1;
+		public static final int kPitStickControllerPort =2;
 		public static final double kDriveDeadband = 0.05;
 	}
 
 	public static final class AutoConstants {
 
-		public static final double kRotationP = 0.1;
+		public static final double kRotationP = 0;
 		public static final double kRotationI = 0;
 		public static final double kRotationD = 0;
 
-		public static final double kTranslationP = 3.35;
-		public static final double kTranslationI = .8;
-		public static final double kTranslationD = .1;
+		public static final double kTranslationP = 0.01;
+		public static final double kTranslationI = 0;
+		public static final double kTranslationD = 1;
  
 		public static final double kMaxSpeedMetersPerSecond = 3;
 		public static final double kMaxAccelerationMetersPerSecondSquared = 3;

@@ -28,6 +28,10 @@ import frc.robot.commands.ArmCommands.Extension;
 import frc.robot.commands.ArmCommands.ManualAngleDown;
 import frc.robot.commands.ArmCommands.ManualAngleUp;
 import frc.robot.commands.ArmCommands.Retraction;
+import frc.robot.commands.PitstickCommands.LeftClimbUp;
+import frc.robot.commands.PitstickCommands.LeftRelease;
+import frc.robot.commands.PitstickCommands.RightClimbUp;
+import frc.robot.commands.PitstickCommands.RightRelease;
 import frc.robot.commands.ShintakeCommands.Intake;
 import frc.robot.commands.ShintakeCommands.Shoot;
 //import frc.robot.commands.ShintakeCommands.Shoot;
@@ -61,6 +65,7 @@ public class RobotContainer {
 
 	public static XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
 	public static XboxController m_operatorController = new XboxController(OIConstants.kOperatorControllerPort);
+	public static XboxController m_pitController = new XboxController(OIConstants.kPitStickControllerPort);
 	// The robot's subsystems
 	private final DriveSubsystem m_robotDrive = Robot.m_drivetrain;
 	private final PhotonCamera camera1 = new PhotonCamera("2791camera");
@@ -72,6 +77,10 @@ public class RobotContainer {
 	private final SpitOut spitout = new SpitOut();
 	private final ManualAngleUp manualangleup = new ManualAngleUp();
 	private final ManualAngleDown manualangledown = new ManualAngleDown();
+	private final LeftClimbUp leftclimbup = new LeftClimbUp();
+	private final LeftRelease leftrelease = new LeftRelease();
+	private final RightClimbUp rightclimbup = new RightClimbUp();
+	private final RightRelease rightrelease = new RightRelease();
 	private final LinearLock actuate = new LinearLock();
 
 	// private final ManualAngle armup = new ManualAngle(true);
@@ -82,6 +91,8 @@ public class RobotContainer {
 
 	private Trigger driverDPadUp, driverDPadDown, driverDPadLeft, driverDPadRight, driverLeftStick;
 	private Trigger operatorDPadUp, operatorDPadDown, operatorDPadLeft, operatorDPadRight, operatorLeftStick;
+
+	private Trigger pitStickRB, pitStickLB, pitDpadRight, pitDpadLeft;
 
 	
 
@@ -110,6 +121,13 @@ public class RobotContainer {
 		driverDPadLeft.whileTrue(new Retraction());
 		driverDPadUp.whileTrue(manualangleup);
 		driverDPadDown.whileTrue(manualangledown);
+
+
+		pitStickLB.whileTrue(leftclimbup);
+		pitStickRB.whileTrue(leftrelease);
+		pitDpadLeft.whileTrue(rightclimbup);
+		pitDpadRight.whileTrue(rightrelease);
+
 
 
 
@@ -170,6 +188,11 @@ public class RobotContainer {
 		operatorDPadRight = new POVButton(m_operatorController, 90);
 		operatorDPadLeft = new POVButton(m_operatorController, 270);
 
+		//pitStick buttons
+		pitStickLB = new JoystickButton(m_pitController, XboxController.Button.kLeftBumper.value);
+		pitStickRB = new JoystickButton(m_pitController, XboxController.Button.kRightBumper.value);
+		pitDpadLeft = new POVButton(m_pitController, 270);
+		pitDpadRight = new POVButton(m_pitController, 90);
 
 	}
 

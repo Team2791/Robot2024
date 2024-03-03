@@ -34,7 +34,7 @@ public class Climber extends SubsystemBase {
 
     leftMotor = new CANSparkMax(41, MotorType.kBrushless);
     rightMotor = new CANSparkMax(42, MotorType.kBrushless);
-    rightMotor.follow(leftMotor, true);
+    //rightMotor.follow(leftMotor, true);
     gyro = Robot.m_drivetrain.m_gyro;
     leftMotor.setIdleMode(IdleMode.kBrake);
     rightMotor.setIdleMode(IdleMode.kBrake);
@@ -108,6 +108,14 @@ public class Climber extends SubsystemBase {
 
   public double getRightPot(){
     return rightPot.get();
+  }
+
+  public void setLeftMotor(double speed){
+    leftMotor.set(speed);
+  }
+
+  public void setRightMotor(double speed){
+    rightMotor.set(speed);
   }
 
 

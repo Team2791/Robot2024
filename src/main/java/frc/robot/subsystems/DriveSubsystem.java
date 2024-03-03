@@ -88,8 +88,8 @@ public class DriveSubsystem extends SubsystemBase {
 													// Constants class
 						new PIDConstants(Constants.AutoConstants.kTranslationP, Constants.AutoConstants.kTranslationI, Constants.AutoConstants.kTranslationD), // Translation PID constants
 						new PIDConstants(Constants.AutoConstants.kRotationP, Constants.AutoConstants.kRotationI, Constants.AutoConstants.kRotationD), // Rotation PID constants
-						4.5, // Max module speed, in m/s
-						0.39, // Drive base radius in meters. Distance from robot center to furthest module.
+						3, // Max module speed, in m/s
+						0.440, // Drive base radius in meters. Distance from robot center to furthest module.
 						new ReplanningConfig() // Default path replanning config. See the API for the options here
 				),
 				() -> {
