@@ -12,37 +12,47 @@ import frc.robot.RobotContainer;
 
 public class Intake extends Command {
   boolean isIn = false;
-  Timer timer = new Timer();
+  
   /** Creates a new Intake. */
   public Intake() {
+    
+
+    addRequirements(Robot.shintake);
 
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    Robot.shintake.takeIn();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-    Robot.shintake.takeIn();
     
-    RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble,.5);
-    isIn = true;
+    
+    
+    
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, .5);
+    while(Robot.shintake.isin()){
+      Robot.shintake.slowOut();
+    }
     Robot.shintake.stopIntake();
+    RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, 0);
   }
+  
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return isIn;
+    return Robot.shintake.isin();
   }
 }

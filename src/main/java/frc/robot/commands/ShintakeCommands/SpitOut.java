@@ -10,6 +10,7 @@ import frc.robot.Robot;
 public class SpitOut extends Command {
   /** Creates a new SpitOut. */
   public SpitOut() {
+    addRequirements(Robot.shintake);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

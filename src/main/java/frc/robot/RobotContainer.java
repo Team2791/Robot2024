@@ -19,9 +19,18 @@ import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.ClimbRelease;
+import frc.robot.commands.LinearLock;
+import frc.robot.commands.climb;
+import frc.robot.commands.linearunlock;
 import frc.robot.commands.AprilTagCommands.TagAllignContinuous;
+import frc.robot.commands.ArmCommands.Extension;
+import frc.robot.commands.ArmCommands.ManualAngleDown;
+import frc.robot.commands.ArmCommands.ManualAngleUp;
+import frc.robot.commands.ArmCommands.Retraction;
 import frc.robot.commands.ShintakeCommands.Intake;
 import frc.robot.commands.ShintakeCommands.Shoot;
+//import frc.robot.commands.ShintakeCommands.Shoot;
 import frc.robot.commands.ShintakeCommands.SpitOut;
 // import frc.robot.commands.servocontrol;
 import frc.robot.subsystems.DriveSubsystem;
@@ -53,7 +62,7 @@ public class RobotContainer {
 	public static XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
 	public static XboxController m_operatorController = new XboxController(OIConstants.kOperatorControllerPort);
 	// The robot's subsystems
-	private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+	private final DriveSubsystem m_robotDrive = Robot.m_drivetrain;
 	private final PhotonCamera camera1 = new PhotonCamera("2791camera");
 
 
@@ -61,8 +70,9 @@ public class RobotContainer {
 	private final TagAllignContinuous tagallign = new TagAllignContinuous(camera1, m_robotDrive, m_driverController);
 	private final Intake intake = new Intake();
 	private final SpitOut spitout = new SpitOut();
-	private final Shoot shoot = new Shoot();
-
+	private final ManualAngleUp manualangleup = new ManualAngleUp();
+	private final ManualAngleDown manualangledown = new ManualAngleDown();
+	private final LinearLock actuate = new LinearLock();
 
 	// private final ManualAngle armup = new ManualAngle(true);
 	// private final ManualAngle armdown = new ManualAngle(false);
@@ -90,11 +100,17 @@ public class RobotContainer {
 
 		// Configure the button bindings
 		configureButtonBindings();
-		driverB.whileTrue(tagallign);
-		driverRT.whileTrue(shoot);
+		//driverB.whileTrue(tagallign);
+		driverRB.whileTrue(new climb());
+		driverLB.whileTrue(new ClimbRelease());
+		driverX.whileTrue(new Shoot());
 		driverA.whileTrue(intake);
 		driverY.whileTrue(spitout);
-		
+		driverDPadRight.whileTrue(new Extension());
+		driverDPadLeft.whileTrue(new Retraction());
+		driverDPadUp.whileTrue(manualangleup);
+		driverDPadDown.whileTrue(manualangledown);
+
 
 
 
@@ -116,9 +132,6 @@ public class RobotContainer {
 						true, true), m_robotDrive));
 	}
 
-	public void autocfg() {
-		this.m_robotDrive.auto();
-	}
 
 	/**
 	 * Use this method to define your button->command mappings. Buttons can be
@@ -142,16 +155,20 @@ public class RobotContainer {
 		driverDPadDown = new POVButton(m_driverController, 0);
 		driverDPadRight = new POVButton(m_driverController, 90);
 		driverDPadLeft = new POVButton(m_driverController, 270);
+		driverLB = new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value);
+		driverRB = new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value);
+		driverRT = new JoystickButton(m_driverController, XboxController.Axis.kRightTrigger.value);
+		driverLT = new JoystickButton(m_driverController, XboxController.Axis.kLeftTrigger.value);
 
 		//operator configs
-		operatorA = new JoystickButton(m_driverController, XboxController.Button.kA.value);
-		operatorB = new JoystickButton(m_driverController,XboxController.Button.kB.value);
-		operatorX = new JoystickButton(m_driverController, XboxController.Button.kX.value);
-		operatorY = new JoystickButton(m_driverController, XboxController.Button.kY.value);
-		operatorDPadUp = new POVButton(m_driverController, 180);
-		operatorDPadDown = new POVButton(m_driverController, 0);
-		operatorDPadRight = new POVButton(m_driverController, 90);
-		operatorDPadLeft = new POVButton(m_driverController, 270);
+		operatorA = new JoystickButton(m_operatorController, XboxController.Button.kA.value);
+		operatorB = new JoystickButton(m_operatorController,XboxController.Button.kB.value);
+		operatorX = new JoystickButton(m_operatorController, XboxController.Button.kX.value);
+		operatorY = new JoystickButton(m_operatorController, XboxController.Button.kY.value);
+		operatorDPadUp = new POVButton(m_operatorController, 180);
+		operatorDPadDown = new POVButton(m_operatorController, 0);
+		operatorDPadRight = new POVButton(m_operatorController, 90);
+		operatorDPadLeft = new POVButton(m_operatorController, 270);
 
 
 	}

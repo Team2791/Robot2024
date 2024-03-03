@@ -29,40 +29,44 @@ public class Shintake extends SubsystemBase {
   Timer timer = new Timer();
   /** Creates a new Shooter. */
   public Shintake() {
-    leftMotor = new CANSparkMax(RobotMap.leftShoot, MotorType.kBrushless);
-    rightMotor = new CANSparkMax(RobotMap.rightShoot, MotorType.kBrushless);
+    leftMotor = new CANSparkMax(21, MotorType.kBrushless);
+    rightMotor = new CANSparkMax(22, MotorType.kBrushless);
     intakeMotor = new CANSparkMax(RobotMap.intakeMotor, MotorType.kBrushless);
     speedController = new PIDController(Constants.ShintakeConstants.kShooterP, Constants.ShintakeConstants.kShooterI, Constants.ShintakeConstants.kShooterD);
     speedController.setTolerance(.01);
     leftMotor.setIdleMode(IdleMode.kCoast);
     rightMotor.setIdleMode(IdleMode.kCoast);
-    beamBrake = intakeMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
+
+    beamBrake = rightMotor.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
     }
 
-  public void setShooter(double speed){
-    leftMotor.set(speedController.calculate(leftMotor.getEncoder().getVelocity(),speed));
-    rightMotor.set(speedController.calculate(leftMotor.getEncoder().getVelocity(),speed));
+  // public void setShooter(double speed){
+  //   leftMotor.set(speedController.calculate(leftMotor.getEncoder().getVelocity(),speed));
+  //   rightMotor.set(speedController.calculate(leftMotor.getEncoder().getVelocity(),speed));
+  // }
+
+  // public void setShooter(double leftSpeed, double rightSpeed){
+  //   leftMotor.set(speedController.calculate(leftMotor.getEncoder().getVelocity(),leftSpeed));
+  //   rightMotor.set(speedController.calculate(leftMotor.getEncoder().getVelocity(),rightSpeed));
+  // }
+
+  public void run22(){
+    rightMotor.set(-.2);
   }
 
   public void setShooter(double leftSpeed, double rightSpeed){
-    leftMotor.set(speedController.calculate(leftMotor.getEncoder().getVelocity(),leftSpeed));
-    rightMotor.set(speedController.calculate(leftMotor.getEncoder().getVelocity(),rightSpeed));
+    leftMotor.set(leftSpeed);
+    rightMotor.set(-rightSpeed);
   }
 
-  public void takeIn(){
-    while(!beamBrake.isLimitSwitchEnabled()){
-      intakeMotor.set(-.5);
-    }
-    timer.start();
-    while(timer.get()<.1){
-      intakeMotor.set(.1);
-    }
-    intakeMotor.set(0);
 
+
+  public void takeIn(){
+    intakeMotor.set(-1);
   }
 
   public void spitOut(){
-    intakeMotor.set(.5);
+    intakeMotor.set(.4);
   }
 
   public void stopIntake(){
@@ -73,9 +77,24 @@ public class Shintake extends SubsystemBase {
     intakeMotor.set(-.3);
   }
 
-  public boolean inout(){
-    return !beamBrake.isLimitSwitchEnabled();
+  public boolean isin(){ //false when note is out
+    return !beamBrake.isPressed();
   }
+
+  public void slowOut(){
+    intakeMotor.set(.2);
+  }
+
+  public double getSpeedRight(){
+    return rightMotor.getEncoder().getVelocity();
+
+
+  }
+
+  public double getSpeedLeft(){
+    return leftMotor.getEncoder().getVelocity();
+  }
+
 
 
 
@@ -86,7 +105,9 @@ public class Shintake extends SubsystemBase {
     // SmartDashboard.putNumber("Left motor set power", leftMotor.get());
     // SmartDashboard.putNumber("Right motor set power", rightMotor.get());
     // //SmartDashboard.putData("Speed PID", speedController);
-    // SmartDashboard.putBoolean("Beam Break?", isItIn());
+    SmartDashboard.putBoolean("Beam Break?", isin());
+    SmartDashboard.putNumber("left speed", getSpeedLeft());
+    SmartDashboard.putNumber("Right speed", getSpeedRight());
   }
 
   
