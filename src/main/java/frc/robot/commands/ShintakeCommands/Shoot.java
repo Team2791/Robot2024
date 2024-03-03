@@ -11,49 +11,48 @@ import frc.robot.Robot;
 import frc.robot.RobotContainer;
 
 public class Shoot extends Command {
-  Timer timer = new Timer();
-  
-  /** Creates a new Shoot. */
-  public Shoot() {
-    timer.reset();
-    addRequirements(Robot.shintake);
-  }
+	Timer timer = new Timer();
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    timer.start();
+	/** Creates a new Shoot. */
+	public Shoot() {
+		timer.reset();
+		addRequirements(Robot.shintake);
+	}
 
-    Robot.shintake.setShooter(.8,.8);
-  }
+	// Called when the command is initially scheduled.
+	@Override
+	public void initialize() {
+		timer.start();
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
+		Robot.shintake.shoot(.8, .8);
+	}
 
-
-    if(timer.get()>3)Robot.shintake.index();
-    
+	// Called every time the scheduler runs while the command is scheduled.
+	@Override
+	public void execute() {
 
 
-    
+		if (timer.get() > 3)
+			Robot.shintake.feedToShooter();
 
-  }
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    while(Robot.shintake.isin()){
-      Robot.shintake.index();
 
-    }
-      Robot.shintake.setShooter(0,0);
-      Robot.shintake.stopIntake();
-  }
+	}
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return Robot.shintake.isin();
-  }
+	// Called once the command ends or is interrupted.
+	@Override
+	public void end(boolean interrupted) {
+		while (Robot.shintake.broken()) {
+			Robot.shintake.feedToShooter();
+
+		}
+		Robot.shintake.shoot(0, 0);
+		Robot.shintake.stopIntake();
+	}
+
+	// Returns true when the command should end.
+	@Override
+	public boolean isFinished() {
+		return Robot.shintake.broken();
+	}
 }

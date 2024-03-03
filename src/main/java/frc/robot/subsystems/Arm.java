@@ -4,130 +4,114 @@
 
 package frc.robot.subsystems;
 
-import org.photonvision.PhotonCamera;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
-import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
-import frc.robot.RobotMap;
 
 
 public class Arm extends SubsystemBase {
-  PhotonCamera camera;
+	/** DO NOT USE (follows pivot automatically) */
+	private final CANSparkMax pivotFollower = new CANSparkMax(31, MotorType.kBrushless);
 
-  private CANSparkMax armLeft;
-  private CANSparkMax armRight;
-  private CANSparkMax extensionMotor;
+	private final CANSparkMax pivot = new CANSparkMax(32, MotorType.kBrushless);
+	private final CANSparkMax extend = new CANSparkMax(33, MotorType.kBrushless);
 
-  private final PIDController leftPID;
-  private final PIDController rightPID;
-  private AnalogPotentiometer armPot;
-  private AnalogPotentiometer extenpot;
-  private PIDController pid;
+	private final PIDController pivotctl = new PIDController(1, 0, 0);
 
-  private double Fg;
-  public double setAngle;
-  /** Creates a new Turret. */
-  public Arm() {
-    armLeft = new CANSparkMax(32, MotorType.kBrushless);
-    armRight = new CANSparkMax(31, MotorType.kBrushless);
-    armRight.follow(armLeft, true);
-    extensionMotor = new CANSparkMax(33, MotorType.kBrushless);
+	private final AnalogPotentiometer pivotPot;
+	private final AnalogPotentiometer extendPot;
 
-    double slope = (ArmConstants.kMaxAngle - ArmConstants.kMinAngle) / (ArmConstants.kMaxPot - ArmConstants.kMinPot);
-    double intercept = ArmConstants.kMinAngle - (ArmConstants.kMinPot * slope);
-    armPot = new AnalogPotentiometer(1, slope, intercept);
+	private double gravity;
+	private double angle;
 
-    extenpot = new AnalogPotentiometer(0);
+	public Arm() {
+		pivotFollower.follow(pivot, true);
+		pivot.setIdleMode(IdleMode.kBrake);
+		pivotFollower.setIdleMode(IdleMode.kBrake);
 
-    leftPID = new PIDController(1,0,0);
-    rightPID = new PIDController(1,0,0);
-    setAngle = (armPot.get()+armPot.get())/2;
+		double slope = (ArmConstants.kMaxAngle - ArmConstants.kMinAngle)
+				/ (ArmConstants.kMaxPot - ArmConstants.kMinPot);
 
-    pid = new PIDController(0,0,0);
+		double intercept = ArmConstants.kMinAngle - (ArmConstants.kMinPot * slope);
 
-    armLeft.setIdleMode(IdleMode.kBrake);
-    armRight.setIdleMode(IdleMode.kBrake);
+		pivotPot = new AnalogPotentiometer(1, slope, intercept);
+		extendPot = new AnalogPotentiometer(0);
 
-  }
+		angle = pivotPot.get();
+
+		CommandScheduler.getInstance().registerSubsystem(this);
+	}
 
 
-  public void setAngle(double angle){
-    armLeft.setIdleMode(IdleMode.kCoast);
-    armRight.setIdleMode(IdleMode.kCoast);
-    setAngle = angle;
-    while(!pid.atSetpoint()){
-      Fg = Math.cos(angle);
-      armLeft.set(pid.calculate(armPot.get(),angle));
-      armRight.set(pid.calculate(armPot.get(),angle));
-    }
+	public void setAngle(double angle) {
+		pivot.setIdleMode(IdleMode.kCoast);
+		pivotctl.setSetpoint(angle);
 
-  }
+		this.angle = angle;
 
-  public void moveUp(){
-    armLeft.set(-ArmConstants.kArmSpeedDown);
+		while (!pivotctl.atSetpoint()) {
+			gravity = Math.cos(angle);
+			pivot.set(pivotctl.calculate(pivotPot.get()));
+		}
+	}
 
-    setAngle = armPot.get();
-  }
+	public void moveUp() {
+		pivot.set(-ArmConstants.kArmSpeedDown);
 
-  public void moveDown(){
-    armLeft.set(ArmConstants.kArmSpeedUp);
-    setAngle = armPot.get();
-  }
+		angle = pivotPot.get();
+	}
 
-  public void hold(){
-    armLeft.set(0);
-    armLeft.setIdleMode(IdleMode.kBrake);
-    armRight.setIdleMode(IdleMode.kBrake);
-  }
+	public void moveDown() {
+		pivot.set(ArmConstants.kArmSpeedUp);
 
-  public void setCoastMode(){
-    armLeft.setIdleMode(IdleMode.kCoast);
-    armRight.setIdleMode(IdleMode.kCoast);
-  }
+		angle = pivotPot.get();
+	}
 
+	public void hold() {
+		pivot.set(0);
+	}
 
-  public double getArmPot(){
-    return armPot.get();
-  }
+	public void coast() {
+		pivot.setIdleMode(IdleMode.kBrake);
+		pivotFollower.setIdleMode(IdleMode.kBrake);
+	}
 
-  public void manualExtend(){
-    extensionMotor.set(.1);
-  }
+	public void brake() {
+		pivot.setIdleMode(IdleMode.kBrake);
+		pivotFollower.setIdleMode(IdleMode.kBrake);
+	}
 
-  public void manualRetract(){
-    extensionMotor.set(-.1);
-  }
+	public double getPivotPot() {
+		return pivotPot.get();
+	}
 
-  public double getExtensionPot(){
-    return extenpot.get();
-  }
+	public void manualExtend() {
+		extend.set(.1);
+	}
 
-  public void stopExtension(){
-    extensionMotor.set(0);
-  }
+	public void manualRetract() {
+		extend.set(-.1);
+	}
 
+	public double getExtensionPot() {
+		return extendPot.get();
+	}
 
+	public void stopExtension() {
+		extend.set(0);
+	}
 
-  @Override
-  public void periodic() {
-    SmartDashboard.putNumber("Turret Pot", getArmPot());
-    SmartDashboard.putNumber("Extension Angle", getExtensionPot());
-    //SmartDashboard.putData("Left Turret PID", leftPID);
-    //SmartDashboard.putData("Right Turret PID", rightPID);
+	public void periodic() {
+		SmartDashboard.putNumber("Turret Pot", getPivotPot());
+		SmartDashboard.putNumber("Extension Angle", getExtensionPot());
 
-
-    // armLeft.set(leftPID.calculate(armPot.get(),setAngle)+Fg*Constants.ArmConstants.armLFF);
-    // armRight.set(rightPID.calculate(turretpot.get(),setAngle)+Fg*Constants.ArmConstants.armRFF);
-
-    // This method will be called once per scheduler run
-  }
-
-
+		// armLeft.set(leftPID.calculate(armPot.get(),setAngle)+Fg*Constants.ArmConstants.armLFF);
+		// armRight.set(rightPID.calculate(turretpot.get(),setAngle)+Fg*Constants.ArmConstants.armRFF);
+	}
 }
