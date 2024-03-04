@@ -30,7 +30,7 @@ public class TagAllignContinuous extends Command {
   DriveSubsystem drivetrain;
 
   double x;
-  double setPoint = 400;
+  double setPoint = 420;
   XboxController controller;
   double  power;
   PIDController pid;
@@ -40,7 +40,7 @@ public class TagAllignContinuous extends Command {
     this.controller = drivController;
     this.camera = camera;
     this.drivetrain = driveSubsystem;
-    this.pid = new PIDController(.1, 0.00001, .0002);
+    this.pid = new PIDController(.002,0,0);
     addRequirements(driveSubsystem);
 
     // Use addRequirements() here to declare subsystem dependencies.
@@ -60,15 +60,19 @@ public class TagAllignContinuous extends Command {
     if (res.hasTargets()) {
       controller.setRumble(RumbleType.kBothRumble,.1);
       var target = res.getBestTarget();
+
+      if(target.getFiducialId() == 7 || target.getFiducialId()==4){
     
       // average as stream
       // 0 - 640
       x = target.getDetectedCorners().stream().mapToDouble((a) -> a.x).sum() / 4;
       SmartDashboard.putNumber("avg april tag position", x);
       SmartDashboard.putNumber("April tag yaw", target.getYaw());
+      SmartDashboard.putString("target", target.toString());
 
 
       drivetrain.drive(-MathUtil.applyDeadband(controller.getLeftY(), OIConstants.kDriveDeadband), -MathUtil.applyDeadband(controller.getLeftX(), OIConstants.kDriveDeadband), pid.calculate(x, setPoint), false, false);
+      }
 
     }
     else {drivetrain.drive(-MathUtil.applyDeadband(controller.getLeftY(), OIConstants.kDriveDeadband), -MathUtil.applyDeadband(controller.getLeftX(), OIConstants.kDriveDeadband), -MathUtil.applyDeadband(controller.getRightX(),OIConstants.kDriveDeadband), false, false);controller.setRumble(RumbleType.kBothRumble, 0);}

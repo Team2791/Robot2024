@@ -22,6 +22,7 @@ public class Shoot extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    timer.reset();
     timer.start();
 
     Robot.shintake.setShooter(.8,.8);
@@ -32,7 +33,7 @@ public class Shoot extends Command {
   public void execute() {
 
 
-    if(timer.get()>3)Robot.shintake.index();
+    if(timer.get()>2)Robot.shintake.index();
     
 
 

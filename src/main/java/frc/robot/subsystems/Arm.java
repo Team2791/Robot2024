@@ -33,6 +33,10 @@ public class Arm extends SubsystemBase {
 
   private double Fg;
   public double setAngle;
+
+  private double slope, intercept;
+  private double extSlope, extIntercept;
+
   /** Creates a new Turret. */
   public Arm() {
     armLeft = new CANSparkMax(32, MotorType.kBrushless);
@@ -40,11 +44,13 @@ public class Arm extends SubsystemBase {
     armRight.follow(armLeft, true);
     extensionMotor = new CANSparkMax(33, MotorType.kBrushless);
 
-    double slope = (ArmConstants.kMaxAngle - ArmConstants.kMinAngle) / (ArmConstants.kMaxPot - ArmConstants.kMinPot);
-    double intercept = ArmConstants.kMinAngle - (ArmConstants.kMinPot * slope);
+    slope = (ArmConstants.kMaxAngle - ArmConstants.kMinAngle) / (ArmConstants.kMaxPot - ArmConstants.kMinPot);
+    intercept = ArmConstants.kMinAngle - (ArmConstants.kMinPot * slope);
     armPot = new AnalogPotentiometer(1, slope, intercept);
 
-    extenpot = new AnalogPotentiometer(0);
+    extSlope = 100 / (ArmConstants.kExtendMaxPot - ArmConstants.kExtendMinPot);
+    extIntercept = - ArmConstants.kExtendMinPot * extSlope;
+    extenpot = new AnalogPotentiometer(0, extSlope, extIntercept);
 
     leftPID = new PIDController(1,0,0);
     rightPID = new PIDController(1,0,0);
@@ -117,8 +123,12 @@ public class Arm extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Turret Pot", getArmPot());
-    SmartDashboard.putNumber("Extension Angle", getExtensionPot());
+    double armPot = getArmPot();
+    double extPot = getExtensionPot();
+    SmartDashboard.putNumber("Pivot Angle", armPot);
+    SmartDashboard.putNumber("Raw pivot pot", (armPot - intercept) / slope);
+    SmartDashboard.putNumber("Extension %", extPot);
+    SmartDashboard.putNumber("Raw extension pot", (extPot - extIntercept) / extSlope);
     //SmartDashboard.putData("Left Turret PID", leftPID);
     //SmartDashboard.putData("Right Turret PID", rightPID);
 
