@@ -1,6 +1,12 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 1.289385365807769,
+      "y": 5.675365008137424
+    },
+    "rotation": 0
+  },
   "command": {
     "type": "sequential",
     "data": {
@@ -9,12 +15,6 @@
           "type": "path",
           "data": {
             "pathName": "midStart"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "fromspeakermidNote"
           }
         }
       ]
