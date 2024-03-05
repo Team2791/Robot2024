@@ -78,14 +78,12 @@ public class Arm extends SubsystemBase {
 
   public void moveUp(){
 
-    armLeft.set(-ArmConstants.kArmSpeedDown);
+    armLeft.set(-ArmConstants.kArmSpeedUp);
   }
 
   public void moveDown(){
 
-    for(double i=ArmConstants.kArmSpeedDown; i>0; i-=.01){
-      armLeft.set(i);
-    }
+    armLeft.set(ArmConstants.kArmSpeedDown);
 
   }
 

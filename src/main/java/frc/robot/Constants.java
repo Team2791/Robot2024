@@ -198,7 +198,7 @@ public final class Constants {
 	}
 
 	public static final class ArmConstants {
-		public static final double kArmSpeedDown = 0.3;
+		public static final double kArmSpeedDown = 0.15;
 		public static final double kArmSpeedUp = .15;
 
 		public static final double extensionPosition = 25;

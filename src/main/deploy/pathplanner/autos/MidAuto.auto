@@ -18,6 +18,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Fullextend"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "midToRightNote"

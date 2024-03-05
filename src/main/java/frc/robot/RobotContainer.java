@@ -21,6 +21,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AprilTagCommands.TagAllignContinuous;
 import frc.robot.commands.ArmCommands.ManualExtension;
+import frc.robot.commands.ArmCommands.Fullextension;
 import frc.robot.commands.ArmCommands.ManualAngleDown;
 import frc.robot.commands.ArmCommands.ManualAngleUp;
 import frc.robot.commands.ArmCommands.Retraction;
@@ -49,6 +50,7 @@ import java.util.List;
 
 import org.photonvision.PhotonCamera;
 
+import com.fasterxml.jackson.databind.util.Named;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
@@ -83,6 +85,7 @@ public class RobotContainer {
 	private final LeftRelease leftrelease = new LeftRelease();
 	private final RightClimbUp rightclimbup = new RightClimbUp();
 	private final RightRelease rightrelease = new RightRelease();
+	private final Fullextension fullextend = new Fullextension();
 	private final LinearLock actuate = new LinearLock();
 
 	// private final ManualAngle armup = new ManualAngle(true);
@@ -112,6 +115,7 @@ public class RobotContainer {
 		NamedCommands.registerCommand("Align", tagallign);
 		NamedCommands.registerCommand("Shoot", shoot);
 		NamedCommands.registerCommand("Intake", intake);
+		NamedCommands.registerCommand("Fullextend", fullextend);
 
 
 
