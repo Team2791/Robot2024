@@ -6,6 +6,8 @@ package frc.robot;
 
 import java.lang.reflect.Field;
 import com.pathplanner.lib.util.PIDConstants;
+
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -37,7 +39,6 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
-
 		shintake = new Shintake();
 
 		arm = new Arm();

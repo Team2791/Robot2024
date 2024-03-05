@@ -30,7 +30,7 @@ public class Shoot extends SequentialCommandGroup {
 
 		addCommands(new Command() {
 			public void initialize() {
-				Robot.shintake.feedToShooter();
+				Robot.shintake.feed();
 			}
 
 			public void end(boolean interrupted) {

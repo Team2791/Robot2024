@@ -24,6 +24,7 @@ public class Arm extends SubsystemBase {
 
 	private final PIDController pivotctl = new PIDController(1, 0, 0);
 
+<<<<<<< HEAD
 	private final AnalogPotentiometer pivotPot;
 	private final AnalogPotentiometer extendPot;
 
@@ -34,6 +35,28 @@ public class Arm extends SubsystemBase {
 		pivotFollower.follow(pivot, true);
 		pivot.setIdleMode(IdleMode.kBrake);
 		pivotFollower.setIdleMode(IdleMode.kBrake);
+=======
+  private double Fg;
+  public double setAngle;
+
+  private double slope, intercept;
+  private double extSlope, extIntercept;
+
+  /** Creates a new Turret. */
+  public Arm() {
+    armLeft = new CANSparkMax(32, MotorType.kBrushless);
+    armRight = new CANSparkMax(31, MotorType.kBrushless);
+    armRight.follow(armLeft, true);
+    extensionMotor = new CANSparkMax(33, MotorType.kBrushless);
+
+    slope = (ArmConstants.kMaxAngle - ArmConstants.kMinAngle) / (ArmConstants.kMaxPot - ArmConstants.kMinPot);
+    intercept = ArmConstants.kMinAngle - (ArmConstants.kMinPot * slope);
+    armPot = new AnalogPotentiometer(1, slope, intercept);
+
+    extSlope = 100 / (ArmConstants.kExtendMaxPot - ArmConstants.kExtendMinPot);
+    extIntercept = - ArmConstants.kExtendMinPot * extSlope;
+    extenpot = new AnalogPotentiometer(0, extSlope, extIntercept);
+>>>>>>> refs/remotes/origin/swerveFieldCentric
 
 		double slope = (ArmConstants.kMaxAngle - ArmConstants.kMinAngle)
 				/ (ArmConstants.kMaxPot - ArmConstants.kMinPot);
@@ -107,9 +130,22 @@ public class Arm extends SubsystemBase {
 		extend.set(0);
 	}
 
+<<<<<<< HEAD
 	public void periodic() {
 		SmartDashboard.putNumber("Turret Pot", getPivotPot());
 		SmartDashboard.putNumber("Extension Angle", getExtensionPot());
+=======
+  @Override
+  public void periodic() {
+    double armPot = getArmPot();
+    double extPot = getExtensionPot();
+    SmartDashboard.putNumber("Pivot Angle", armPot);
+    SmartDashboard.putNumber("Raw pivot pot", (armPot - intercept) / slope);
+    SmartDashboard.putNumber("Extension %", extPot);
+    SmartDashboard.putNumber("Raw extension pot", (extPot - extIntercept) / extSlope);
+    //SmartDashboard.putData("Left Turret PID", leftPID);
+    //SmartDashboard.putData("Right Turret PID", rightPID);
+>>>>>>> refs/remotes/origin/swerveFieldCentric
 
 		// armLeft.set(leftPID.calculate(armPot.get(),setAngle)+Fg*Constants.ArmConstants.armLFF);
 		// armRight.set(rightPID.calculate(turretpot.get(),setAngle)+Fg*Constants.ArmConstants.armRFF);

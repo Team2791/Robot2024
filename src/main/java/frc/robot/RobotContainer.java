@@ -113,12 +113,12 @@ public class RobotContainer {
 
 		// Configure the button bindings
 		configureButtonBindings();
-		//driverB.whileTrue(tagallign);
+		driverB.whileTrue(tagallign);
 		driverRB.whileTrue(new frc.robot.commands.ClimberCommands.climbing.ClimbUp());
 		driverLB.whileTrue(new frc.robot.commands.ClimberCommands.ClimbRelease());
-		driverX.whileTrue(new Shoot());
-		driverA.whileTrue(intake);
-		driverY.whileTrue(spitout);
+		operatorX.whileTrue(new Shoot());
+		operatorA.whileTrue(intake);
+		operatorY.whileTrue(spitout);
 		driverDPadRight.whileTrue(new Extension());
 		driverDPadLeft.whileTrue(new Retraction());
 		driverDPadUp.whileTrue(manualangleup);

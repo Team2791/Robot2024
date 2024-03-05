@@ -67,7 +67,7 @@ public class Shintake extends SubsystemBase {
 		intake.set(0);
 	}
 
-	public void feedToShooter() {
+	public void feed() {
 		intake.set(-.3);
 	}
 
