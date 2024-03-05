@@ -5,36 +5,16 @@ package frc.robot.commands.ArmCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
+import frc.robot.Constants.ArmConstants;
 
 public class Retraction extends Command {
-  boolean inout = false;
-  /** Creates a new Extension. */
-  public Retraction() {
-  }
+	public Retraction() {}
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {}
+	public void execute() {
+		Robot.arm.extend(false);
+	}
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    if(Robot.arm.getExtensionPot()<5 && Robot.arm.extensionMotor.getEncoder().getVelocity()<0){
-      Robot.arm.extensionMotor.set(0);
-    }
-    else {Robot.arm.manualRetract();
-    }
-  }
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    Robot.arm.stopExtension();
-  }
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
+	public boolean isFinished() {
+		return Robot.arm.getExtPoint() <= ArmConstants.kMinExt;
+	}
 }
