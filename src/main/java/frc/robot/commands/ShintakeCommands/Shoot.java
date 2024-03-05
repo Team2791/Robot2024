@@ -33,7 +33,7 @@ public class Shoot extends Command {
   public void execute() {
 
 
-    if(timer.get()>2)Robot.shintake.index();
+    if(timer.get()>1)Robot.shintake.index();
     
 
 

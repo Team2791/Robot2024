@@ -63,6 +63,10 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotPeriodic() {
+
+		
+		
+
 		// Runs the Scheduler. This is responsible for polling buttons, adding
 		// newly-scheduled
 		// commands, running already-scheduled commands, removing finished or
@@ -76,7 +80,6 @@ public class Robot extends TimedRobot {
 	/** This function is called once each time the robot enters Disabled mode. */
 	@Override
 	public void disabledInit() {
-		Robot.arm.setCoastMode();
 	}
 
 	@Override

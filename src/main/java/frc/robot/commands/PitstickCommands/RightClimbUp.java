@@ -24,7 +24,7 @@ public class RightClimbUp extends Command {
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		Robot.climber.setRight(.5);
+		Robot.climber.setRight(.3);
 
 	}
 

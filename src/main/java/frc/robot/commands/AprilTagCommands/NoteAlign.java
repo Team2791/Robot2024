@@ -36,11 +36,7 @@ public class NoteAlign extends Command {
     var result = camera.getLatestResult();
 		if (result != null && result.hasTargets()) {
 			output = pid.calculate(result.getBestTarget().getYaw()); // -8
-			if (output > 0.4)
-				output = 0.4;
-			if (output < -0.4)
-				output = -0.4;
-
+      
 			Robot.m_drivetrain.drive(0, 0, output, false, false);
 	    if(result.getBestTarget().getYaw() < nonPIDTolerance && result.getBestTarget().getYaw() > -nonPIDTolerance)
       	{

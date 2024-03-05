@@ -13,8 +13,12 @@ public class Climb extends SequentialCommandGroup {
 
 		// Wait for lb press
 		addCommands(new Command() {
+			public void initialize() {
+				controller.getAButton();
+			}
+
 			public boolean isFinished() {
-				return controller.getLeftBumper();
+				return controller.getAButtonPressed();
 			}
 		});
 

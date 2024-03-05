@@ -6,10 +6,10 @@ package frc.robot.commands.ArmCommands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 
-public class Extension extends Command {
+public class ManualExtension extends Command {
   boolean inout = false;
   /** Creates a new Extension. */
-  public Extension() {
+  public ManualExtension() {
   }
 
   // Called when the command is initially scheduled.
@@ -19,7 +19,12 @@ public class Extension extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Robot.arm.manualExtend();
+    
+
+    if(Robot.arm.getExtensionPot()>95 && Robot.arm.extensionMotor.getEncoder().getVelocity()>0){
+      Robot.arm.extensionMotor.set(0);
+    }
+    else {Robot.arm.manualExtend();}
   }
 
   // Called once the command ends or is interrupted.

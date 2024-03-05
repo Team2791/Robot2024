@@ -67,6 +67,8 @@ public final class Constants {
 		public static final int kRearRightTurningCanId = 15; //45
 
 		public static final boolean kGyroReversed = false;
+
+		public static final double driveBaseRadius = .5*Math.sqrt(Math.pow(kTrackWidth, 2) + Math.pow(kWheelBase,2));
 	}
 
 	public static final class ModuleConstants {
@@ -196,30 +198,34 @@ public final class Constants {
 	}
 
 	public static final class ArmConstants {
-		public static final double kArmSpeedDown = 0.15;
+		public static final double kArmSpeedDown = 0.3;
 		public static final double kArmSpeedUp = .15;
 
-		public static final double kMaxPot = 0.2448;
-		public static final double kMinPot = 0.3007;
+		public static final double extensionPosition = 25;
+
+		public static final double kMaxPot = 0.3027;
+		public static final double kMinPot = 0.3640;
 
 		public static final double kMaxAngle = 111.0;
 		public static final double kMinAngle = -10.4;
 
-		public static final double kExtendMinPot = 0.44;
-		public static final double kExtendMaxPot = 0.55;
+		public static final double kExtendMinPot = 0.13965;
+		public static final double kExtendMaxPot = 0.4917;
 	}
 
 	public static final class ClimberConstants {
 		public static final double RelativeEncoderWhileUp = 0;
-		public static final double RelativeEncoderWhileDown = 0;
+		public static final double RelativeEncoderWhileDown = -93.2;
 		public static final double ActivationSpeed = -0.3;
 		public static final double ClimbSpeedHigh = 0.6;
 		public static final double ClimbSpeedLow = 0.3;
 	}
 
 	public static class VisionConstants {
+
+		public static final double kCameraPitch = 30;
 		/** Physical location of the apriltag camera on the robot, relative to the center of the robot. */
-		public static final Transform3d APRILTAG_CAMERA_TO_ROBOT = new Transform3d(new Translation3d(-0.06, 0.2, -0.2127),new Rotation3d(0.0, Units.degreesToRadians(15.0), Units.degreesToRadians(-3.0)));
+		public static final Transform3d APRILTAG_CAMERA_TO_ROBOT = new Transform3d(new Translation3d(Units.inchesToMeters(12.25), Units.inchesToMeters(12.25), Units.inchesToMeters(0)),new Rotation3d(0.0, Units.degreesToRadians(15.0), Units.degreesToRadians(-3.0)));
 		
 		public static final double FIELD_LENGTH_METERS = 16.54;
 		public static final double FIELD_WIDTH_METERS = 8.21;

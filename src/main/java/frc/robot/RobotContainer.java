@@ -19,12 +19,12 @@ import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.*;
 import frc.robot.commands.AprilTagCommands.TagAllignContinuous;
-import frc.robot.commands.ArmCommands.Extension;
+import frc.robot.commands.ArmCommands.ManualExtension;
 import frc.robot.commands.ArmCommands.ManualAngleDown;
 import frc.robot.commands.ArmCommands.ManualAngleUp;
 import frc.robot.commands.ArmCommands.Retraction;
+import frc.robot.commands.ClimberCommands.Climb;
 import frc.robot.commands.ClimberCommands.actuator.LinearLock;
 import frc.robot.commands.PitstickCommands.LeftClimbUp;
 import frc.robot.commands.PitstickCommands.LeftRelease;
@@ -76,6 +76,7 @@ public class RobotContainer {
 			new TagAllignContinuous(camera1, m_robotDrive, m_driverController);
 	private final Intake intake = new Intake();
 	private final SpitOut spitout = new SpitOut();
+	private final Shoot shoot = new Shoot();
 	private final ManualAngleUp manualangleup = new ManualAngleUp();
 	private final ManualAngleDown manualangledown = new ManualAngleDown();
 	private final LeftClimbUp leftclimbup = new LeftClimbUp();
@@ -108,19 +109,21 @@ public class RobotContainer {
 	 */
 	public RobotContainer() {
 
-		NamedCommands.registerCommand("Allign", tagallign);
+		NamedCommands.registerCommand("Align", tagallign);
+		NamedCommands.registerCommand("Shoot", shoot);
+		NamedCommands.registerCommand("Intake", intake);
 
 
 
 		// Configure the button bindings
 		configureButtonBindings();
 		driverB.whileTrue(tagallign);
-		driverRB.whileTrue(new frc.robot.commands.ClimberCommands.climbing.ClimbUp());
+		driverRB.toggleOnTrue(new Climb(m_driverController));
 		driverLB.whileTrue(new frc.robot.commands.ClimberCommands.ClimbRelease());
 		operatorX.whileTrue(new Shoot());
 		operatorA.whileTrue(intake);
 		operatorY.whileTrue(spitout);
-		driverDPadRight.whileTrue(new Extension());
+		driverDPadRight.whileTrue(new ManualExtension());
 		driverDPadLeft.whileTrue(new Retraction());
 		driverDPadUp.whileTrue(manualangleup);
 		driverDPadDown.whileTrue(manualangledown);
@@ -194,6 +197,6 @@ public class RobotContainer {
 	}
 
 	public Command getAutonomousCommand() {
-		return new PathPlannerAuto("New Auto");
-	}
+		return new PathPlannerAuto("MidAuto");
+	}         
 }

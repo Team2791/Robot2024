@@ -20,7 +20,7 @@ public class LeftClimbUp extends Command {
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		Robot.climber.setLeft(.5);
+		Robot.climber.setLeft(.3);
 	}
 
 	// Called once the command ends or is interrupted.

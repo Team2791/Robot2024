@@ -8,6 +8,7 @@ import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.SparkAbsoluteEncoder.Type;
 
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -26,6 +27,7 @@ public class Climber extends SubsystemBase {
 	private final AHRS gyro = DriveSubsystem.m_gyro;
 
 	public Climber() {
+		CommandScheduler.getInstance().registerSubsystem(this);
 		leftMotor.setIdleMode(IdleMode.kBrake);
 		rightMotor.setIdleMode(IdleMode.kBrake);
 
@@ -34,8 +36,6 @@ public class Climber extends SubsystemBase {
 
 		leftLock.setBoundsMicroseconds(2000, 0, 0, 0, 1000);
 		rightLock.setBoundsMicroseconds(2000, 0, 0, 0, 1000);
-
-		CommandScheduler.getInstance().registerSubsystem(this);
 	}
 
 	/**  Used to tilt during climbing and unclimbing */
@@ -81,7 +81,7 @@ public class Climber extends SubsystemBase {
 	}
 
 	public double rightPos() {
-		return leftMotor.getEncoder().getPosition();
+		return rightMotor.getEncoder().getPosition();
 	}
 
 	public void setLeft(double speed) {
@@ -94,6 +94,6 @@ public class Climber extends SubsystemBase {
 
 	public void periodic() {
 		SmartDashboard.putNumber("(Clmber) Left Position", leftPos());
-		SmartDashboard.putNumber("(Climber) Right Position", leftPos());
+		SmartDashboard.putNumber("(Climber) Right Position", rightPos());
 	}
 }

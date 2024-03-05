@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.CANDigitalInput;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
@@ -82,7 +81,7 @@ public class Shintake extends SubsystemBase {
   }
 
   public void slowOut(){
-    intakeMotor.set(.4);
+    intakeMotor.set(.25);
   }
 
   public double getSpeedRight(){
