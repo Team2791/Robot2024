@@ -19,13 +19,13 @@ import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.*;
-import frc.robot.commands.AprilTagCommands.TagAlign;
 import frc.robot.commands.AprilTagCommands.TagAllignContinuous;
-import frc.robot.commands.ArmCommands.Extension;
+import frc.robot.commands.ArmCommands.ManualExtension;
+import frc.robot.commands.ArmCommands.Fullextension;
 import frc.robot.commands.ArmCommands.ManualAngleDown;
 import frc.robot.commands.ArmCommands.ManualAngleUp;
 import frc.robot.commands.ArmCommands.Retraction;
+import frc.robot.commands.ClimberCommands.Climb;
 import frc.robot.commands.ClimberCommands.actuator.LinearLock;
 import frc.robot.commands.PitstickCommands.LeftClimbUp;
 import frc.robot.commands.PitstickCommands.LeftRelease;
@@ -50,6 +50,7 @@ import java.util.List;
 
 import org.photonvision.PhotonCamera;
 
+import com.fasterxml.jackson.databind.util.Named;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
@@ -61,7 +62,7 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
  */
 public class RobotContainer {
 
-	public static XboxController driverController =
+	public static XboxController m_driverController =
 			new XboxController(OIConstants.kDriverControllerPort);
 	public static XboxController m_operatorController =
 			new XboxController(OIConstants.kOperatorControllerPort);
@@ -74,15 +75,17 @@ public class RobotContainer {
 
 	//Commands
 	private final TagAllignContinuous tagallign =
-			new TagAllignContinuous(cam, drivetrain, driverController);
+			new TagAllignContinuous(cam, drivetrain, m_driverController);
 	private final Intake intake = new Intake();
 	private final SpitOut spitout = new SpitOut();
+	private final Shoot shoot = new Shoot();
 	private final ManualAngleUp manualangleup = new ManualAngleUp();
 	private final ManualAngleDown manualangledown = new ManualAngleDown();
 	private final LeftClimbUp leftclimbup = new LeftClimbUp();
 	private final LeftRelease leftrelease = new LeftRelease();
 	private final RightClimbUp rightclimbup = new RightClimbUp();
 	private final RightRelease rightrelease = new RightRelease();
+	private final Fullextension fullextend = new Fullextension();
 	private final LinearLock actuate = new LinearLock();
 
 	// private final ManualAngle armup = new ManualAngle(true);
@@ -108,20 +111,21 @@ public class RobotContainer {
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
 	 */
 	public RobotContainer() {
-		NamedCommands.registerCommand("Intake", new Intake());
-		NamedCommands.registerCommand("Shoot", new Shoot());
-		NamedCommands.registerCommand("SpeakerTagAlign",
-				new TagAlign(cam, drivetrain, driverController, 7));
+
+		NamedCommands.registerCommand("Align", tagallign);
+		NamedCommands.registerCommand("Shoot", shoot);
+		NamedCommands.registerCommand("Intake", intake);
+		NamedCommands.registerCommand("Fullextend", fullextend);
 
 		// Configure the button bindings
 		configureButtonBindings();
 		driverB.whileTrue(tagallign);
-		driverRB.whileTrue(new frc.robot.commands.ClimberCommands.climbing.ClimbUp());
+		driverRB.toggleOnTrue(new Climb(m_driverController, false));
 		driverLB.whileTrue(new frc.robot.commands.ClimberCommands.ClimbRelease());
 		operatorX.whileTrue(new Shoot());
 		operatorA.whileTrue(intake);
 		operatorY.whileTrue(spitout);
-		driverDPadRight.whileTrue(new Extension());
+		driverDPadRight.whileTrue(new ManualExtension());
 		driverDPadLeft.whileTrue(new Retraction());
 		driverDPadUp.whileTrue(manualangleup);
 		driverDPadDown.whileTrue(manualangledown);
@@ -139,11 +143,11 @@ public class RobotContainer {
 				// The left stick controls translation of the robot.
 				// Turning is controlled by the X axis of the right stick.
 				new RunCommand(() -> drivetrain.drive(
-						-MathUtil.applyDeadband(driverController.getLeftY(),
+						-MathUtil.applyDeadband(m_driverController.getLeftY(),
 								OIConstants.kDriveDeadband),
-						-MathUtil.applyDeadband(driverController.getLeftX(),
+						-MathUtil.applyDeadband(m_driverController.getLeftX(),
 								OIConstants.kDriveDeadband),
-						-MathUtil.applyDeadband(driverController.getRightX(),
+						-MathUtil.applyDeadband(m_driverController.getRightX(),
 								OIConstants.kDriveDeadband),
 						true, true), drivetrain));
 	}
@@ -159,22 +163,22 @@ public class RobotContainer {
 	 * {@link JoystickButton}.
 	 */
 	private void configureButtonBindings() {
-		new JoystickButton(driverController, Button.kR1.value)
+		new JoystickButton(m_driverController, Button.kR1.value)
 				.whileTrue(new RunCommand(() -> drivetrain.setX(), drivetrain));
 
 		//driver configs
-		driverA = new JoystickButton(driverController, XboxController.Button.kA.value);
-		driverB = new JoystickButton(driverController, XboxController.Button.kB.value);
-		driverX = new JoystickButton(driverController, XboxController.Button.kX.value);
-		driverY = new JoystickButton(driverController, XboxController.Button.kY.value);
-		driverDPadUp = new POVButton(driverController, 180);
-		driverDPadDown = new POVButton(driverController, 0);
-		driverDPadRight = new POVButton(driverController, 90);
-		driverDPadLeft = new POVButton(driverController, 270);
-		driverLB = new JoystickButton(driverController, XboxController.Button.kLeftBumper.value);
-		driverRB = new JoystickButton(driverController, XboxController.Button.kRightBumper.value);
-		driverRT = new JoystickButton(driverController, XboxController.Axis.kRightTrigger.value);
-		driverLT = new JoystickButton(driverController, XboxController.Axis.kLeftTrigger.value);
+		driverA = new JoystickButton(m_driverController, XboxController.Button.kA.value);
+		driverB = new JoystickButton(m_driverController, XboxController.Button.kB.value);
+		driverX = new JoystickButton(m_driverController, XboxController.Button.kX.value);
+		driverY = new JoystickButton(m_driverController, XboxController.Button.kY.value);
+		driverDPadUp = new POVButton(m_driverController, 180);
+		driverDPadDown = new POVButton(m_driverController, 0);
+		driverDPadRight = new POVButton(m_driverController, 90);
+		driverDPadLeft = new POVButton(m_driverController, 270);
+		driverLB = new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value);
+		driverRB = new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value);
+		driverRT = new JoystickButton(m_driverController, XboxController.Axis.kRightTrigger.value);
+		driverLT = new JoystickButton(m_driverController, XboxController.Axis.kLeftTrigger.value);
 
 		//operator configs
 		operatorA = new JoystickButton(m_operatorController, XboxController.Button.kA.value);
@@ -195,6 +199,6 @@ public class RobotContainer {
 	}
 
 	public Command getAutonomousCommand() {
-		return new PathPlannerAuto("New Auto");
+		return new PathPlannerAuto("MidAuto");
 	}
 }

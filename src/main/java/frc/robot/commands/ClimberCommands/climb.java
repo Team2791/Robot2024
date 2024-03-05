@@ -12,8 +12,12 @@ public class Climb extends SequentialCommandGroup {
 		addCommands(new ClimberActivate());
 
 		addCommands(new Command() {
+			public void initialize() {
+				controller.getAButton();
+			}
+
 			public boolean isFinished() {
-				return controller.getLeftBumper();
+				return controller.getAButtonPressed();
 			}
 		});
 

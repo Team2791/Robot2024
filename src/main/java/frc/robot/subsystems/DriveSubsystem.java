@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.Arrays;
+
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -71,7 +73,7 @@ public class DriveSubsystem extends SubsystemBase {
 
 		AutoBuilder.configureHolonomic(this::getPose, // Robot pose supplier
 				this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
-				this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+				this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
 				this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
 				new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your
 						// Constants class
@@ -82,7 +84,7 @@ public class DriveSubsystem extends SubsystemBase {
 								Constants.AutoConstants.kRotationI,
 								Constants.AutoConstants.kRotationD), // Rotation PID constants
 						3, // Max module speed, in m/s
-						0.440, // Drive base radius in meters. Distance from robot center to furthest module.
+						Constants.DriveConstants.driveBaseRadius, // Drive base radius in meters. Distance from robot center to furthest module.
 						new ReplanningConfig() // Default path replanning config. See the API for the options here
 				), () -> {
 					// Boolean supplier that controls when the path will be mirrored for the red
@@ -91,9 +93,9 @@ public class DriveSubsystem extends SubsystemBase {
 					// THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
 					var alliance = DriverStation.getAlliance();
-					//if (alliance == null || alliance != null) {
-					//	return alliance == DriverStation.Alliance.Red;
-					//}
+					if (alliance.isPresent()) {
+                		return alliance.get() == DriverStation.Alliance.Red;
+              		}
 					return false;
 				}, this // Reference to this subsystem to set requirements
 		);
@@ -132,15 +134,28 @@ public class DriveSubsystem extends SubsystemBase {
 				pose);
 	}
 
-	public void driveRobotRelative(ChassisSpeeds speeds) {
-		this.drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond,
-				false, false);
-	}
+	public void driveRobotRelative(ChassisSpeeds speeds){
+		var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
+		SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.DriveConstants.kMaxSpeedMetersPerSecond);
+		
+		m_frontLeft.setDesiredState(swerveModuleStates[0]);
+		m_frontRight.setDesiredState(swerveModuleStates[1]);
+		m_rearLeft.setDesiredState(swerveModuleStates[2]);
+		m_rearRight.setDesiredState(swerveModuleStates[3]);
+	  }
+
+
 
 	public ChassisSpeeds getRobotRelativeSpeeds() {
 		return DriveConstants.kDriveKinematics.toChassisSpeeds(m_frontLeft.getState(),
 				m_frontRight.getState(), m_rearLeft.getState(), m_rearRight.getState());
 	}
+
+	public ChassisSpeeds getChassisSpeeds(){
+		SwerveModuleState[] modulestates = getModuleStates();
+		return DriveConstants.kDriveKinematics.toChassisSpeeds(modulestates);
+	  }
+	
 
 	/**
 	 * Method to drive the robot using joystick info.
@@ -299,13 +314,17 @@ public class DriveSubsystem extends SubsystemBase {
 
 
 	public SwerveModulePosition[] getModulePositions() {
-		SwerveModulePosition arr[] = new SwerveModulePosition[4];
-		arr[0] = m_frontLeft.getPosition();
-		arr[1] = m_frontRight.getPosition();
-		arr[2] = m_rearLeft.getPosition();
-		arr[3] = m_rearRight.getPosition();
-		return arr;
+		MAXSwerveModule[] mods = new MAXSwerveModule[]{m_frontLeft, m_frontRight, m_rearLeft, m_rearRight};
+		
+		return Arrays.stream(mods).map(MAXSwerveModule::getPosition).toArray(SwerveModulePosition[]::new);
 	}
+
+		public SwerveModuleState[] getModuleStates(){
+		MAXSwerveModule[] mods = new MAXSwerveModule[]{m_frontLeft, m_frontRight, m_rearLeft, m_rearRight};
+		
+		return Arrays.stream(mods).map(MAXSwerveModule::getState).toArray(SwerveModuleState[]::new);
+	}
+
 
 	public Rotation2d getGyroscopeRotation() {
 		return Rotation2d.fromDegrees(m_gyro.getAngle());
