@@ -20,6 +20,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.*;
+import frc.robot.commands.AprilTagCommands.TagAlign;
 import frc.robot.commands.AprilTagCommands.TagAllignContinuous;
 import frc.robot.commands.ArmCommands.Extension;
 import frc.robot.commands.ArmCommands.ManualAngleDown;
@@ -60,20 +61,20 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
  */
 public class RobotContainer {
 
-	public static XboxController m_driverController =
+	public static XboxController driverController =
 			new XboxController(OIConstants.kDriverControllerPort);
 	public static XboxController m_operatorController =
 			new XboxController(OIConstants.kOperatorControllerPort);
 	public static XboxController m_pitController =
 			new XboxController(OIConstants.kPitStickControllerPort);
 	// The robot's subsystems
-	private final DriveSubsystem m_robotDrive = Robot.m_drivetrain;
-	private final PhotonCamera camera1 = new PhotonCamera("2791camera");
+	private final DriveSubsystem drivetrain = Robot.m_drivetrain;
+	private final PhotonCamera cam = new PhotonCamera("2791camera");
 
 
 	//Commands
 	private final TagAllignContinuous tagallign =
-			new TagAllignContinuous(camera1, m_robotDrive, m_driverController);
+			new TagAllignContinuous(cam, drivetrain, driverController);
 	private final Intake intake = new Intake();
 	private final SpitOut spitout = new SpitOut();
 	private final ManualAngleUp manualangleup = new ManualAngleUp();
@@ -108,8 +109,9 @@ public class RobotContainer {
 	 */
 	public RobotContainer() {
 		NamedCommands.registerCommand("Intake", new Intake());
-		// NamedCommands.registerCommand("Shoot", new Shoot());
-		// NamedCommands.registerCommand("AutoAlign", new );
+		NamedCommands.registerCommand("Shoot", new Shoot());
+		NamedCommands.registerCommand("SpeakerTagAlign",
+				new TagAlign(cam, drivetrain, driverController, 7));
 
 		// Configure the button bindings
 		configureButtonBindings();
@@ -133,17 +135,17 @@ public class RobotContainer {
 
 
 		// Configure default commands
-		m_robotDrive.setDefaultCommand(
+		drivetrain.setDefaultCommand(
 				// The left stick controls translation of the robot.
 				// Turning is controlled by the X axis of the right stick.
-				new RunCommand(() -> m_robotDrive.drive(
-						-MathUtil.applyDeadband(m_driverController.getLeftY(),
+				new RunCommand(() -> drivetrain.drive(
+						-MathUtil.applyDeadband(driverController.getLeftY(),
 								OIConstants.kDriveDeadband),
-						-MathUtil.applyDeadband(m_driverController.getLeftX(),
+						-MathUtil.applyDeadband(driverController.getLeftX(),
 								OIConstants.kDriveDeadband),
-						-MathUtil.applyDeadband(m_driverController.getRightX(),
+						-MathUtil.applyDeadband(driverController.getRightX(),
 								OIConstants.kDriveDeadband),
-						true, true), m_robotDrive));
+						true, true), drivetrain));
 	}
 
 
@@ -157,22 +159,22 @@ public class RobotContainer {
 	 * {@link JoystickButton}.
 	 */
 	private void configureButtonBindings() {
-		new JoystickButton(m_driverController, Button.kR1.value)
-				.whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));
+		new JoystickButton(driverController, Button.kR1.value)
+				.whileTrue(new RunCommand(() -> drivetrain.setX(), drivetrain));
 
 		//driver configs
-		driverA = new JoystickButton(m_driverController, XboxController.Button.kA.value);
-		driverB = new JoystickButton(m_driverController, XboxController.Button.kB.value);
-		driverX = new JoystickButton(m_driverController, XboxController.Button.kX.value);
-		driverY = new JoystickButton(m_driverController, XboxController.Button.kY.value);
-		driverDPadUp = new POVButton(m_driverController, 180);
-		driverDPadDown = new POVButton(m_driverController, 0);
-		driverDPadRight = new POVButton(m_driverController, 90);
-		driverDPadLeft = new POVButton(m_driverController, 270);
-		driverLB = new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value);
-		driverRB = new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value);
-		driverRT = new JoystickButton(m_driverController, XboxController.Axis.kRightTrigger.value);
-		driverLT = new JoystickButton(m_driverController, XboxController.Axis.kLeftTrigger.value);
+		driverA = new JoystickButton(driverController, XboxController.Button.kA.value);
+		driverB = new JoystickButton(driverController, XboxController.Button.kB.value);
+		driverX = new JoystickButton(driverController, XboxController.Button.kX.value);
+		driverY = new JoystickButton(driverController, XboxController.Button.kY.value);
+		driverDPadUp = new POVButton(driverController, 180);
+		driverDPadDown = new POVButton(driverController, 0);
+		driverDPadRight = new POVButton(driverController, 90);
+		driverDPadLeft = new POVButton(driverController, 270);
+		driverLB = new JoystickButton(driverController, XboxController.Button.kLeftBumper.value);
+		driverRB = new JoystickButton(driverController, XboxController.Button.kRightBumper.value);
+		driverRT = new JoystickButton(driverController, XboxController.Axis.kRightTrigger.value);
+		driverLT = new JoystickButton(driverController, XboxController.Axis.kLeftTrigger.value);
 
 		//operator configs
 		operatorA = new JoystickButton(m_operatorController, XboxController.Button.kA.value);

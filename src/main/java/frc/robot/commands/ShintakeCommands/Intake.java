@@ -25,14 +25,14 @@ public class Intake extends SequentialCommandGroup {
 
 			public void end(boolean interrupted) {
 				Robot.shintake.stopIntake();
-				RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, 0.5);
+				RobotContainer.driverController.setRumble(RumbleType.kBothRumble, 0.5);
 
 				// Allows command to exit without taking time
 				// even after turning off the controller after 100ms
 				new Thread(() -> {
 					try {
 						Thread.sleep(100);
-						RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, 0.5);
+						RobotContainer.driverController.setRumble(RumbleType.kBothRumble, 0.5);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

@@ -29,17 +29,19 @@ public class TagAlign extends Command {
 	DriveSubsystem drivetrain;
 
 	double x;
-	double setPoint = 400;
+	double setPoint = 320;
 	XboxController controller;
 	double power;
 	PIDController pid;
+	int id;
 
 	/** Creates a new TagAllign. */
 	public TagAlign(PhotonCamera camera, DriveSubsystem driveSubsystem,
-			XboxController drivController) {
+			XboxController drivController, int id) {
 		this.controller = drivController;
 		this.camera = camera;
 		this.drivetrain = driveSubsystem;
+		this.id = id;
 		this.pid = new PIDController(.001, 0.00001, .0002);
 		addRequirements(driveSubsystem);
 
@@ -49,7 +51,8 @@ public class TagAlign extends Command {
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-
+		pid.setSetpoint(setPoint);
+		pid.setTolerance(20);
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
@@ -60,12 +63,16 @@ public class TagAlign extends Command {
 		if (res.hasTargets()) {
 			var target = res.getBestTarget();
 
+			int tid = target.getFiducialId();
+			if (tid != id)
+				return;
+
 			// average as stream
 			// 0 - 640
 			x = target.getDetectedCorners().stream().mapToDouble((a) -> a.x).sum() / 4;
 
 
-			drivetrain.drive(0, 0, pid.calculate(x, 320), false, false);
+			drivetrain.drive(0, 0, pid.calculate(x), false, false);
 
 		} else
 			drivetrain.drive(0, 0, 0, false, false);
@@ -81,6 +88,6 @@ public class TagAlign extends Command {
 	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
-		return false;
+		return pid.atSetpoint();
 	}
 }
