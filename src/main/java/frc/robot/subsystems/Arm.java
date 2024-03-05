@@ -67,19 +67,15 @@ public class Arm extends SubsystemBase {
 	 * Starts at zero speed, ramps to full over 1/3 of the distance
 	 * then stays at full speed for 1/3 of the distance, then ramps to zero
 	 * 
-	 * @param atSetpoint - a supplier that returns true when the system is at the setpoint (within tolerance)
-	 * @param maxSpeed - the maximum speed to ramp to
-	 * @param getCurrent - a supplier that returns the current position
-	 * @param lastGoal - the last setpoint
-	 * @param goal - the current setpoint
+	 * @param current the current position
+	 * @param lastGoal the last setpoint
+	 * @param goal the current setpoint
+	 * @param maxSpeed the maximum speed to ramp to
+	 * @param zeroOffset when current == lastGoal, the output will be zero. Add this to the output to make it non-zero
+	 * @return the speed to set the motor
 	 */
-	private static double trapazoidal(Supplier<Boolean> atSetpoint, double maxSpeed,
-			Supplier<Double> getCurrent, double lastGoal, double goal) {
-
-		if (atSetpoint.get())
-			return 0;
-
-		double current = getCurrent.get();
+	private static double trapazoidal(double current, double lastGoal, double goal, double maxSpeed,
+			double zeroOffset) {
 		double distBegin = Math.abs(current - lastGoal);
 		double totalLen = Math.abs(goal - lastGoal);
 
@@ -95,7 +91,7 @@ public class Arm extends SubsystemBase {
 		if (distBegin < (totalLen / 3)) {
 			// line
 			double x1 = 0;
-			double y1 = 0;
+			double y1 = zeroOffset;
 			double x2 = totalLen / 3;
 			double y2 = maxSpeed;
 
@@ -106,7 +102,7 @@ public class Arm extends SubsystemBase {
 			double yeq = ((y2 - y1) / (x2 - x1)) * (xeq - x1) + y1;
 
 			return yeq;
-		} else if (distBegin < (2 * (totalLen / 3))) {
+		} else if (distBegin > (2 * (totalLen / 3))) {
 			// line
 			double x1 = totalLen;
 			double y1 = 0;
@@ -176,8 +172,8 @@ public class Arm extends SubsystemBase {
 	}
 
 	public void periodic() {
-		double piv = trapazoidal(this::atPivot, 0.15, this::getPivot, lastPivPoint, pivPoint);
-		double ext = trapazoidal(this::atExt, 0.15, this::getExt, lastExtPoint, extPoint);
+		double piv = trapazoidal(getPivot(), lastPivPoint, pivPoint, 0.15, 0.02);
+		double ext = trapazoidal(getPivot(), lastPivPoint, pivPoint, 0.15, 0.02);
 
 		left.set(piv);
 		extension.set(ext);

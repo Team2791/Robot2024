@@ -31,16 +31,18 @@ public class DistanceCommand extends Command {
 		if (result.hasTargets()) {
 			PhotonTrackedTarget target = result.getBestTarget();
 
-			double distance = PhotonUtils.calculateDistanceToTargetMeters(
-				Units.inchesToMeters(9.451),
-				AprilTagFields.k2024Crescendo.loadAprilTagLayoutField().getTagPose(target.getFiducialId()).get().getZ(),
-				Constants.VisionConstants.kCameraPitch,
-				Units.degreesToRadians(result.getBestTarget().getPitch())
-			);
+			double distance =
+					PhotonUtils.calculateDistanceToTargetMeters(Units.inchesToMeters(9.451),
+							AprilTagFields.k2024Crescendo.loadAprilTagLayoutField()
+									.getTagPose(target.getFiducialId()).get().getZ(),
+							Constants.VisionConstants.kCameraPitch,
+							Units.degreesToRadians(result.getBestTarget().getPitch()));
 
-			Robot.arm.setAngle(Math.atan(AprilTagFields.k2024Crescendo.loadAprilTagLayoutField().getTagPose(target.getFiducialId()).get().getZ())/distance);
+			Robot.arm.pivot(Math.atan(AprilTagFields.k2024Crescendo.loadAprilTagLayoutField()
+					.getTagPose(target.getFiducialId()).get().getZ()) / distance);
 
-			SmartDashboard.putNumber("(Photon) Distance to AprilTag (feet)", Units.metersToFeet(distance));
+			SmartDashboard.putNumber("(Photon) Distance to AprilTag (feet)",
+					Units.metersToFeet(distance));
 		}
 	}
 }

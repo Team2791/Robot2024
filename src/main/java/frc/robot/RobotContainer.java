@@ -21,7 +21,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AprilTagCommands.TagAllignContinuous;
 import frc.robot.commands.ArmCommands.ManualExtension;
-import frc.robot.commands.ArmCommands.Fullextension;
+import frc.robot.commands.ArmCommands.FullExtension;
 import frc.robot.commands.ArmCommands.ManualAngleDown;
 import frc.robot.commands.ArmCommands.ManualAngleUp;
 import frc.robot.commands.ArmCommands.Retraction;
@@ -85,7 +85,7 @@ public class RobotContainer {
 	private final LeftRelease leftrelease = new LeftRelease();
 	private final RightClimbUp rightclimbup = new RightClimbUp();
 	private final RightRelease rightrelease = new RightRelease();
-	private final Fullextension fullextend = new Fullextension();
+	private final FullExtension fullextend = new FullExtension();
 	private final LinearLock actuate = new LinearLock();
 
 	// private final ManualAngle armup = new ManualAngle(true);
