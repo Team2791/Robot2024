@@ -4,55 +4,43 @@
 
 package frc.robot.commands.ShintakeCommands;
 
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
-import frc.robot.RobotContainer;
+import frc.robot.commands.UtilCommands.Wait;
 
-public class Shoot extends Command {
+public class Shoot extends SequentialCommandGroup {
 	Timer timer = new Timer();
 
-	/** Creates a new Shoot. */
 	public Shoot() {
-		timer.reset();
 		addRequirements(Robot.shintake);
-	}
 
-	// Called when the command is initially scheduled.
-	@Override
-	public void initialize() {
-		timer.start();
+		addCommands(new Command() {
+			public void initialize() {
+				Robot.shintake.shoot(.8, .8);
+			}
 
-		Robot.shintake.shoot(.8, .8);
-	}
+			public boolean isFinished() {
+				return true;
+			}
+		});
 
-	// Called every time the scheduler runs while the command is scheduled.
-	@Override
-	public void execute() {
+		addCommands(new Wait(3));
 
+		addCommands(new Command() {
+			public void initialize() {
+				Robot.shintake.feedToShooter();
+			}
 
-		if (timer.get() > 3)
-			Robot.shintake.feedToShooter();
+			public void end(boolean interrupted) {
+				Robot.shintake.stopIntake();
+				Robot.shintake.shoot(0, 0);
+			}
 
-
-
-	}
-
-	// Called once the command ends or is interrupted.
-	@Override
-	public void end(boolean interrupted) {
-		while (Robot.shintake.broken()) {
-			Robot.shintake.feedToShooter();
-
-		}
-		Robot.shintake.shoot(0, 0);
-		Robot.shintake.stopIntake();
-	}
-
-	// Returns true when the command should end.
-	@Override
-	public boolean isFinished() {
-		return Robot.shintake.broken();
+			public boolean isFinished() {
+				return !Robot.shintake.broken();
+			}
+		});
 	}
 }

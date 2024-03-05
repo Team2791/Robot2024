@@ -8,10 +8,9 @@ import frc.robot.commands.ClimberCommands.actuator.LinearLock;
 import frc.robot.commands.ClimberCommands.climbing.ClimbUp;
 
 public class Climb extends SequentialCommandGroup {
-	public Climb(XboxController controller) {
+	public Climb(XboxController controller, boolean auto) {
 		addCommands(new ClimberActivate());
 
-		// Wait for lb press
 		addCommands(new Command() {
 			public boolean isFinished() {
 				return controller.getLeftBumper();

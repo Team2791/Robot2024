@@ -107,10 +107,9 @@ public class RobotContainer {
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
 	 */
 	public RobotContainer() {
-
-		NamedCommands.registerCommand("Allign", tagallign);
-
-
+		NamedCommands.registerCommand("Intake", new Intake());
+		// NamedCommands.registerCommand("Shoot", new Shoot());
+		// NamedCommands.registerCommand("AutoAlign", new );
 
 		// Configure the button bindings
 		configureButtonBindings();
