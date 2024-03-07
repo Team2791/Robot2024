@@ -32,11 +32,8 @@ public class Shoot extends Command {
   @Override
   public void execute() {
 
-
     if(timer.get()>1)Robot.shintake.index();
-    
-
-
+  
     
 
   }

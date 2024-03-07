@@ -26,7 +26,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Robot;
 
-public class PoseEstimator extends SubsystemBase {
+public class PhotonEstimator extends SubsystemBase {
 
   PhotonCamera camera;
   DriveSubsystem drivetrain;
@@ -44,7 +44,7 @@ public class PoseEstimator extends SubsystemBase {
   SwerveDrivePoseEstimator poseEstimator;
   
   /** Creates a new PoseEstimator. */
-  public PoseEstimator(PhotonCamera camera, DriveSubsystem drivetrain) {
+  public PhotonEstimator(PhotonCamera camera, DriveSubsystem drivetrain) {
     this.camera = camera;
     this.drivetrain = drivetrain;
     

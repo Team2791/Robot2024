@@ -35,6 +35,7 @@ public class Arm extends SubsystemBase {
 
   private double Fg;
   public double setExtension;
+  public double setpoint;
 
   private double slope, intercept;
   private double extSlope, extIntercept;
@@ -44,10 +45,13 @@ public class Arm extends SubsystemBase {
     armLeft = new CANSparkMax(32, MotorType.kBrushless);
     armRight = new CANSparkMax(31, MotorType.kBrushless);
     armRight.follow(armLeft, true);
+
     extensionMotor = new CANSparkMax(33, MotorType.kBrushless);
     extensionMotor.setIdleMode(IdleMode.kBrake);
+
     slope = (ArmConstants.kMaxAngle - ArmConstants.kMinAngle) / (ArmConstants.kMaxPot - ArmConstants.kMinPot);
     intercept = ArmConstants.kMinAngle - (ArmConstants.kMinPot * slope);
+
     armPot = new AnalogPotentiometer(1, slope, intercept);
     armLeft.setIdleMode(IdleMode.kBrake);
     armRight.setIdleMode(IdleMode.kBrake);
@@ -60,30 +64,23 @@ public class Arm extends SubsystemBase {
     setExtension = getExtensionPot();
     extensionPID = new PIDController(7,0,0);
 
-    pid = new PIDController(0,0,0);
+    pid = new PIDController(1,0,0);
+    setpoint = getArmPot();
 
   }
 
 
   public void setAngle(double angle){
     armLeft.setIdleMode(IdleMode.kBrake);
-    armRight.setIdleMode(IdleMode.kBrake);
-    while(!pid.atSetpoint()){
-      Fg = Math.cos(angle);
-      armLeft.set(pid.calculate(armPot.get(),angle));
-      armRight.set(pid.calculate(armPot.get(),angle));
-    }
-
+    setpoint = angle;
   }
 
-  public void moveUp(){
-
-    armLeft.set(-ArmConstants.kArmSpeedUp);
+  public void moveUp(double speed){
+    armLeft.set(-speed);
   }
 
-  public void moveDown(){
-
-    armLeft.set(ArmConstants.kArmSpeedDown);
+  public void moveDown(double speed){
+    armLeft.set(speed);
 
   }
 
@@ -99,22 +96,11 @@ public class Arm extends SubsystemBase {
   }
 
   public void manualExtend(){
-    extensionMotor.set(.1);
-    setExtension = getExtensionPot();
+    extensionMotor.set(ArmConstants.kExtensionSpeed);
   }
 
   public void manualRetract(){
-    extensionMotor.set(-.1);
-    setExtension = getExtensionPot();
-  }
-
-  public void intakeOut(){
-    extensionMotor.set(-.1);
-    if(extenpot.get()<Constants.ArmConstants.extensionPosition);
-  }
-
-  public void intakein(){
-    extensionMotor.set(.1);
+    extensionMotor.set(ArmConstants.kRetractionSpeed);
   }
 
   public double getExtensionPot(){
@@ -127,25 +113,25 @@ public class Arm extends SubsystemBase {
 
 
 
+
   @Override
   public void periodic() {
     double armPot = getArmPot();
     double extPot = getExtensionPot();
+
+    setpoint = getArmPot();
     SmartDashboard.putNumber("Pivot Angle", armPot);
     SmartDashboard.putNumber("Raw pivot pot", (armPot - intercept) / slope);
     SmartDashboard.putNumber("Extension", extPot);
     SmartDashboard.putNumber("Raw extension pot", (extPot - extIntercept) / extSlope);
 
     
+    armLeft.set(leftPID.calculate(getArmPot(),setpoint)+Constants.ArmConstants.armLeftFF * Math.cos(Math.toRadians(getArmPot())));
 
 
-    //SmartDashboard.putData("Left Turret PID", leftPID);
-    //SmartDashboard.putData("Right Turret PID", rightPID);
-
-
-    // armLeft.set(leftPID.calculate(armPot.get(),setAngle)+Fg*Constants.ArmConstants.armLFF);
-    // armRight.set(rightPID.calculate(turretpot.get(),setAngle)+Fg*Constants.ArmConstants.armRFF);
-
+    while(armLeft.get() ==0){
+      armLeft.setVoltage(10);
+    }
     // This method will be called once per scheduler run
   }
 

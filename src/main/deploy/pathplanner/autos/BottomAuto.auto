@@ -2,15 +2,21 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.8672303058891838,
-      "y": 4.265902246090207
+      "x": 0.7694503445150959,
+      "y": 4.232182676053205
     },
-    "rotation": -64.65382405805332
+    "rotation": -60.19428259990464
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
         {
           "type": "path",
           "data": {
@@ -20,7 +26,19 @@
         {
           "type": "named",
           "data": {
-            "name": "Allign"
+            "name": "Fullextend"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BottomNoteScore"
           }
         }
       ]

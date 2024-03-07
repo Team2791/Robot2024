@@ -166,26 +166,6 @@ public final class Constants {
 		public static final double kFreeSpeedRpm = 5676;
 	}
 
-	// public static final class ArmConstants{
-
-	// 	public static final int LeftArmPot = 6;
-	// 	public static final int RightArmPot = 7;
-
-	// 	public static final double armLP = 1;
-	// 	public static final double armLI = 0;
-	// 	public static final double armLD = 0;
-	// 	public static final double armLFF = 0;
-
-	// 	public static final double armRP = 0;
-	// 	public static final double armRI = 0;
-	// 	public static final double armRD = 0;
-	// 	public static final double armRFF = 1;
-
-
-	// 	public static final double SpeakerHeight = 2.045;
-	// 	public static final double ShooterHeight = .5;
-
-	// }
 
 	public static final class ShintakeConstants {
 		public static final double kShooterP = 0;
@@ -198,10 +178,16 @@ public final class Constants {
 	}
 
 	public static final class ArmConstants {
-		public static final double kArmSpeedDown = 0.15;
-		public static final double kArmSpeedUp = .15;
 
-		public static final double extensionPosition = 25;
+		public static final double kExtensionSpeed = .5; // extension speed
+		public static final double kRetractionSpeed = -.5; // retraction speed
+
+		public static final double armLeftFF = .1;
+		
+		public static final double kArmSpeedDown = 0.15; //max pivot down speed
+		public static final double kArmSpeedUp = 0.15; //max pivot up speed
+		public static final double kArmPivotIntakePos = 15; //intake setpoint
+
 
 		public static final double kMaxPot = 0.3027;
 		public static final double kMinPot = 0.3640;
@@ -211,6 +197,9 @@ public final class Constants {
 
 		public static final double kExtendMinPot = 0.13965;
 		public static final double kExtendMaxPot = 0.4917;
+
+
+		public static final double kAccelerationTime = 1; //time for arm pivot acceleration
 	}
 
 	public static final class ClimberConstants {
@@ -226,6 +215,8 @@ public final class Constants {
 		public static final double kCameraPitch = 30;
 		/** Physical location of the apriltag camera on the robot, relative to the center of the robot. */
 		public static final Transform3d APRILTAG_CAMERA_TO_ROBOT = new Transform3d(new Translation3d(Units.inchesToMeters(12.25), Units.inchesToMeters(12.25), Units.inchesToMeters(0)),new Rotation3d(0.0, Units.degreesToRadians(15.0), Units.degreesToRadians(-3.0)));
+
+		public static final double kspeakerHeight = 77.9528; // inches
 		
 		public static final double FIELD_LENGTH_METERS = 16.54;
 		public static final double FIELD_WIDTH_METERS = 8.21;

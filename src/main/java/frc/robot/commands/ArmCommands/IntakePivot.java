@@ -5,28 +5,36 @@
 package frc.robot.commands.ArmCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Robot;
+import frc.robot.Constants.ArmConstants;
 
-public class AutoAngle extends Command {
-  /** Creates a new AutoAngle. */
-  public AutoAngle() {
+public class IntakePivot extends Command {
+  /** Creates a new IntakePivot. */
+  public IntakePivot() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    Robot.arm.moveUp(.4);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    Robot.arm.moveUp(0);
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return Robot.arm.getArmPot()>ArmConstants.kArmPivotIntakePos;
   }
 }

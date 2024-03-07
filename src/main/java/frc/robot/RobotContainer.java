@@ -15,16 +15,20 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AprilTagCommands.TagAllignContinuous;
-import frc.robot.commands.ArmCommands.ManualExtension;
-import frc.robot.commands.ArmCommands.Fullextension;
-import frc.robot.commands.ArmCommands.ManualAngleDown;
-import frc.robot.commands.ArmCommands.ManualAngleUp;
-import frc.robot.commands.ArmCommands.Retraction;
+import frc.robot.commands.ArmCommands.FullExtension;
+import frc.robot.commands.ArmCommands.FullRetraction;
+import frc.robot.commands.ArmCommands.IntakePivot;
+import frc.robot.commands.ArmCommands.ManualCommands.ManualAngleDown;
+import frc.robot.commands.ArmCommands.ManualCommands.ManualAngleUp;
+import frc.robot.commands.ArmCommands.ManualCommands.ManualExtension;
+import frc.robot.commands.ArmCommands.ManualCommands.ManualRetraction;
 import frc.robot.commands.ClimberCommands.Climb;
 import frc.robot.commands.ClimberCommands.actuator.LinearLock;
 import frc.robot.commands.PitstickCommands.LeftClimbUp;
@@ -42,6 +46,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -51,6 +56,7 @@ import java.util.List;
 import org.photonvision.PhotonCamera;
 
 import com.fasterxml.jackson.databind.util.Named;
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
@@ -62,20 +68,18 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
  */
 public class RobotContainer {
 
-	public static XboxController m_driverController =
-			new XboxController(OIConstants.kDriverControllerPort);
-	public static XboxController m_operatorController =
-			new XboxController(OIConstants.kOperatorControllerPort);
-	public static XboxController m_pitController =
-			new XboxController(OIConstants.kPitStickControllerPort);
+	private final SendableChooser<Command> autoChooser;
+
+
+	public static XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+	public static CommandXboxController m_operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
+	public static CommandXboxController m_pitController = new CommandXboxController(2);
 	// The robot's subsystems
 	private final DriveSubsystem m_robotDrive = Robot.m_drivetrain;
-	private final PhotonCamera camera1 = new PhotonCamera("2791camera");
 
 
 	//Commands
-	private final TagAllignContinuous tagallign =
-			new TagAllignContinuous(camera1, m_robotDrive, m_driverController);
+	private final TagAllignContinuous tagallign = new TagAllignContinuous(Robot.camera1, m_robotDrive, m_driverController);
 	private final Intake intake = new Intake();
 	private final SpitOut spitout = new SpitOut();
 	private final Shoot shoot = new Shoot();
@@ -85,7 +89,7 @@ public class RobotContainer {
 	private final LeftRelease leftrelease = new LeftRelease();
 	private final RightClimbUp rightclimbup = new RightClimbUp();
 	private final RightRelease rightrelease = new RightRelease();
-	private final Fullextension fullextend = new Fullextension();
+	private final FullExtension fullextend = new FullExtension();
 	private final LinearLock actuate = new LinearLock();
 
 	// private final ManualAngle armup = new ManualAngle(true);
@@ -95,6 +99,8 @@ public class RobotContainer {
 			driverStart, driverBack;
 	private Trigger operatorX, operatorY, operatorA, operatorB, operatorLB, operatorRB, operatorLT,
 			operatorRT;
+			
+	private Trigger operatorLeftYPos, operatorLeftYNeg;
 
 	private Trigger driverDPadUp, driverDPadDown, driverDPadLeft, driverDPadRight, driverLeftStick;
 	private Trigger operatorDPadUp, operatorDPadDown, operatorDPadLeft, operatorDPadRight,
@@ -124,19 +130,30 @@ public class RobotContainer {
 		driverB.whileTrue(tagallign);
 		driverRB.toggleOnTrue(new Climb(m_driverController));
 		driverLB.whileTrue(new frc.robot.commands.ClimberCommands.ClimbRelease());
-		operatorX.whileTrue(new Shoot());
-		operatorA.whileTrue(intake);
-		operatorY.whileTrue(spitout);
 		driverDPadRight.whileTrue(new ManualExtension());
-		driverDPadLeft.whileTrue(new Retraction());
-		driverDPadUp.whileTrue(manualangleup);
-		driverDPadDown.whileTrue(manualangledown);
+		driverDPadLeft.whileTrue(new ManualRetraction());
+		// driverDPadUp.whileTrue(manualangleup);
+		// driverDPadDown.whileTrue(manualangledown);
 
 
-		pitStickLB.whileTrue(leftclimbup);
-		pitStickRB.whileTrue(leftrelease);
-		pitDpadLeft.whileTrue(rightclimbup);
-		pitDpadRight.whileTrue(rightrelease);
+
+
+		operatorX.whileTrue(new Shoot());
+		operatorA.onTrue(new SequentialCommandGroup(new IntakePivot(), new FullExtension(), new Intake()));
+		operatorA.onFalse(new SequentialCommandGroup(new IntakePivot(), new FullRetraction()));
+		operatorY.whileTrue(spitout);
+
+		operatorLeftYPos.whileTrue(manualangleup);
+		operatorLeftYNeg.whileTrue(manualangledown);
+
+		
+		
+
+
+		pitStickLB.onTrue(leftclimbup);
+		pitStickRB.onTrue(leftrelease);
+		pitDpadLeft.onTrue(rightclimbup);
+		pitDpadRight.onTrue(rightrelease);
 
 
 
@@ -152,6 +169,11 @@ public class RobotContainer {
 						-MathUtil.applyDeadband(m_driverController.getRightX(),
 								OIConstants.kDriveDeadband),
 						true, true), m_robotDrive));
+
+
+
+		autoChooser = AutoBuilder.buildAutoChooser();
+		SmartDashboard.putData("Auto Chooser", autoChooser);
 	}
 
 
@@ -165,8 +187,8 @@ public class RobotContainer {
 	 * {@link JoystickButton}.
 	 */
 	private void configureButtonBindings() {
-		new JoystickButton(m_driverController, Button.kR1.value)
-				.whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));
+		// new JoystickButton(m_driverController, Button.kR1.value)
+		// 		.whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));
 
 		//driver configs
 		driverA = new JoystickButton(m_driverController, XboxController.Button.kA.value);
@@ -183,24 +205,27 @@ public class RobotContainer {
 		driverLT = new JoystickButton(m_driverController, XboxController.Axis.kLeftTrigger.value);
 
 		//operator configs
-		operatorA = new JoystickButton(m_operatorController, XboxController.Button.kA.value);
-		operatorB = new JoystickButton(m_operatorController, XboxController.Button.kB.value);
-		operatorX = new JoystickButton(m_operatorController, XboxController.Button.kX.value);
-		operatorY = new JoystickButton(m_operatorController, XboxController.Button.kY.value);
-		operatorDPadUp = new POVButton(m_operatorController, 180);
-		operatorDPadDown = new POVButton(m_operatorController, 0);
-		operatorDPadRight = new POVButton(m_operatorController, 90);
-		operatorDPadLeft = new POVButton(m_operatorController, 270);
+		operatorA = m_operatorController.a();
+		operatorB = m_operatorController.b();
+		operatorY = m_operatorController.y();
+		operatorX = m_operatorController.x();
+		operatorDPadUp = m_operatorController.povUp();
+		operatorDPadDown = m_operatorController.povDown();
+		operatorDPadRight = m_operatorController.povRight();
+		operatorDPadLeft = m_operatorController.povLeft();
+
+		operatorLeftYPos = m_operatorController.axisGreaterThan(1, 0.4);
+		operatorLeftYNeg = m_operatorController.axisLessThan(1, -0.4);
 
 		//pitStick buttons
-		pitStickLB = new JoystickButton(m_pitController, XboxController.Button.kLeftBumper.value);
-		pitStickRB = new JoystickButton(m_pitController, XboxController.Button.kRightBumper.value);
-		pitDpadLeft = new POVButton(m_pitController, 270);
-		pitDpadRight = new POVButton(m_pitController, 90);
+		pitStickLB = m_pitController.leftBumper();
+		pitStickRB = m_pitController.rightBumper();
+		pitDpadLeft = m_pitController.povLeft();
+		pitDpadRight = m_pitController.povRight();
 
 	}
 
 	public Command getAutonomousCommand() {
-		return new PathPlannerAuto("MidAuto");
+		return autoChooser.getSelected();
 	}         
 }

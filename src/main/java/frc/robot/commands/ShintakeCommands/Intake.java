@@ -41,12 +41,14 @@ public class Intake extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, .5);
+    RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, .3);
+    RobotContainer.m_operatorController.getHID().setRumble(RumbleType.kBothRumble, .5);
     while(Robot.shintake.isin()){
       Robot.shintake.slowOut();
     }
     Robot.shintake.stopIntake();
     RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, 0);
+    RobotContainer.m_operatorController.getHID().setRumble(RumbleType.kBothRumble, 0);
   }
   
 

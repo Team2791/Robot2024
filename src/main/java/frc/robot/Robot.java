@@ -5,9 +5,13 @@
 package frc.robot;
 
 import java.lang.reflect.Field;
+
+import org.photonvision.PhotonCamera;
+
 import com.pathplanner.lib.util.PIDConstants;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import frc.robot.subsystems.PhotonEstimator;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -31,6 +35,9 @@ public class Robot extends TimedRobot {
 	public static Shintake shintake;
 	public static Climber climber;
 	public static DriveSubsystem m_drivetrain;
+	public static PhotonEstimator photonestimator;
+	public static PhotonCamera camera1;
+	public static PhotonCamera camera2;
 
 	/**
 	 * This function is run when the robot is first started up and should be used
@@ -39,6 +46,9 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
+
+		camera1 = new PhotonCamera("2791camera");
+		camera2 = new PhotonCamera("testCamera");
 		shintake = new Shintake();
 
 		arm = new Arm();
@@ -48,6 +58,9 @@ public class Robot extends TimedRobot {
 		m_drivetrain = new DriveSubsystem();
 		m_robotContainer = new RobotContainer();
 		climber = new Climber();
+
+		photonestimator = new PhotonEstimator(camera1, m_drivetrain);
+		
 
 	}
 
@@ -63,6 +76,13 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotPeriodic() {
+
+		if(Robot.arm.getExtensionPot()<5 && Robot.arm.extensionMotor.getEncoder().getVelocity()<0){
+			Robot.arm.extensionMotor.set(0.05);
+		}
+		else if(Robot.arm.getExtensionPot()>95 && Robot.arm.extensionMotor.getEncoder().getVelocity()>0){
+			Robot.arm.extensionMotor.set(-0.05);
+		}
 
 		
 		
