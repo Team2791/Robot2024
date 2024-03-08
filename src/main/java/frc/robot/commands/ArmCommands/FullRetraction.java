@@ -7,6 +7,7 @@ package frc.robot.commands.ArmCommands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
+import frc.robot.RobotContainer;
 
 public class FullRetraction extends Command {
   Timer timer = new Timer();
@@ -21,7 +22,7 @@ public class FullRetraction extends Command {
   public void initialize() {
     timer.reset();
     timer.start();
-    Robot.arm.manualExtend();
+    Robot.arm.manualRetract();
 
     
     
@@ -36,11 +37,12 @@ public class FullRetraction extends Command {
   @Override
   public void end(boolean interrupted) {
     Robot.arm.stopExtension();
+    Robot.shintake.stopIntake();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Robot.arm.getArmPot()<10 || timer.get()>5;
+    return Robot.arm.getExtensionPot()<10 || timer.get()>5;
   }
 }

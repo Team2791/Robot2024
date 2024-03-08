@@ -59,12 +59,12 @@ public class Arm extends SubsystemBase {
     extIntercept = - ArmConstants.kExtendMinPot * extSlope;
     extenpot = new AnalogPotentiometer(0, extSlope, extIntercept);
 
-    leftPID = new PIDController(1,0,0);
-    rightPID = new PIDController(1,0,0);
+    leftPID = new PIDController(.1,0,0);
+    rightPID = new PIDController(.1,0,0);
     setExtension = getExtensionPot();
-    extensionPID = new PIDController(7,0,0);
+    extensionPID = new PIDController(.7,0,0);
 
-    pid = new PIDController(1,0,0);
+    pid = new PIDController(.1,0,0);
     setpoint = getArmPot();
 
   }
@@ -72,15 +72,17 @@ public class Arm extends SubsystemBase {
 
   public void setAngle(double angle){
     armLeft.setIdleMode(IdleMode.kBrake);
-    setpoint = angle;
+    //setpoint = angle;
   }
 
   public void moveUp(double speed){
     armLeft.set(-speed);
+    //setpoint = getArmPot();
   }
 
   public void moveDown(double speed){
     armLeft.set(speed);
+    //setpoint = getArmPot();
 
   }
 
@@ -100,7 +102,7 @@ public class Arm extends SubsystemBase {
   }
 
   public void manualRetract(){
-    extensionMotor.set(ArmConstants.kRetractionSpeed);
+    extensionMotor.set(-ArmConstants.kRetractionSpeed);
   }
 
   public double getExtensionPot(){
@@ -126,13 +128,8 @@ public class Arm extends SubsystemBase {
     SmartDashboard.putNumber("Raw extension pot", (extPot - extIntercept) / extSlope);
 
     
-    armLeft.set(leftPID.calculate(getArmPot(),setpoint)+Constants.ArmConstants.armLeftFF * Math.cos(Math.toRadians(getArmPot())));
+    //armLeft.set(leftPID.calculate(getArmPot(),setpoint)+Constants.ArmConstants.armLeftFF * Math.cos(Math.toRadians(getArmPot())));
 
-
-    while(armLeft.get() ==0){
-      armLeft.setVoltage(10);
-    }
-    // This method will be called once per scheduler run
   }
 
 

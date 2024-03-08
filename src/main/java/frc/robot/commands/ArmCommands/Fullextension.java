@@ -7,9 +7,11 @@ package frc.robot.commands.ArmCommands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
+import frc.robot.RobotContainer;
 
 public class FullExtension extends Command {
   Timer timer = new Timer();
+  boolean aPressedOnInit = false;
   /** Creates a new Fullextension. */
   public FullExtension() {
     
@@ -21,6 +23,8 @@ public class FullExtension extends Command {
   public void initialize() {
     timer.reset();
     timer.start();
+    Robot.arm.manualExtend();
+    aPressedOnInit = RobotContainer.m_operatorController.a().getAsBoolean();
 
     
     
@@ -29,8 +33,7 @@ public class FullExtension extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    while(Robot.arm.getArmPot()<95){
-      Robot.arm.manualExtend();}
+
   }
 
   // Called once the command ends or is interrupted.
@@ -42,6 +45,6 @@ public class FullExtension extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Robot.arm.getArmPot()>90 || timer.get()>5;
+    return Robot.arm.getExtensionPot()>97 || timer.get()>3;// || (aPressedOnInit && !RobotContainer.m_operatorController.a().getAsBoolean());
   }
 }

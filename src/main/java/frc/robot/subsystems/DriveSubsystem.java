@@ -111,6 +111,7 @@ public class DriveSubsystem extends SubsystemBase {
 		SmartDashboard.putNumber("yaw:", m_gyro.getYaw());
 		SmartDashboard.putNumber("angle:", m_gyro.getAngle());
 		SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
+		
 	}
 
 	/**

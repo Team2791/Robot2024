@@ -96,14 +96,14 @@ public class PhotonEstimator extends SubsystemBase {
       if (target.getPoseAmbiguity() <= .2 && fiducialld >= 0){
         var targetPose = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField().getTagPose(fiducialld).get();
 
-        SmartDashboard.putNumber("April Tag X", targetPose.getX());
-        SmartDashboard.putNumber("April Tag Y", targetPose.getY());
-        SmartDashboard.putNumber("April Tag Z", targetPose.getZ());
-        SmartDashboard.putNumber("April Tag ID", fiducialld);
+        SmartDashboard.putNumber("April Tag X PoseEstimator", targetPose.getX());
+        SmartDashboard.putNumber("April Tag Y PoseEstimator", targetPose.getY());
+        SmartDashboard.putNumber("April Tag Z PoseEstimator", targetPose.getZ());
+        SmartDashboard.putNumber("April Tag ID PoseEstimator", fiducialld);
 
-        SmartDashboard.putString("April Tag Rotation", targetPose.getRotation().toString());
-        SmartDashboard.putString("Translation", targetPose.getTranslation().toString());
-        
+        SmartDashboard.putString("April Tag Rotation PoseEstimator", targetPose.getRotation().toString());
+        SmartDashboard.putString("Translation PoseEstimator", targetPose.getTranslation().toString());
+        SmartDashboard.putString("Photon Pose estimator ", getCurrentPose().getTranslation().toString());
         Transform3d camToTarget = target.getBestCameraToTarget();
         Pose3d camPose = targetPose.transformBy(camToTarget.inverse());
 

@@ -13,6 +13,7 @@ import com.pathplanner.lib.util.PIDConstants;
 import edu.wpi.first.cameraserver.CameraServer;
 import frc.robot.subsystems.PhotonEstimator;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -38,6 +39,7 @@ public class Robot extends TimedRobot {
 	public static PhotonEstimator photonestimator;
 	public static PhotonCamera camera1;
 	public static PhotonCamera camera2;
+	Timer timer = new Timer();
 
 	/**
 	 * This function is run when the robot is first started up and should be used
@@ -76,13 +78,6 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotPeriodic() {
-
-		if(Robot.arm.getExtensionPot()<5 && Robot.arm.extensionMotor.getEncoder().getVelocity()<0){
-			Robot.arm.extensionMotor.set(0.05);
-		}
-		else if(Robot.arm.getExtensionPot()>95 && Robot.arm.extensionMotor.getEncoder().getVelocity()>0){
-			Robot.arm.extensionMotor.set(-0.05);
-		}
 
 		
 		

@@ -20,20 +20,18 @@ public class ManualAngleDown extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+    timer.reset();
+    timer.start();
+    Robot.arm.moveDown(ArmConstants.kArmSpeedDown);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    timer.reset();
-    timer.start();
 
-    while(timer.get()<ArmConstants.kArmSpeedDown/ArmConstants.kAccelerationTime){
-      Robot.arm.moveUp((ArmConstants.kArmSpeedDown/ArmConstants.kAccelerationTime)*timer.get());}
+    // if(timer.get()<ArmConstants.kAccelerationTime){
+    //   Robot.arm.moveUp((ArmConstants.kArmSpeedDown/ArmConstants.kAccelerationTime)*timer.get());}
 
-    Robot.arm.moveUp(ArmConstants.kArmSpeedUp);
-    
   }
 
   // Called once the command ends or is interrupted.
@@ -41,17 +39,12 @@ public class ManualAngleDown extends Command {
   public void end(boolean interrupted) {
     timer.reset();
     timer.start();
-    
-    while(timer.get()<ArmConstants.kArmSpeedDown/ArmConstants.kAccelerationTime){
-      Robot.arm.moveUp(1-((ArmConstants.kArmSpeedDown/ArmConstants.kAccelerationTime)*timer.get()));}
-
-
     Robot.arm.hold();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return Robot.arm.getArmPot()>95;
   }
 }

@@ -10,7 +10,7 @@ import frc.robot.Constants.ClimberConstants;
 
 public class ClimbUp extends Command {
 	public void initialize() {
-		Robot.climber.setAll(0.6);
+		Robot.climber.setAll(-0.6);
 	}
 
 	public void execute() {

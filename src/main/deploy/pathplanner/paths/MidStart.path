@@ -16,11 +16,11 @@
     },
     {
       "anchor": {
-        "x": 2.2103388565887303,
+        "x": 2.30385717914293,
         "y": 5.541275082550166
       },
       "prevControl": {
-        "x": 1.9279585035957179,
+        "x": 2.0214768261499176,
         "y": 5.541275082550166
       },
       "nextControl": null,
@@ -33,11 +33,37 @@
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 0.5,
+      "waypointRelativePos": 0.15,
       "command": {
         "type": "parallel",
         "data": {
-          "commands": []
+          "commands": [
+            {
+              "type": "sequential",
+              "data": {
+                "commands": [
+                  {
+                    "type": "named",
+                    "data": {
+                      "name": "IntakePivot"
+                    }
+                  },
+                  {
+                    "type": "named",
+                    "data": {
+                      "name": "Fullextend"
+                    }
+                  },
+                  {
+                    "type": "named",
+                    "data": {
+                      "name": "IntakeDown"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
         }
       }
     }

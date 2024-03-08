@@ -31,7 +31,7 @@ public final class Constants {
 	public static final class DriveConstants {
 		// Driving Parameters - Note that these are not the maximum capable speeds of
 		// the robot, rather the allowed maximum speeds
-		public static final double kMaxSpeedMetersPerSecond = 3;
+		public static final double kMaxSpeedMetersPerSecond = 4.8;
 		public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
 		public static final double kDirectionSlewRate = 3; // radians per second 1.2
@@ -179,18 +179,20 @@ public final class Constants {
 
 	public static final class ArmConstants {
 
-		public static final double kExtensionSpeed = .5; // extension speed
-		public static final double kRetractionSpeed = -.5; // retraction speed
+		public static final double AmpPivot = 90;
+
+		public static final double kExtensionSpeed = .7; // extension speed
+		public static final double kRetractionSpeed = .7; // retraction speed
 
 		public static final double armLeftFF = .1;
 		
 		public static final double kArmSpeedDown = 0.15; //max pivot down speed
 		public static final double kArmSpeedUp = 0.15; //max pivot up speed
-		public static final double kArmPivotIntakePos = 15; //intake setpoint
+		public static final double kArmPivotIntakePos = 8; //intake setpoint
 
 
-		public static final double kMaxPot = 0.3027;
-		public static final double kMinPot = 0.3640;
+		public static final double kMaxPot = 0.2712;
+		public static final double kMinPot = 0.3300;
 
 		public static final double kMaxAngle = 111.0;
 		public static final double kMinAngle = -10.4;
@@ -205,9 +207,9 @@ public final class Constants {
 	public static final class ClimberConstants {
 		public static final double RelativeEncoderWhileUp = 0;
 		public static final double RelativeEncoderWhileDown = -93.2;
-		public static final double ActivationSpeed = -0.3;
-		public static final double ClimbSpeedHigh = 0.6;
-		public static final double ClimbSpeedLow = 0.3;
+		public static final double ActivationSpeed = 0.3;
+		public static final double ClimbSpeedHigh = -0.6;
+		public static final double ClimbSpeedLow = -0.3;
 	}
 
 	public static class VisionConstants {

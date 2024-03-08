@@ -10,16 +10,20 @@ public class ManualExtension extends Command {
   boolean inout = false;
   /** Creates a new Extension. */
   public ManualExtension() {
+    
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    Robot.arm.manualExtend();
+
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Robot.arm.manualExtend();
+    
   }
 
   // Called once the command ends or is interrupted.
@@ -31,6 +35,6 @@ public class ManualExtension extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return Robot.arm.getExtensionPot() >90;
   }
 }

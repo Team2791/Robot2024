@@ -6,9 +6,12 @@ package frc.robot.commands.ArmCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.ArmConstants;
 
 public class IntakePivot extends Command {
+  boolean aPressedOnInit = false;
+
   /** Creates a new IntakePivot. */
   public IntakePivot() {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -17,7 +20,8 @@ public class IntakePivot extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    Robot.arm.moveUp(.4);
+    Robot.arm.moveDown(.3);
+    aPressedOnInit = RobotContainer.m_operatorController.a().getAsBoolean();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -29,7 +33,7 @@ public class IntakePivot extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    Robot.arm.moveUp(0);
+    Robot.arm.hold();
   }
 
   // Returns true when the command should end.

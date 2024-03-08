@@ -67,13 +67,13 @@ public class Climber extends SubsystemBase {
 	}
 
 	public void lock() {
-		leftLock.setSpeed(-1);
-		rightLock.setSpeed(-1);
+		leftLock.setSpeed(1);
+		rightLock.setSpeed(1);
 	}
 
 	public void unlock() {
-		leftLock.setSpeed(1);
-		rightLock.setSpeed(1);
+		leftLock.setSpeed(-1);
+		rightLock.setSpeed(-1);
 	}
 
 	public double leftPos() {

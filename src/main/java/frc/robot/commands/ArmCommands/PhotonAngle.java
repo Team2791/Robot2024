@@ -38,10 +38,10 @@ public class PhotonAngle extends Command {
       
 			distance = PhotonUtils.calculateDistanceToTargetMeters(Units.inchesToMeters(9.451),Units.inchesToMeters(57.13),Constants.VisionConstants.kCameraPitch,Units.degreesToRadians(result.getBestTarget().getPitch())); // based on camera pitch
 
-      distance = PhotonUtils.getDistanceToPose(Robot.photonestimator.getCurrentPose(), AprilTagFields.k2024Crescendo.loadAprilTagLayoutField().getTagPose(targetID).get().toPose2d()); //based on poseestimation
+      		distance = PhotonUtils.getDistanceToPose(Robot.photonestimator.getCurrentPose(), AprilTagFields.k2024Crescendo.loadAprilTagLayoutField().getTagPose(targetID).get().toPose2d()); //based on poseestimation
 
 
-			Robot.arm.setAngle(Units.radiansToDegrees(53-(Math.atan(Units.inchesToMeters(Constants.VisionConstants.kspeakerHeight)/distance))));
+			Robot.arm.setAngle(53-Units.radiansToDegrees(Math.atan(Units.inchesToMeters(Constants.VisionConstants.kspeakerHeight)/distance)));
       }
 
 		}

@@ -30,6 +30,8 @@ public class Shintake extends SubsystemBase {
   public Shintake() {
     leftMotor = new CANSparkMax(21, MotorType.kBrushless);
     rightMotor = new CANSparkMax(22, MotorType.kBrushless);
+    leftMotor.setSmartCurrentLimit(40);
+    rightMotor.setSmartCurrentLimit(40);
     intakeMotor = new CANSparkMax(RobotMap.intakeMotor, MotorType.kBrushless);
     speedController = new PIDController(Constants.ShintakeConstants.kShooterP, Constants.ShintakeConstants.kShooterI, Constants.ShintakeConstants.kShooterD);
     speedController.setTolerance(.01);
@@ -81,7 +83,7 @@ public class Shintake extends SubsystemBase {
   }
 
   public void slowOut(){
-    intakeMotor.set(.25);
+    intakeMotor.set(.2);
   }
 
   public double getSpeedRight(){
