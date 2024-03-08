@@ -197,8 +197,8 @@ public final class Constants {
 		public static final double kMaxAngle = 111.0;
 		public static final double kMinAngle = -10.4;
 
-		public static final double kExtendMinPot = 0.13965;
-		public static final double kExtendMaxPot = 0.4917;
+		public static final double kExtendMinPot = 0.1419;
+		public static final double kExtendMaxPot = 0.4830;
 
 
 		public static final double kAccelerationTime = 1; //time for arm pivot acceleration

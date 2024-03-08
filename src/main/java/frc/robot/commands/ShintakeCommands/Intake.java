@@ -57,6 +57,6 @@ public class Intake extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Robot.shintake.isin() || (aPressedOnInit && !RobotContainer.m_operatorController.a().getAsBoolean());
+    return Robot.shintake.isin() || RobotContainer.m_operatorController.getHID().getAButtonReleased();
   }
 }

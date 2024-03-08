@@ -21,7 +21,6 @@ public class IntakePivot extends Command {
   @Override
   public void initialize() {
     Robot.arm.moveDown(.3);
-    aPressedOnInit = RobotContainer.m_operatorController.a().getAsBoolean();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

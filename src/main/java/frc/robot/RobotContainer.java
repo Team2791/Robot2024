@@ -40,6 +40,7 @@ import frc.robot.commands.PitstickCommands.LeftRelease;
 import frc.robot.commands.PitstickCommands.RightClimbUp;
 import frc.robot.commands.PitstickCommands.RightRelease;
 import frc.robot.commands.ShintakeCommands.Intake;
+import frc.robot.commands.ShintakeCommands.SetShooter;
 import frc.robot.commands.ShintakeCommands.Shoot;
 // import frc.robot.commands.ShintakeCommands.Shoot;
 import frc.robot.commands.ShintakeCommands.SpitOut;
@@ -87,7 +88,7 @@ public class RobotContainer {
 	private final TagAllignContinuous tagallign = new TagAllignContinuous(Robot.camera1, m_robotDrive, m_driverController);
 	private final Intake intake = new Intake();
 	private final SpitOut spitout = new SpitOut();
-	private final Shoot shoot = new Shoot();
+	private final SetShooter shoot = new SetShooter();
 	private final ManualAngleUp manualangleup = new ManualAngleUp();
 	private final ManualAngleDown manualangledown = new ManualAngleDown();
 	private final LeftClimbUp leftclimbup = new LeftClimbUp();
@@ -136,29 +137,27 @@ public class RobotContainer {
 
 		// Configure the button bindings
 		configureButtonBindings();
-		driverLT.whileTrue(tagallign);
-		driverRB.toggleOnTrue(new Climb(m_driverController));
-		driverLB.toggleOnTrue(new ClimbRelease());
+
+		// driverLT.whileTrue(tagallign);
+		// driverRB.toggleOnTrue(new Climb(m_driverController));
+		// driverLB.toggleOnTrue(new ClimbRelease());
+
+		driverRT.whileTrue(new Shoot());
 		
 		// driverDPadUp.whileTrue(manualangleup);
-		// driverDPadDown.whileTrue(manualangledown)
+		// driverDPadDown.whileTrue(manualangledown);
 
 
-		operatorX.whileTrue(new Shoot());
-		driverA.whileTrue(intake);
-		operatorA.onTrue(new SequentialCommandGroup(new IntakePivot(), new FullExtension(),new IntakeDownCommand(), new Intake()));
+		operatorX.whileTrue(new SetShooter());
+		operatorA.onTrue(new SequentialCommandGroup(new ParallelCommandGroup(new IntakePivot(), new FullExtension()),new IntakeDownCommand(), new Intake()));
 		operatorA.onFalse(new SequentialCommandGroup(new IntakePivot(), new FullRetraction()));
 		operatorY.whileTrue(spitout);
 		operatorB.onTrue(new SequentialCommandGroup(new AmpPivot(), new FullExtension()));
-		operatorDPadUp.whileTrue(new ManualExtension());
-		operatorDPadDown.whileTrue(new ManualRetraction());
-
+		operatorRB.whileTrue(new ManualExtension());
+		operatorLB.whileTrue(new ManualRetraction());
 		operatorLeftYNeg.whileTrue(manualangledown);
 		operatorLeftYPos.whileTrue(manualangleup);
-
 		
-		Zxc
-
 
 		pitStickLB.whileTrue(leftclimbup);
 		pitStickRB.whileTrue(leftrelease);
@@ -234,12 +233,14 @@ public class RobotContainer {
 		operatorLeftYNeg = m_operatorController.axisLessThan(1, -0.4);
 		operatorLeftXPos = m_operatorController.axisGreaterThan(0, .4);
 		operatorLeftXNeg = m_operatorController.axisLessThan(0, -.4);
-
 		operatorRightXPos  = m_operatorController.axisGreaterThan(4, 0.4);
 		operatorRightXNeg = m_operatorController.axisLessThan(4, -.4);
-
 		operatorRightYPos = m_operatorController.axisGreaterThan(5, .4);
 		operatorRightYNeg = m_operatorController.axisLessThan(5, -.4);
+
+
+
+
 
 		//pitStick buttons
 		pitStickLB = m_pitController.leftBumper();

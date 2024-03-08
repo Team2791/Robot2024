@@ -21,18 +21,24 @@ public class SpitOut extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    
     Robot.shintake.spitOut();
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+
     Robot.shintake.stopIntake();
+  
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+
+    return !Robot.shintake.isin();
+
   }
 }
