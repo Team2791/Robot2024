@@ -4,41 +4,44 @@
 
 package frc.robot.commands.ShintakeCommands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.Robot;
 
-public class SpitOut extends Command {
-  /** Creates a new SpitOut. */
-  public SpitOut() {
-    addRequirements(Robot.shintake);
+public class ShootCommand extends Command {
+  Timer timer = new Timer();
+  /** Creates a new ShootCommand. */
+  public ShootCommand() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    timer.reset();
+    timer.start();
+    Robot.shintake.setShooter(.8,.8);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
-    Robot.shintake.spitOut();
-
+    if(Robot.shintake.getRPM()>-Constants.ShintakeConstants.kRPM){
+      Robot.shintake.takeIn();
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-
+    Robot.shintake.setShooter(0, 0);
     Robot.shintake.stopIntake();
-  
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-
-    return false;
-
+    return Robot.shintake.isin() || timer.get()>3;
   }
 }

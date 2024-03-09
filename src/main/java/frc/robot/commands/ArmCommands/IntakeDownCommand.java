@@ -35,6 +35,6 @@ public class IntakeDownCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Robot.arm.getArmPot()<10;//|| !RobotContainer.m_operatorController.a().getAsBoolean();
+    return Robot.arm.getArmPot()<0 || !RobotContainer.m_operatorController.getHID().getAButton();//|| !RobotContainer.m_operatorController.a().getAsBoolean();
   }
 }

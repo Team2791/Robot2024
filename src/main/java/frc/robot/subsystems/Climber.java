@@ -76,11 +76,11 @@ public class Climber extends SubsystemBase {
 		rightLock.setSpeed(-1);
 	}
 
-	public double leftPos() {
+	public double getleftPos() {
 		return leftMotor.getEncoder().getPosition();
 	}
 
-	public double rightPos() {
+	public double getrightPos() {
 		return rightMotor.getEncoder().getPosition();
 	}
 
@@ -93,7 +93,7 @@ public class Climber extends SubsystemBase {
 	}
 
 	public void periodic() {
-		SmartDashboard.putNumber("(Clmber) Left Position", leftPos());
-		SmartDashboard.putNumber("(Climber) Right Position", rightPos());
+		SmartDashboard.putNumber("(Clmber) Left Position", getleftPos());
+		SmartDashboard.putNumber("(Climber) Right Position", getrightPos());
 	}
 }

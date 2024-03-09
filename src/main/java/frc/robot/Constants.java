@@ -116,7 +116,7 @@ public final class Constants {
 		public static final double kDrivingMinOutput = -1;
 		public static final double kDrivingMaxOutput = 1;
 
-		public static final double kTurningP = .9; // 1
+		public static final double kTurningP = .3; // 1
 		public static final double kTurningI = 0.00001;
 		public static final double kTurningD = .02;
 		public static final double kTurningFF = 0;
@@ -139,13 +139,13 @@ public final class Constants {
 
 	public static final class AutoConstants {
 
-		public static final double kRotationP = 0;
+		public static final double kRotationP = 5;
 		public static final double kRotationI = 0;
 		public static final double kRotationD = 0;
 
-		public static final double kTranslationP = 0.01;
+		public static final double kTranslationP = 2.5;
 		public static final double kTranslationI = 0;
-		public static final double kTranslationD = 1;
+		public static final double kTranslationD = 0;
 
 		public static final double kMaxSpeedMetersPerSecond = 3;
 		public static final double kMaxAccelerationMetersPerSecondSquared = 3;
@@ -174,6 +174,8 @@ public final class Constants {
 
 		public static final double kAngleWithArm = 53;
 
+		public static final double kRPM = 1800;
+
 
 	}
 
@@ -197,8 +199,8 @@ public final class Constants {
 		public static final double kMaxAngle = 111.0;
 		public static final double kMinAngle = -10.4;
 
-		public static final double kExtendMinPot = 0.1419;
-		public static final double kExtendMaxPot = 0.4830;
+		public static final double kExtendMinPot = 0.150;
+		public static final double kExtendMaxPot = .479;
 
 
 		public static final double kAccelerationTime = 1; //time for arm pivot acceleration

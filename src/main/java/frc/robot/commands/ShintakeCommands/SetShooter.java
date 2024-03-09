@@ -5,8 +5,12 @@
 package frc.robot.commands.ShintakeCommands;
 
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+
+import java.lang.constant.Constable;
+
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 
@@ -28,6 +32,12 @@ public class SetShooter extends Command {
   @Override
   public void execute() {
 
+    if(Robot.shintake.getRPM()>-Constants.ShintakeConstants.kRPM){
+      RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, .3);
+      RobotContainer.m_operatorController.getHID().setRumble(RumbleType.kBothRumble, .5);
+    }
+
+  
   }
 
   // Called once the command ends or is interrupted.
@@ -35,6 +45,9 @@ public class SetShooter extends Command {
   public void end(boolean interrupted) {
 
     Robot.shintake.setShooter(0, 0);
+    RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, 0);
+    RobotContainer.m_operatorController.getHID().setRumble(RumbleType.kBothRumble, 0);
+
 
   }
 
@@ -43,7 +56,7 @@ public class SetShooter extends Command {
   @Override
   public boolean isFinished() {
 
-    return false;
+    return RobotContainer.m_driverController.getRightTriggerAxis()>.5 || timer.get()>10;
 
   }
 }

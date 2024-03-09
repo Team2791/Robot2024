@@ -18,6 +18,7 @@ public class ClimberActivate extends Command {
 	}
 
 	public boolean isFinished() {
-		return Robot.climber.leftPos() >= ClimberConstants.RelativeEncoderWhileUp;
+		return false;
+		//return Robot.climber.getleftPos() >= ClimberConstants.RelativeEncoderWhileUp;
 	}
 }

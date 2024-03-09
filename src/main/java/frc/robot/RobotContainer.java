@@ -14,6 +14,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -23,7 +24,8 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AprilTagCommands.TagAllignContinuous;
 import frc.robot.commands.ArmCommands.AmpPivot;
-import frc.robot.commands.ArmCommands.FullExtension;
+import frc.robot.commands.ArmCommands.FullExtensionAmp;
+import frc.robot.commands.ArmCommands.FullExtensionIntake;
 import frc.robot.commands.ArmCommands.FullRetraction;
 import frc.robot.commands.ArmCommands.IntakeDownCommand;
 import frc.robot.commands.ArmCommands.IntakePivot;
@@ -32,16 +34,20 @@ import frc.robot.commands.ArmCommands.ManualCommands.ManualAngleUp;
 import frc.robot.commands.ArmCommands.ManualCommands.ManualExtension;
 import frc.robot.commands.ArmCommands.ManualCommands.ManualRetraction;
 import frc.robot.commands.ClimberCommands.Climb;
-import frc.robot.commands.ClimberCommands.ClimbRelease;
+import frc.robot.commands.ClimberCommands.activate.ClimberActivate;
+import frc.robot.commands.ClimberCommands.activate.ClimberDeactivate;
+// import frc.robot.commands.ClimberCommands.ClimbRelease;
 import frc.robot.commands.ClimberCommands.actuator.LinearLock;
 import frc.robot.commands.ClimberCommands.actuator.LinearUnlock;
 import frc.robot.commands.PitstickCommands.LeftClimbUp;
 import frc.robot.commands.PitstickCommands.LeftRelease;
 import frc.robot.commands.PitstickCommands.RightClimbUp;
 import frc.robot.commands.PitstickCommands.RightRelease;
+import frc.robot.commands.ShintakeCommands.AmpShoot;
 import frc.robot.commands.ShintakeCommands.Intake;
 import frc.robot.commands.ShintakeCommands.SetShooter;
 import frc.robot.commands.ShintakeCommands.Shoot;
+import frc.robot.commands.ShintakeCommands.ShootCommand;
 // import frc.robot.commands.ShintakeCommands.Shoot;
 import frc.robot.commands.ShintakeCommands.SpitOut;
 // import frc.robot.commands.servocontrol;
@@ -58,6 +64,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import java.security.spec.KeySpec;
 import java.util.List;
+import java.util.function.Supplier;
 
 import org.photonvision.PhotonCamera;
 
@@ -73,9 +80,6 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-
-	private final SendableChooser<Command> autoChooser;
-
 
 	public static XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
 	public static CommandXboxController m_operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
@@ -95,7 +99,11 @@ public class RobotContainer {
 	private final LeftRelease leftrelease = new LeftRelease();
 	private final RightClimbUp rightclimbup = new RightClimbUp();
 	private final RightRelease rightrelease = new RightRelease();
-	private final FullExtension fullextend = new FullExtension();
+
+	private final FullExtensionIntake fullextend = new FullExtensionIntake();
+	private final IntakeDownCommand intakedown = new IntakeDownCommand();
+	private final IntakePivot intakepivot = new IntakePivot();
+	private final FullRetraction fullretraction = new FullRetraction();
 	private final LinearLock actuate = new LinearLock();
 
 	// private final ManualAngle armup = new ManualAngle(true);
@@ -106,7 +114,7 @@ public class RobotContainer {
 	private Trigger operatorX, operatorY, operatorA, operatorB, operatorLB, operatorRB, operatorLT,
 			operatorRT;
 
-	private Trigger pitA, pitB;
+	private Trigger pitA, pitB, pitX;
 			
 	private Trigger operatorLeftYPos, operatorLeftYNeg, operatorLeftXNeg, operatorLeftXPos, operatorRightXPos, operatorRightXNeg, operatorRightYPos, operatorRightYNeg;
 
@@ -127,9 +135,9 @@ public class RobotContainer {
 	public RobotContainer() {
 
 		NamedCommands.registerCommand("Align", tagallign);
-		NamedCommands.registerCommand("Shoot", shoot);
-		NamedCommands.registerCommand("Intake", intake);
-		NamedCommands.registerCommand("Fullextend", fullextend);
+		NamedCommands.registerCommand("Shoot", new ShootCommand());
+		NamedCommands.registerCommand("Intake", new Intake());
+		NamedCommands.registerCommand("Fullextend", new FullExtensionIntake());
 		NamedCommands.registerCommand("IntakePivot", new IntakePivot());
 		NamedCommands.registerCommand("IntakeDown", new IntakeDownCommand());
 
@@ -142,28 +150,37 @@ public class RobotContainer {
 		// driverRB.toggleOnTrue(new Climb(m_driverController));
 		// driverLB.toggleOnTrue(new ClimbRelease());
 
-		driverRT.whileTrue(new Shoot());
+		driverX.whileTrue(new Shoot());
+		driverDPadLeft.whileTrue(new LeftClimbUp());
+		driverDPadRight.whileTrue(new LeftRelease());
+		driverDPadUp.whileTrue(new RightRelease());
+		driverDPadDown.whileTrue(new RightClimbUp());
 		
 		// driverDPadUp.whileTrue(manualangleup);
 		// driverDPadDown.whileTrue(manualangledown);
 
 
 		operatorX.whileTrue(new SetShooter());
-		operatorA.onTrue(new SequentialCommandGroup(new ParallelCommandGroup(new IntakePivot(), new FullExtension()),new IntakeDownCommand(), new Intake()));
-		operatorA.onFalse(new SequentialCommandGroup(new IntakePivot(), new FullRetraction()));
-		operatorY.whileTrue(spitout);
-		operatorB.onTrue(new SequentialCommandGroup(new AmpPivot(), new FullExtension()));
+		operatorA.whileTrue(new SequentialCommandGroup(new IntakePivot(), new FullExtensionIntake(), new IntakeDownCommand(), new Intake()));
+		operatorA.whileFalse(new SequentialCommandGroup(new IntakePivot(), new FullRetraction()));
+	
+		//operatorA.whileTrue(new Intake());
+		
+		operatorY.whileTrue(new SpitOut());
+		operatorB.whileTrue(new SequentialCommandGroup(new AmpPivot(), new FullExtensionAmp(), new AmpShoot()));
 		operatorRB.whileTrue(new ManualExtension());
 		operatorLB.whileTrue(new ManualRetraction());
 		operatorLeftYNeg.whileTrue(manualangledown);
 		operatorLeftYPos.whileTrue(manualangleup);
-		
+
+		operatorRightYPos.whileTrue(new ClimberActivate());
+		operatorRightYNeg.whileTrue(new ClimberDeactivate());
 
 		pitStickLB.whileTrue(leftclimbup);
 		pitStickRB.whileTrue(leftrelease);
 		pitDpadLeft.whileTrue(rightclimbup);
 		pitDpadRight.whileTrue(rightrelease);
-		
+		pitX.whileTrue(new ShootCommand());
 		pitA.toggleOnTrue(new LinearLock());
 		pitB.toggleOnTrue(new LinearUnlock());
 
@@ -185,9 +202,6 @@ public class RobotContainer {
 						true, true), m_robotDrive));
 
 
-
-		autoChooser = AutoBuilder.buildAutoChooser();
-		SmartDashboard.putData("Auto Chooser", autoChooser);
 	}
 
 
@@ -250,10 +264,13 @@ public class RobotContainer {
 
 		pitA = m_pitController.a();
 		pitB = m_pitController.b();
+		pitX = m_pitController.x();
 
 	}
 
 	public Command getAutonomousCommand() {
-		return autoChooser.getSelected();
-	}         
+
+		return new PathPlannerAuto("Taxi");
+
+	}
 }

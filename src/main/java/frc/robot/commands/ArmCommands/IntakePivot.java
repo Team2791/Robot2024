@@ -11,6 +11,7 @@ import frc.robot.Constants.ArmConstants;
 
 public class IntakePivot extends Command {
   boolean aPressedOnInit = false;
+  
 
   /** Creates a new IntakePivot. */
   public IntakePivot() {

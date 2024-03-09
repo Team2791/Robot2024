@@ -11,8 +11,8 @@ import frc.robot.Robot;
 import frc.robot.RobotContainer;
 
 public class Intake extends Command {
-  boolean isIn = false;
-  boolean aPressedOnInit = false;
+  Timer timer = new Timer();
+  boolean cancel = false;
   
   /** Creates a new Intake. */
   public Intake() {
@@ -26,15 +26,15 @@ public class Intake extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    timer.reset();
+    timer.start();
     Robot.shintake.takeIn();
-    aPressedOnInit = RobotContainer.m_operatorController.a().getAsBoolean();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
-    
+  
     
     
 
@@ -57,6 +57,6 @@ public class Intake extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Robot.shintake.isin() || RobotContainer.m_operatorController.getHID().getAButtonReleased();
+    return Robot.shintake.isin() || timer.get()>10;
   }
 }

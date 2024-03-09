@@ -51,8 +51,8 @@ public class Shintake extends SubsystemBase {
   //   rightMotor.set(speedController.calculate(leftMotor.getEncoder().getVelocity(),rightSpeed));
   // }
 
-  public void run22(){
-    rightMotor.set(-.2);
+  public double getRPM(){
+    return (leftMotor.getEncoder().getVelocity() + rightMotor.getEncoder().getVelocity())/2;
   }
 
   public void setShooter(double leftSpeed, double rightSpeed){
@@ -109,6 +109,7 @@ public class Shintake extends SubsystemBase {
     SmartDashboard.putBoolean("Beam Break?", isin());
     SmartDashboard.putNumber("left speed", getSpeedLeft());
     SmartDashboard.putNumber("Right speed", getSpeedRight());
+    SmartDashboard.putNumber("RPM", getRPM());
   }
 
   

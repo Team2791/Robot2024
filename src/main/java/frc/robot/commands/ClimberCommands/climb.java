@@ -1,30 +1,41 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package frc.robot.commands.ClimberCommands;
 
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.ClimberCommands.activate.ClimberActivate;
-import frc.robot.commands.ClimberCommands.actuator.LinearLock;
-import frc.robot.commands.ClimberCommands.actuator.LinearUnlock;
-import frc.robot.commands.ClimberCommands.climbing.ClimbUp;
+import frc.robot.Constants;
+import frc.robot.Robot;
+import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.ClimberConstants;
 
-public class Climb extends SequentialCommandGroup {
-	public Climb(XboxController controller) {
-		addCommands(new LinearUnlock());
-		addCommands(new ClimberActivate());
+public class Climb extends Command {
+  /** Creates a new Climb. */
+  public Climb() {
+    // Use addRequirements() here to declare subsystem dependencies.
+  }
 
-		// // Wait for lb press
-		// addCommands(new Command() {
-		// 	public void initialize() {
-		// 		controller.getRightBumper();
-		// 	}
+  // Called when the command is initially scheduled.
+  @Override
+  public void initialize() {
+    Robot.climber.setAll(.5);
 
-		// 	public boolean isFinished() {
-		// 		return controller.getRightBumperPressed();
-		// 	}
-		// });
+  }
 
-		addCommands(new ClimbUp());
-		addCommands(new LinearLock());
-	}
+  // Called every time the scheduler runs while the command is scheduled.
+  @Override
+  public void execute() {}
+
+  // Called once the command ends or is interrupted.
+  @Override
+  public void end(boolean interrupted) {
+    Robot.climber.setAll(0);
+  }
+
+  // Returns true when the command should end.
+  @Override
+  public boolean isFinished() {
+    return Robot.climber.getleftPos()<ClimberConstants.RelativeEncoderWhileDown;
+  }
 }

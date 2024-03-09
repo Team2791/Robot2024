@@ -17,7 +17,7 @@ public class AmpPivot extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    Robot.arm.moveUp(.1);
+    Robot.arm.moveDown(.2);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -35,6 +35,6 @@ public class AmpPivot extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Robot.arm.getArmPot()>80;
+    return Robot.arm.getArmPot()>85;
   }
 }

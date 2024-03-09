@@ -9,11 +9,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 
-public class FullExtension extends Command {
+public class FullExtensionAmp extends Command {
   Timer timer = new Timer();
   boolean aPressedOnInit = false;
   /** Creates a new Fullextension. */
-  public FullExtension() {
+  public FullExtensionAmp() {
     
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -29,7 +29,7 @@ public class FullExtension extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    
   }
 
   // Called once the command ends or is interrupted.
@@ -41,6 +41,6 @@ public class FullExtension extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Robot.arm.getExtensionPot()>97 || timer.get()>3;// || (aPressedOnInit && !RobotContainer.m_operatorController.a().getAsBoolean());
+    return Robot.arm.getExtensionPot()>70 || timer.get()>3 || !RobotContainer.m_operatorController.getHID().getBButton();// || (aPressedOnInit && !RobotContainer.m_operatorController.a().getAsBoolean());
   }
 }

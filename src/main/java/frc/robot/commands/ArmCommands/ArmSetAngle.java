@@ -19,10 +19,7 @@ public class ArmSetAngle extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if(setAngle > Robot.arm.getArmPot()){
-      Robot.arm.moveUp(.3);
-    }
-    else { Robot.arm.moveDown(.3);}
+    Robot.arm.moveDown(.1);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -35,11 +32,12 @@ public class ArmSetAngle extends Command {
   @Override
   public void end(boolean interrupted) {
     Robot.arm.hold();
+    
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Robot.arm.getArmPot()==setAngle+10) || (Robot.arm.getArmPot()==setAngle-10);
+    return Robot.arm.getArmPot()>75;
   }
 }

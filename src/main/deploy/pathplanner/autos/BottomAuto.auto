@@ -2,27 +2,15 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7694503445150959,
-      "y": 4.232182676053205
+      "x": 0.5154033165209193,
+      "y": 4.130246361657978
     },
-    "rotation": -60.19428259990464
+    "rotation": 0.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
-          }
-        },
         {
           "type": "path",
           "data": {
@@ -32,19 +20,31 @@
         {
           "type": "named",
           "data": {
-            "name": "Fullextend"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake"
+            "name": "Shoot"
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "BottomNoteScore"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BottomNoteSpeaker"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SpeakerToMidline"
           }
         }
       ]

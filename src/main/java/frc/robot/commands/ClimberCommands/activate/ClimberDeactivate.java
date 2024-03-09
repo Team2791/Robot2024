@@ -6,7 +6,7 @@ import frc.robot.Constants.ClimberConstants;
 
 public class ClimberDeactivate extends Command {
 	public void initialize() {
-		Robot.climber.setAll(0.3);
+		Robot.climber.setAll(-0.3);
 	}
 
 	public void end(boolean interrupted) {
@@ -14,6 +14,7 @@ public class ClimberDeactivate extends Command {
 	}
 
 	public boolean isFinished() {
-		return Robot.climber.leftPos() <= ClimberConstants.RelativeEncoderWhileDown;
+		return false;
+		//return Robot.climber.getleftPos() <= ClimberConstants.RelativeEncoderWhileDown;
 	}
 }
