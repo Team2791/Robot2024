@@ -26,25 +26,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BottomNoteScore"
+            "pathName": "SpeakerToBottom"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "BottomNoteSpeaker"
+            "pathName": "BottomToBottomnote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BottomNoteToSpeaker"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "SpeakerToMidline"
           }
         }
       ]

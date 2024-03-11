@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.749954642766429,
-      "y": 6.860626292681157
+      "x": 0.7102830024869088,
+      "y": 4.359739340947609
     },
-    "rotation": 57.99461679191639
+    "rotation": -57.171458208587524
   },
   "command": {
     "type": "sequential",
@@ -20,19 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "topStart"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "TopNoteScore"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
+            "pathName": "bottomopenfirst"
           }
         }
       ]

@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.3,
-        "y": 5.55
+        "x": 2.15,
+        "y": 4.15
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.62952211618709,
-        "y": 4.852280561703981
+        "x": 1.881383197794644,
+        "y": 4.753971089863084
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.245219347581553,
-        "y": 4.119307667186764
+        "x": 1.3712009344922642,
+        "y": 5.530839536255343
       },
       "prevControl": {
-        "x": 1.878732900322944,
-        "y": 4.5884103196777835
+        "x": 1.5799118603886924,
+        "y": 5.148202838778559
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,21 +33,21 @@
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 0.35,
+      "waypointRelativePos": 0.1,
       "command": {
-        "type": "parallel",
+        "type": "sequential",
         "data": {
           "commands": [
             {
               "type": "named",
               "data": {
-                "name": "Fullextend"
+                "name": "IntakePivot"
               }
             },
             {
               "type": "named",
               "data": {
-                "name": "Intake"
+                "name": "FullRetraction"
               }
             }
           ]
@@ -56,7 +56,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 0.75,
+    "maxVelocity": 1.0,
     "maxAcceleration": 0.75,
     "maxAngularVelocity": 360.0,
     "maxAngularAcceleration": 180.0
@@ -67,7 +67,10 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
-  "previewStartingState": null,
-  "useDefaultConstraints": false
+  "folder": "BottomStraightAuto",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
 }

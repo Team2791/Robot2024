@@ -25,7 +25,8 @@ public class SetShooter extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    Robot.shintake.setShooter(.8,.8);
+
+    Robot.shintake.setShooter(1,1);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

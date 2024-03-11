@@ -14,19 +14,13 @@
         {
           "type": "named",
           "data": {
-            "name": "ShootCommand"
+            "name": "Shoot"
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "MidStart"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake"
           }
         },
         {

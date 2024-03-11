@@ -2,31 +2,25 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.749954642766429,
-      "y": 6.860626292681157
+      "x": 0.7450681568029801,
+      "y": 4.382929443824989
     },
-    "rotation": 57.99461679191639
+    "rotation": -60.46121774044183
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Shoot"
+            "pathName": "BottomToNote"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "topStart"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "TopNoteScore"
+            "pathName": "Path"
           }
         },
         {

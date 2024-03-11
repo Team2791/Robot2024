@@ -23,13 +23,14 @@ public class SpitOut extends Command {
   public void execute() {
     
     Robot.shintake.spitOut();
+    Robot.shintake.setShooter(-.5,-.5);
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-
+    Robot.shintake.setShooter(0, 0);
     Robot.shintake.stopIntake();
   
   }

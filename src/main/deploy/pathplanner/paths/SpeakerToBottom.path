@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.46,
-        "y": 6.97
+        "x": 1.4987465003178593,
+        "y": 5.577219742010105
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2524248438327383,
-        "y": 6.632369422930936
+        "x": 1.4987465003178593,
+        "y": 5.213590592479568
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.3656518741608918,
-        "y": 5.55593454044051
+        "x": 1.5,
+        "y": 4.14
       },
       "prevControl": {
-        "x": 1.591506911827383,
-        "y": 5.878691079416058
+        "x": 1.5,
+        "y": 4.707685088244883
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,31 +30,7 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [
-    {
-      "name": "New Event Marker",
-      "waypointRelativePos": 0.2,
-      "command": {
-        "type": "sequential",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "IntakePivot"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "FullRetraction"
-              }
-            }
-          ]
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 1.0,
     "maxAcceleration": 0.75,
@@ -67,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "BottomStraightAuto",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

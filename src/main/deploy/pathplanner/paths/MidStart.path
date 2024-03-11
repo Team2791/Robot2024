@@ -16,11 +16,11 @@
     },
     {
       "anchor": {
-        "x": 2.30385717914293,
+        "x": 2.484325872606547,
         "y": 5.541275082550166
       },
       "prevControl": {
-        "x": 2.0214768261499176,
+        "x": 2.2019455196135347,
         "y": 5.541275082550166
       },
       "nextControl": null,
@@ -33,7 +33,7 @@
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 0.15,
+      "waypointRelativePos": 0.1,
       "command": {
         "type": "parallel",
         "data": {
@@ -58,6 +58,12 @@
                     "type": "named",
                     "data": {
                       "name": "IntakeDown"
+                    }
+                  },
+                  {
+                    "type": "named",
+                    "data": {
+                      "name": "Intake"
                     }
                   }
                 ]

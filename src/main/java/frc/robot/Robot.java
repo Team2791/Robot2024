@@ -11,7 +11,7 @@ import org.photonvision.PhotonCamera;
 import com.pathplanner.lib.util.PIDConstants;
 
 import edu.wpi.first.cameraserver.CameraServer;
-import frc.robot.subsystems.PhotonEstimator;
+//import frc.robot.subsystems.PhotonEstimator;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -38,7 +38,7 @@ public class Robot extends TimedRobot {
 	public static Shintake shintake;
 	public static Climber climber;
 	public static DriveSubsystem m_drivetrain;
-	public static PhotonEstimator photonestimator;
+	//public static PhotonEstimator photonestimator;
 	public static PhotonCamera camera1;
 	public static PhotonCamera camera2;
 	public static PowerDistribution pdp;
@@ -56,6 +56,8 @@ public class Robot extends TimedRobot {
 		camera2 = new PhotonCamera("testCamera");
 		shintake = new Shintake();
 
+		CameraServer.startAutomaticCapture();
+
 		arm = new Arm();
 		// Instantiate our RobotContainer. This will perform all our button bindings,
 		// and put our
@@ -65,7 +67,7 @@ public class Robot extends TimedRobot {
 		climber = new Climber();
 		pdp = new PowerDistribution(1, ModuleType.kRev);
 
-		photonestimator = new PhotonEstimator(camera1, m_drivetrain);
+		//photonestimator = new PhotonEstimator(camera1, m_drivetrain);
 		
 
 	}
@@ -83,9 +85,9 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotPeriodic() {
 
-		SmartDashboard.putNumber("Radio VRM", pdp.getCurrent(15));
-		SmartDashboard.putNumber("Brain Box", pdp.getCurrent(16));
-		SmartDashboard.putNumber("Raspi VRM", pdp.getCurrent(19));
+		// SmartDashboard.putNumber("Radio VRM", pdp.getCurrent(15));
+		// SmartDashboard.putNumber("Brain Box", pdp.getCurrent(16));
+		// SmartDashboard.putNumber("Raspi VRM", pdp.getCurrent(19));
 
 
 

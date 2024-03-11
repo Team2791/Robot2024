@@ -41,6 +41,6 @@ public class FullExtensionAmp extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Robot.arm.getExtensionPot()>70 || timer.get()>3 || !RobotContainer.m_operatorController.getHID().getBButton();// || (aPressedOnInit && !RobotContainer.m_operatorController.a().getAsBoolean());
+    return Robot.arm.getExtensionPot()>80 || timer.get()>3 || !RobotContainer.m_operatorController.getHID().getBButton();// || (aPressedOnInit && !RobotContainer.m_operatorController.a().getAsBoolean());
   }
 }

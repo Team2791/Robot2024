@@ -5,26 +5,23 @@
 package frc.robot.commands.ArmCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.Robot;
 
-public class AmpPivot extends Command {
-  /** Creates a new AmpAngle. */
-  public AmpPivot() {
+public class ResetPosition extends Command {
+  /** Creates a new ResetPosition. */
+  public ResetPosition() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    Robot.arm.moveDown(.4);
+    Robot.arm.moveUp(.3);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
@@ -35,6 +32,6 @@ public class AmpPivot extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Robot.arm.getArmPot()>75;
+    return Robot.arm.getArmPot()<20;
   }
 }

@@ -83,7 +83,7 @@ public class Shintake extends SubsystemBase {
   }
 
   public void slowOut(){
-    intakeMotor.set(.2);
+    intakeMotor.set(.3);
   }
 
   public double getSpeedRight(){
@@ -106,10 +106,10 @@ public class Shintake extends SubsystemBase {
     // SmartDashboard.putNumber("Left motor set power", leftMotor.get());
     // SmartDashboard.putNumber("Right motor set power", rightMotor.get());
     // //SmartDashboard.putData("Speed PID", speedController);
-    SmartDashboard.putBoolean("Beam Break?", isin());
-    SmartDashboard.putNumber("left speed", getSpeedLeft());
-    SmartDashboard.putNumber("Right speed", getSpeedRight());
-    SmartDashboard.putNumber("RPM", getRPM());
+    // SmartDashboard.putBoolean("Beam Break?", isin());
+    // SmartDashboard.putNumber("left speed", getSpeedLeft());
+    // SmartDashboard.putNumber("Right speed", getSpeedRight());
+    // SmartDashboard.putNumber("RPM", getRPM());
   }
 
   

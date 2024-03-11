@@ -29,6 +29,7 @@ import frc.robot.commands.ArmCommands.FullExtensionIntake;
 import frc.robot.commands.ArmCommands.FullRetraction;
 import frc.robot.commands.ArmCommands.IntakeDownCommand;
 import frc.robot.commands.ArmCommands.IntakePivot;
+import frc.robot.commands.ArmCommands.ResetPosition;
 import frc.robot.commands.ArmCommands.ManualCommands.ManualAngleDown;
 import frc.robot.commands.ArmCommands.ManualCommands.ManualAngleUp;
 import frc.robot.commands.ArmCommands.ManualCommands.ManualExtension;
@@ -114,7 +115,7 @@ public class RobotContainer {
 	private Trigger operatorX, operatorY, operatorA, operatorB, operatorLB, operatorRB, operatorLT,
 			operatorRT;
 
-	private Trigger pitA, pitB, pitX;
+	private Trigger pitA, pitB, pitX, operatortinyright;
 			
 	private Trigger operatorLeftYPos, operatorLeftYNeg, operatorLeftXNeg, operatorLeftXPos, operatorRightXPos, operatorRightXNeg, operatorRightYPos, operatorRightYNeg;
 
@@ -124,7 +125,7 @@ public class RobotContainer {
 
 	private Trigger pitStickRB, pitStickLB, pitDpadRight, pitDpadLeft;
 
-
+	private final SendableChooser<Command> autoChooser;
 
 	// The driver's controller
 
@@ -138,8 +139,14 @@ public class RobotContainer {
 		NamedCommands.registerCommand("Shoot", new ShootCommand());
 		NamedCommands.registerCommand("Intake", new Intake());
 		NamedCommands.registerCommand("Fullextend", new FullExtensionIntake());
+		NamedCommands.registerCommand("FullRetraction", new FullRetraction());
 		NamedCommands.registerCommand("IntakePivot", new IntakePivot());
 		NamedCommands.registerCommand("IntakeDown", new IntakeDownCommand());
+
+		autoChooser = AutoBuilder.buildAutoChooser();
+		SmartDashboard.putData("Auto Chooser", autoChooser);
+
+
 
 
 
@@ -150,7 +157,7 @@ public class RobotContainer {
 		// driverRB.toggleOnTrue(new Climb(m_driverController));
 		// driverLB.toggleOnTrue(new ClimbRelease());
 
-		driverX.whileTrue(new Shoot());
+		driverLB.whileTrue(new Shoot());
 		driverDPadLeft.whileTrue(new LeftClimbUp());
 		driverDPadRight.whileTrue(new LeftRelease());
 		driverDPadUp.whileTrue(new RightRelease());
@@ -163,11 +170,13 @@ public class RobotContainer {
 		operatorX.whileTrue(new SetShooter());
 		operatorA.whileTrue(new SequentialCommandGroup(new IntakePivot(), new FullExtensionIntake(), new IntakeDownCommand(), new Intake()));
 		operatorA.whileFalse(new SequentialCommandGroup(new IntakePivot(), new FullRetraction()));
+		operatortinyright.whileTrue(new Intake());
 	
 		//operatorA.whileTrue(new Intake());
 		
 		operatorY.whileTrue(new SpitOut());
-		operatorB.whileTrue(new SequentialCommandGroup(new AmpPivot(), new FullExtensionAmp(), new AmpShoot()));
+		operatorB.whileTrue(new SequentialCommandGroup(new AmpPivot(), new FullExtensionAmp(), new SetShooter()));
+		operatorB.whileFalse(new SequentialCommandGroup(new ParallelCommandGroup(new ResetPosition(), new FullRetraction())));
 		operatorRB.whileTrue(new ManualExtension());
 		operatorLB.whileTrue(new ManualRetraction());
 		operatorLeftYNeg.whileTrue(manualangledown);
@@ -199,7 +208,7 @@ public class RobotContainer {
 								OIConstants.kDriveDeadband),
 						-MathUtil.applyDeadband(m_driverController.getRightX(),
 								OIConstants.kDriveDeadband),
-						true, true), m_robotDrive));
+						true, false), m_robotDrive));
 
 
 	}
@@ -215,8 +224,8 @@ public class RobotContainer {
 	 * {@link JoystickButton}.
 	 */
 	private void configureButtonBindings() {
-		// new JoystickButton(m_driverController, Button.kR1.value)
-		// 		.whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));
+		new JoystickButton(m_driverController, Button.kR1.value)
+		 		.whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));
 
 		//driver configs
 		driverA = new JoystickButton(m_driverController, XboxController.Button.kA.value);
@@ -251,6 +260,7 @@ public class RobotContainer {
 		operatorRightXNeg = m_operatorController.axisLessThan(4, -.4);
 		operatorRightYPos = m_operatorController.axisGreaterThan(5, .4);
 		operatorRightYNeg = m_operatorController.axisLessThan(5, -.4);
+		operatortinyright = m_operatorController.start();
 
 
 
@@ -270,7 +280,7 @@ public class RobotContainer {
 
 	public Command getAutonomousCommand() {
 
-		return new PathPlannerAuto("Taxi");
+		return autoChooser.getSelected();
 
 	}
 }

@@ -108,8 +108,8 @@ public class DriveSubsystem extends SubsystemBase {
 		m_odometry.update(Rotation2d.fromDegrees(m_gyro.getAngle()),
 				new SwerveModulePosition[] {m_frontLeft.getPosition(), m_frontRight.getPosition(),
 						m_rearLeft.getPosition(), m_rearRight.getPosition()});
-		SmartDashboard.putNumber("yaw:", m_gyro.getYaw());
-		SmartDashboard.putNumber("angle:", m_gyro.getAngle());
+		// SmartDashboard.putNumber("yaw:", m_gyro.getYaw());
+		// SmartDashboard.putNumber("angle:", m_gyro.getAngle());
 		SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
 		
 	}

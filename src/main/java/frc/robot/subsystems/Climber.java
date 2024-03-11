@@ -93,7 +93,7 @@ public class Climber extends SubsystemBase {
 	}
 
 	public void periodic() {
-		SmartDashboard.putNumber("(Clmber) Left Position", getleftPos());
-		SmartDashboard.putNumber("(Climber) Right Position", getrightPos());
+		// SmartDashboard.putNumber("(Clmber) Left Position", getleftPos());
+		// SmartDashboard.putNumber("(Climber) Right Position", getrightPos());
 	}
 }
