@@ -193,8 +193,8 @@ public final class Constants {
 		public static final double kArmPivotIntakePos = 8; //intake setpoint
 
 
-		public static final double kMaxPot = 0.2712;
-		public static final double kMinPot = 0.3300;
+		public static final double kMaxPot = 0.1840;
+		public static final double kMinPot = 0.2344;
 
 		public static final double kMaxAngle = 111.0;
 		public static final double kMinAngle = -10.4;
