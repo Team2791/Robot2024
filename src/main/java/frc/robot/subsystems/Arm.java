@@ -22,7 +22,7 @@ import frc.robot.RobotMap;
 public class Arm extends SubsystemBase {
   PhotonCamera camera;
 
-  private CANSparkMax armLeft;
+  public CANSparkMax armLeft;
   private CANSparkMax armRight;
   public CANSparkMax extensionMotor;
 
@@ -122,10 +122,10 @@ public class Arm extends SubsystemBase {
     double extPot = getExtensionPot();
 
     setpoint = getArmPot();
-    // SmartDashboard.putNumber("Pivot Angle", armPot);
-    // SmartDashboard.putNumber("Raw pivot pot", (armPot - intercept) / slope);
-    // SmartDashboard.putNumber("Extension", extPot);
-    // SmartDashboard.putNumber("Raw extension pot", (extPot - extIntercept) / extSlope);
+    SmartDashboard.putNumber("Pivot Angle", armPot);
+    SmartDashboard.putNumber("Raw pivot pot", (armPot - intercept) / slope);
+    SmartDashboard.putNumber("Extension", extPot);
+    SmartDashboard.putNumber("Raw extension pot", (extPot - extIntercept) / extSlope);
 
     
     //armLeft.set(leftPID.calculate(getArmPot(),setpoint)+Constants.ArmConstants.armLeftFF * Math.cos(Math.toRadians(getArmPot())));

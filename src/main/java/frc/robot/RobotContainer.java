@@ -30,6 +30,7 @@ import frc.robot.commands.ArmCommands.FullRetraction;
 import frc.robot.commands.ArmCommands.IntakeDownCommand;
 import frc.robot.commands.ArmCommands.IntakePivot;
 import frc.robot.commands.ArmCommands.ResetPosition;
+import frc.robot.commands.ArmCommands.ManualCommands.Hold;
 import frc.robot.commands.ArmCommands.ManualCommands.ManualAngleDown;
 import frc.robot.commands.ArmCommands.ManualCommands.ManualAngleUp;
 import frc.robot.commands.ArmCommands.ManualCommands.ManualExtension;
@@ -115,7 +116,7 @@ public class RobotContainer {
 	private Trigger operatorX, operatorY, operatorA, operatorB, operatorLB, operatorRB, operatorLT,
 			operatorRT;
 
-	private Trigger pitA, pitB, pitX, operatortinyright;
+	private Trigger pitA, pitB, pitX, operatortinyright, operatorTinyLeft;
 			
 	private Trigger operatorLeftYPos, operatorLeftYNeg, operatorLeftXNeg, operatorLeftXPos, operatorRightXPos, operatorRightXNeg, operatorRightYPos, operatorRightYNeg;
 
@@ -171,6 +172,7 @@ public class RobotContainer {
 		operatorA.whileTrue(new SequentialCommandGroup(new IntakePivot(), new FullExtensionIntake(), new IntakeDownCommand(), new Intake()));
 		operatorA.whileFalse(new SequentialCommandGroup(new IntakePivot(), new FullRetraction()));
 		operatortinyright.whileTrue(new Intake());
+		operatorTinyLeft.whileTrue(new Hold(45));
 	
 		//operatorA.whileTrue(new Intake());
 		
@@ -261,6 +263,7 @@ public class RobotContainer {
 		operatorRightYPos = m_operatorController.axisGreaterThan(5, .4);
 		operatorRightYNeg = m_operatorController.axisLessThan(5, -.4);
 		operatortinyright = m_operatorController.start();
+		operatorTinyLeft = m_operatorController.back();
 
 
 
