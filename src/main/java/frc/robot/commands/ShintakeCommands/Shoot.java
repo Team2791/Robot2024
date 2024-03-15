@@ -36,7 +36,7 @@ public class Shoot extends Command {
   public void end(boolean interrupted) {
     if(timer.get()>1){
       Robot.shintake.setShooter(0, 0);
-    Robot.shintake.stopIntake();
+      Robot.shintake.stopIntake();
     }
     
   }

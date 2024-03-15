@@ -41,6 +41,6 @@ public class FullExtensionIntake extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Robot.arm.getExtensionPot()>97 || timer.get()>3 || !RobotContainer.m_operatorController.getHID().getAButton();// || (aPressedOnInit && !RobotContainer.m_operatorController.a().getAsBoolean());
+    return Robot.arm.getExtensionPot()>97 || timer.get()>3;// || (aPressedOnInit && !RobotContainer.m_operatorController.a().getAsBoolean());
   }
 }

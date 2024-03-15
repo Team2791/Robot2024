@@ -66,7 +66,7 @@ public final class Constants {
 		public static final int kFrontRightTurningCanId = 35; //25
 		public static final int kRearRightTurningCanId = 15; //45
 
-		public static final boolean kGyroReversed = false;
+		public static final boolean kGyroReversed = true;
 
 		public static final double driveBaseRadius = .5*Math.sqrt(Math.pow(kTrackWidth, 2) + Math.pow(kWheelBase,2));
 	}
@@ -139,13 +139,13 @@ public final class Constants {
 
 	public static final class AutoConstants {
 
-		public static final double kRotationP = .1;
+		public static final double kRotationP = .00001;
 		public static final double kRotationI = 0;
 		public static final double kRotationD = 0;
 
-		public static final double kTranslationP = .2;
+		public static final double kTranslationP = .000000001;
 		public static final double kTranslationI = 0;
-		public static final double kTranslationD = 0;
+		public static final double kTranslationD = .0001;
 
 		public static final double kMaxSpeedMetersPerSecond = 3;
 		public static final double kMaxAccelerationMetersPerSecondSquared = 3;
@@ -190,17 +190,17 @@ public final class Constants {
 		
 		public static final double kArmSpeedDown = 0.15; //max pivot down speed
 		public static final double kArmSpeedUp = 0.15; //max pivot up speed
-		public static final double kArmPivotIntakePos = 8; //intake setpoint
+		public static final double kArmPivotIntakePos = 3; //intake setpoint
 
 
-		public static final double kMaxPot = 0.1840;
-		public static final double kMinPot = 0.2344;
+		public static final double kMaxPot = 0.1673;
+		public static final double kMinPot = 0.2303;
 
 		public static final double kMaxAngle = 111.0;
 		public static final double kMinAngle = -10.4;
 
 		public static final double kExtendMinPot = 0.150;
-		public static final double kExtendMaxPot = .479;
+		public static final double kExtendMaxPot = .495;
 
 
 		public static final double kAccelerationTime = 1; //time for arm pivot acceleration

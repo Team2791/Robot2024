@@ -63,7 +63,7 @@ public class Shintake extends SubsystemBase {
 
 
   public void takeIn(){
-    intakeMotor.set(-.65);
+    intakeMotor.set(-.55);
   }
 
   public void spitOut(){
@@ -94,6 +94,10 @@ public class Shintake extends SubsystemBase {
 
   public double getSpeedLeft(){
     return leftMotor.getEncoder().getVelocity();
+  }
+
+  public double getIntakeCurrent(){
+    return intakeMotor.getOutputCurrent();
   }
 
 

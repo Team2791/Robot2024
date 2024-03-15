@@ -85,6 +85,8 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotPeriodic() {
 
+		SmartDashboard.putNumber("intake Voltage", Robot.shintake.getIntakeCurrent());
+
 		// SmartDashboard.putNumber("Radio VRM", pdp.getCurrent(15));
 		// SmartDashboard.putNumber("Brain Box", pdp.getCurrent(16));
 		// SmartDashboard.putNumber("Raspi VRM", pdp.getCurrent(19));

@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.AprilTagCommands.DistanceCommand;
 import frc.robot.commands.AprilTagCommands.TagAllignContinuous;
 import frc.robot.commands.ArmCommands.AmpPivot;
 import frc.robot.commands.ArmCommands.FullExtensionAmp;
@@ -90,8 +91,7 @@ public class RobotContainer {
 	private final DriveSubsystem m_robotDrive = Robot.m_drivetrain;
 
 
-	//Commands
-	private final TagAllignContinuous tagallign = new TagAllignContinuous(Robot.camera1, m_robotDrive, m_driverController);
+	//commands
 	private final Intake intake = new Intake();
 	private final SpitOut spitout = new SpitOut();
 	private final SetShooter shoot = new SetShooter();
@@ -136,13 +136,14 @@ public class RobotContainer {
 	 */
 	public RobotContainer() {
 
-		NamedCommands.registerCommand("Align", tagallign);
+		NamedCommands.registerCommand("Align", new TagAllignContinuous(Robot.camera1, m_robotDrive, m_driverController));
 		NamedCommands.registerCommand("Shoot", new ShootCommand());
 		NamedCommands.registerCommand("Intake", new Intake());
-		NamedCommands.registerCommand("Fullextend", new FullExtensionIntake());
+		NamedCommands.registerCommand("Fullextendintake", new FullExtensionIntake());
 		NamedCommands.registerCommand("FullRetraction", new FullRetraction());
 		NamedCommands.registerCommand("IntakePivot", new IntakePivot());
 		NamedCommands.registerCommand("IntakeDown", new IntakeDownCommand());
+		NamedCommands.registerCommand("ResetPosition", new ResetPosition());
 
 		autoChooser = AutoBuilder.buildAutoChooser();
 		SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -154,10 +155,10 @@ public class RobotContainer {
 		// Configure the button bindings
 		configureButtonBindings();
 
-		// driverLT.whileTrue(tagallign);
+		driverB.whileTrue(new TagAllignContinuous(Robot.camera1, m_robotDrive, m_driverController));
 		// driverRB.toggleOnTrue(new Climb(m_driverController));
 		// driverLB.toggleOnTrue(new ClimbRelease());
-
+		driverX.whileTrue(new DistanceCommand());
 		driverLB.whileTrue(new Shoot());
 		driverDPadLeft.whileTrue(new LeftClimbUp());
 		driverDPadRight.whileTrue(new LeftRelease());
@@ -170,7 +171,7 @@ public class RobotContainer {
 
 		operatorX.whileTrue(new SetShooter());
 		operatorA.whileTrue(new SequentialCommandGroup(new IntakePivot(), new FullExtensionIntake(), new IntakeDownCommand(), new Intake()));
-		operatorA.whileFalse(new SequentialCommandGroup(new IntakePivot(), new FullRetraction()));
+		operatorA.whileFalse(new SequentialCommandGroup(new IntakePivot(), new FullRetraction(), new ResetPosition()));
 		operatortinyright.whileTrue(new Intake());
 		operatorTinyLeft.whileTrue(new Hold(45));
 	

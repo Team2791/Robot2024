@@ -29,11 +29,16 @@ public class Intake extends Command {
     timer.reset();
     timer.start();
     Robot.shintake.takeIn();
+    Robot.shintake.setShooter(-.1, -.1);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if(Robot.shintake.getIntakeCurrent()>50){
+      Robot.arm.moveDown(.1);
+    }
+    else Robot.arm.hold();
   
     
     
@@ -49,6 +54,7 @@ public class Intake extends Command {
       Robot.shintake.slowOut();
     }
     Robot.shintake.stopIntake();
+    Robot.arm.hold();
     RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, 0);
     RobotContainer.m_operatorController.getHID().setRumble(RumbleType.kBothRumble, 0);
   }

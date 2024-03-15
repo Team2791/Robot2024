@@ -18,6 +18,31 @@
           }
         },
         {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakePivot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Fullextendintake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeDown"
+                }
+              }
+            ]
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "MidStart"
@@ -39,6 +64,18 @@
           "type": "path",
           "data": {
             "pathName": "SpeakerToMidline"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MidlineToShoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
           }
         }
       ]
