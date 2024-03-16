@@ -14,32 +14,13 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "SetShooter"
           }
         },
         {
-          "type": "sequential",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakePivot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Fullextendintake"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeDown"
-                }
-              }
-            ]
+            "name": "Shoot"
           }
         },
         {
@@ -49,9 +30,15 @@
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "MidNoteScore"
+            "name": "IntakeReset"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Angle"
           }
         },
         {
@@ -70,6 +57,12 @@
           "type": "path",
           "data": {
             "pathName": "MidlineToShoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Angle"
           }
         },
         {

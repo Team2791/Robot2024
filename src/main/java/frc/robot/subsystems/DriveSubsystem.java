@@ -88,7 +88,7 @@ public class DriveSubsystem extends SubsystemBase {
 						new PIDConstants(Constants.AutoConstants.kRotationP,
 								Constants.AutoConstants.kRotationI,
 								Constants.AutoConstants.kRotationD), // Rotation PID constants
-						2, // Max module speed, in m/s
+						4, // Max module speed, in m/s
 						Constants.DriveConstants.driveBaseRadius, // Drive base radius in meters. Distance from robot center to furthest module.
 						new ReplanningConfig() // Default path replanning config. See the API for the options here
 				), () -> {
@@ -112,8 +112,8 @@ public class DriveSubsystem extends SubsystemBase {
 		// Update the odometry in the periodic block
 		m_odometry.update(getHeading(), getModulePositions());
 		field.setRobotPose(getPose());
-		SmartDashboard.putData("field", field);
-		SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
+		// SmartDashboard.putData("field", field);
+		// SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
 		
 	}
 

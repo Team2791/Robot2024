@@ -22,7 +22,6 @@ import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.AprilTagCommands.DistanceCommand;
 import frc.robot.commands.AprilTagCommands.TagAllignContinuous;
 import frc.robot.commands.ArmCommands.AmpPivot;
 import frc.robot.commands.ArmCommands.FullExtensionAmp;
@@ -30,12 +29,15 @@ import frc.robot.commands.ArmCommands.FullExtensionIntake;
 import frc.robot.commands.ArmCommands.FullRetraction;
 import frc.robot.commands.ArmCommands.IntakeDownCommand;
 import frc.robot.commands.ArmCommands.IntakePivot;
+import frc.robot.commands.ArmCommands.PhotonAngle;
+import frc.robot.commands.ArmCommands.PhotonAngleCommand;
 import frc.robot.commands.ArmCommands.ResetPosition;
-import frc.robot.commands.ArmCommands.ManualCommands.Hold;
 import frc.robot.commands.ArmCommands.ManualCommands.ManualAngleDown;
 import frc.robot.commands.ArmCommands.ManualCommands.ManualAngleUp;
 import frc.robot.commands.ArmCommands.ManualCommands.ManualExtension;
 import frc.robot.commands.ArmCommands.ManualCommands.ManualRetraction;
+import frc.robot.commands.AutoCommands.IntakeReset;
+import frc.robot.commands.AutoCommands.IntakeSequence;
 import frc.robot.commands.ClimberCommands.Climb;
 import frc.robot.commands.ClimberCommands.activate.ClimberActivate;
 import frc.robot.commands.ClimberCommands.activate.ClimberDeactivate;
@@ -136,14 +138,17 @@ public class RobotContainer {
 	 */
 	public RobotContainer() {
 
-		NamedCommands.registerCommand("Align", new TagAllignContinuous(Robot.camera1, m_robotDrive, m_driverController));
-		NamedCommands.registerCommand("Shoot", new ShootCommand());
+		// NamedCommands.registerCommand("Align", new TagAllignContinuous(Robot.camera1, m_robotDrive, m_driverController));
+		// NamedCommands.registerCommand("Shoot", new ShootCommand());
+		// NamedCommands.registerCommand("Intake", new Intake());
+
+		NamedCommands.registerCommand("IntakeSequence", new IntakeSequence());
+		NamedCommands.registerCommand("IntakeReset", new IntakeReset());
+		NamedCommands.registerCommand("SetShooter", new SetShooter());
+		NamedCommands.registerCommand("Shoot", new Shoot());
 		NamedCommands.registerCommand("Intake", new Intake());
-		NamedCommands.registerCommand("Fullextendintake", new FullExtensionIntake());
-		NamedCommands.registerCommand("FullRetraction", new FullRetraction());
-		NamedCommands.registerCommand("IntakePivot", new IntakePivot());
-		NamedCommands.registerCommand("IntakeDown", new IntakeDownCommand());
-		NamedCommands.registerCommand("ResetPosition", new ResetPosition());
+		NamedCommands.registerCommand("Angle", new PhotonAngleCommand());
+		NamedCommands.registerCommand("esetArm", new ResetPosition());
 
 		autoChooser = AutoBuilder.buildAutoChooser();
 		SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -158,7 +163,6 @@ public class RobotContainer {
 		driverB.whileTrue(new TagAllignContinuous(Robot.camera1, m_robotDrive, m_driverController));
 		// driverRB.toggleOnTrue(new Climb(m_driverController));
 		// driverLB.toggleOnTrue(new ClimbRelease());
-		driverX.whileTrue(new DistanceCommand());
 		driverLB.whileTrue(new Shoot());
 		driverDPadLeft.whileTrue(new LeftClimbUp());
 		driverDPadRight.whileTrue(new LeftRelease());
@@ -170,16 +174,16 @@ public class RobotContainer {
 
 
 		operatorX.whileTrue(new SetShooter());
-		operatorA.whileTrue(new SequentialCommandGroup(new IntakePivot(), new FullExtensionIntake(), new IntakeDownCommand(), new Intake()));
-		operatorA.whileFalse(new SequentialCommandGroup(new IntakePivot(), new FullRetraction(), new ResetPosition()));
+		operatorB.whileTrue(new PhotonAngle());
+		operatorA.whileTrue(new SequentialCommandGroup(new IntakeSequence(), new Intake()));
+		operatorA.whileFalse(new IntakeReset());
 		operatortinyright.whileTrue(new Intake());
-		operatorTinyLeft.whileTrue(new Hold(45));
 	
 		//operatorA.whileTrue(new Intake());
 		
 		operatorY.whileTrue(new SpitOut());
-		operatorB.whileTrue(new SequentialCommandGroup(new AmpPivot(), new FullExtensionAmp(), new SetShooter()));
-		operatorB.whileFalse(new SequentialCommandGroup(new ParallelCommandGroup(new ResetPosition(), new FullRetraction())));
+		// operatorB.whileTrue(new SequentialCommandGroup(new AmpPivot(), new FullExtensionAmp(), new SetShooter()));
+		// operatorB.whileFalse(new SequentialCommandGroup(new ParallelCommandGroup(new ResetPosition(), new FullRetraction())));
 		operatorRB.whileTrue(new ManualExtension());
 		operatorLB.whileTrue(new ManualRetraction());
 		operatorLeftYNeg.whileTrue(manualangledown);

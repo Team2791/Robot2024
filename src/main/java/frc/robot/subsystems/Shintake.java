@@ -21,7 +21,7 @@ public class Shintake extends SubsystemBase {
 
   private CANSparkMax leftMotor;
   private CANSparkMax rightMotor;
-  private CANSparkMax intakeMotor;
+  public CANSparkMax intakeMotor;
   private SparkLimitSwitch beamBrake;
   public PIDController speedController;
   double power;

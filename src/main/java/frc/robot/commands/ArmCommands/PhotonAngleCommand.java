@@ -27,7 +27,7 @@ import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
-public class PhotonAngle extends Command {
+public class PhotonAngleCommand extends Command {
 	PIDController drivepid = new PIDController(.001, 0, 0);
 	double theta=0;
 
@@ -44,7 +44,7 @@ public class PhotonAngle extends Command {
   double proportion;
 	
 
-	public PhotonAngle() {
+	public PhotonAngleCommand() {
 		
 		addRequirements(Robot.m_drivetrain);
 		addRequirements(Robot.arm);
@@ -94,18 +94,12 @@ public class PhotonAngle extends Command {
 
 			
 			
-			if(armpid.atSetpoint()){
-
-				RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, .3);
-   				RobotContainer.m_operatorController.getHID().setRumble(RumbleType.kBothRumble, .5);
-				Robot.m_drivetrain.drive(-MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftY(), OIConstants.kDriveDeadband), -MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftX(), OIConstants.kDriveDeadband), drivepid.calculate(x, setPoint), false, false);		
-			}
 
 
 
 			
 
-      		Robot.m_drivetrain.drive(-MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftY(), OIConstants.kDriveDeadband), -MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftX(), OIConstants.kDriveDeadband), drivepid.calculate(x, setPoint), false, false);
+      Robot.m_drivetrain.drive(-MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftY(), OIConstants.kDriveDeadband), -MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftX(), OIConstants.kDriveDeadband), drivepid.calculate(x, setPoint), false, false);
 			
 
 			
@@ -138,15 +132,13 @@ public class PhotonAngle extends Command {
 
 	@Override
   public void end(boolean interrupted) {
-    Robot.arm.hold();
-	Robot.shintake.setShooter(0,0);
-	RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, 0);
-	RobotContainer.m_operatorController.getHID().setRumble(RumbleType.kBothRumble, 0);
-  }
 
+  Robot.arm.armLeft.set(armpid.calculate(Robot.arm.getArmPot(),armAngle));
+
+  }
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;//timer.get()>5;
+    return armpid.atSetpoint() || timer.get()>4;//timer.get()>5;
   }
 }

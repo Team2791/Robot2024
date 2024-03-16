@@ -50,10 +50,13 @@ public class Intake extends Command {
   public void end(boolean interrupted) {
     RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, .3);
     RobotContainer.m_operatorController.getHID().setRumble(RumbleType.kBothRumble, .5);
+    
     while(Robot.shintake.isin()){
       Robot.shintake.slowOut();
+      Robot.shintake.setShooter(-.1, -.1);
     }
     Robot.shintake.stopIntake();
+    Robot.shintake.setShooter(0, 0);
     Robot.arm.hold();
     RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, 0);
     RobotContainer.m_operatorController.getHID().setRumble(RumbleType.kBothRumble, 0);
@@ -63,6 +66,6 @@ public class Intake extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Robot.shintake.isin() || timer.get()>5;
+    return (Robot.shintake.isin() || timer.get()>5);
   }
 }

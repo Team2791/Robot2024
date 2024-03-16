@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.5154033165209193,
-      "y": 4.130246361657978
+      "x": 0.44,
+      "y": 3.68
     },
-    "rotation": 0.0
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BottomStart"
+            "pathName": "midtoNote"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Angle"
           }
         },
         {
@@ -26,19 +32,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "SpeakerToBottom"
+            "pathName": "New Path"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "BottomToBottomnote"
+            "pathName": "Path"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "BottomNoteToSpeaker"
+            "name": "Angle"
           }
         },
         {

@@ -139,13 +139,13 @@ public final class Constants {
 
 	public static final class AutoConstants {
 
-		public static final double kRotationP = .00001;
+		public static final double kRotationP = .5;
 		public static final double kRotationI = 0;
 		public static final double kRotationD = 0;
 
-		public static final double kTranslationP = .000000001;
+		public static final double kTranslationP = .2;
 		public static final double kTranslationI = 0;
-		public static final double kTranslationD = .0001;
+		public static final double kTranslationD = 0;
 
 		public static final double kMaxSpeedMetersPerSecond = 3;
 		public static final double kMaxAccelerationMetersPerSecondSquared = 3;
@@ -183,18 +183,18 @@ public final class Constants {
 
 		public static final double AmpPivot = 90;
 
-		public static final double kExtensionSpeed = .7; // extension speed
-		public static final double kRetractionSpeed = .7; // retraction speed
+		public static final double kExtensionSpeed = .8; // extension speed
+		public static final double kRetractionSpeed = .8; // retraction speed
 
 		public static final double armLeftFF = .1;
 		
 		public static final double kArmSpeedDown = 0.15; //max pivot down speed
 		public static final double kArmSpeedUp = 0.15; //max pivot up speed
-		public static final double kArmPivotIntakePos = 3; //intake setpoint
+		public static final double kArmPivotIntakePos = 2; //intake setpoint
 
 
-		public static final double kMaxPot = 0.1673;
-		public static final double kMinPot = 0.2303;
+		public static final double kMaxPot = 0.1850;
+		public static final double kMinPot = 0.2380;
 
 		public static final double kMaxAngle = 111.0;
 		public static final double kMinAngle = -10.4;
@@ -216,11 +216,13 @@ public final class Constants {
 
 	public static class VisionConstants {
 
-		public static final double kCameraPitch = 30;
+		public static final double kCameraPitchRadians = Units.degreesToRadians(30);
 		/** Physical location of the apriltag camera on the robot, relative to the center of the robot. */
 		public static final Transform3d APRILTAG_CAMERA_TO_ROBOT = new Transform3d(new Translation3d(Units.inchesToMeters(12.25), Units.inchesToMeters(12.25), Units.inchesToMeters(0)),new Rotation3d(0.0, Units.degreesToRadians(15.0), Units.degreesToRadians(-3.0)));
 
-		public static final double kspeakerHeight = 77.9528; // inches
+		public static final double kspeakerHeight = 2.045; // meters
+		public static final double kAprilTagHeight = 1.451;
+
 		
 		public static final double FIELD_LENGTH_METERS = 16.54;
 		public static final double FIELD_WIDTH_METERS = 8.21;

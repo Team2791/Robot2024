@@ -25,7 +25,8 @@ public class SetShooter extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    timer.reset();
+    timer.start();
     Robot.shintake.setShooter(1,1);
   }
 
@@ -45,7 +46,7 @@ public class SetShooter extends Command {
   @Override
   public void end(boolean interrupted) {
 
-    Robot.shintake.setShooter(0, 0);
+    // Robot.shintake.setShooter(0, 0);
     RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, 0);
     RobotContainer.m_operatorController.getHID().setRumble(RumbleType.kBothRumble, 0);
 
@@ -57,7 +58,7 @@ public class SetShooter extends Command {
   @Override
   public boolean isFinished() {
 
-    return RobotContainer.m_driverController.getRightTriggerAxis()>.5 || timer.get()>10;
+    return timer.get()>1.5;
 
   }
 }

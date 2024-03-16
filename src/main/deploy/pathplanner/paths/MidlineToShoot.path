@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 1.4389491636126137,
-        "y": 5.541275082550166
+        "x": 3.168765194673247,
+        "y": 5.321383214195
       },
       "prevControl": {
-        "x": 2.465111215936718,
-        "y": 4.705685982800538
+        "x": 4.444138031133205,
+        "y": 4.764323814361915
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,7 +33,7 @@
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 0.25,
+      "waypointRelativePos": 0.05,
       "command": {
         "type": "sequential",
         "data": {
@@ -41,13 +41,24 @@
             {
               "type": "named",
               "data": {
-                "name": "IntakePivot"
+                "name": "IntakeReset"
               }
-            },
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.6,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
             {
               "type": "named",
               "data": {
-                "name": "FullRetraction"
+                "name": "SetShooter"
               }
             }
           ]
@@ -56,8 +67,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 1.0,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 360.0,
     "maxAngularAcceleration": 180.0
   },
@@ -67,7 +78,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "MidAuto",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

@@ -40,15 +40,13 @@
 //   private boolean sawTag = false;
   
 //   private double previousTimeStamp = 0;
-
-//   SwerveDrivePoseEstimator poseEstimator;
   
 //   /** Creates a new PoseEstimator. */
 //   public PhotonEstimator(PhotonCamera camera, DriveSubsystem drivetrain) {
 //     this.camera = camera;
 //     this.drivetrain = drivetrain;
     
-//     poseEstimator = new SwerveDrivePoseEstimator(Constants.DriveConstants.kDriveKinematics, drivetrain.getGyroscopeRotation(), drivetrain.getModulePositions(), new Pose2d(), stateStdDevs, visionMeasurementStdDevs);
+//     //poseEstimator = new SwerveDrivePoseEstimator(Constants.DriveConstants.kDriveKinematics, drivetrain.getGyroscopeRotation(), drivetrain.getModulePositions(), new Pose2d(), stateStdDevs, visionMeasurementStdDevs);
 //   }
 
 
@@ -72,7 +70,7 @@
 //       // Since a tag was seen, and the tags are all relative to the coordinate system, the estimated pose
 //       // needs to be transformed to the new coordinate system.
 //       var newPose = flipAlliance(getCurrentPose());
-//       poseEstimator.resetPosition(drivetrain.getGyroscopeRotation(), drivetrain.getModulePositions(), newPose);
+//       Robot.m_drivetrain.m_odometry.resetPosition(drivetrain.getGyroscopeRotation(), drivetrain.getModulePositions(), newPose);
 //     }
 //   }
 //   private Pose2d flipAlliance(Pose2d poseToFlip) {
@@ -83,39 +81,40 @@
 //   @Override
 //   public void periodic() {
 
-//     // var pipelineResult = camera.getLatestResult();
-//     // var resultTimestamp = pipelineResult.getTimestampSeconds();
+//     var pipelineResult = camera.getLatestResult();
+//     var resultTimestamp = pipelineResult.getTimestampSeconds();
 
 
-//     // if (resultTimestamp == previousTimeStamp && pipelineResult.hasTargets()) {
-//     //   previousTimeStamp = resultTimestamp;
-//     //   var target = pipelineResult.getBestTarget();
-//     //   var fiducialld = target.getFiducialId();  
+//     if (resultTimestamp == previousTimeStamp && pipelineResult.hasTargets()) {
+//       previousTimeStamp = resultTimestamp;
+//       var target = pipelineResult.getBestTarget();
+//       var fiducialld = target.getFiducialId();  
 
 
-//     //   if (target.getPoseAmbiguity() <= .2 && fiducialld >= 0){
-//     //     var targetPose = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField().getTagPose(fiducialld).get();
+//       if (target.getPoseAmbiguity() <= .2 && fiducialld >= 0){
+//         var targetPose = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField().getTagPose(fiducialld).get();
 
-//     //     SmartDashboard.putNumber("April Tag X PoseEstimator", targetPose.getX());
-//     //     SmartDashboard.putNumber("April Tag Y PoseEstimator", targetPose.getY());
-//     //     SmartDashboard.putNumber("April Tag Z PoseEstimator", targetPose.getZ());
-//     //     SmartDashboard.putNumber("April Tag ID PoseEstimator", fiducialld);
+//         // SmartDashboard.putNumber("April Tag X PoseEstimator", targetPose.getX());
+//         // SmartDashboard.putNumber("April Tag Y PoseEstimator", targetPose.getY());
+//         // SmartDashboard.putNumber("April Tag Z PoseEstimator", targetPose.getZ());
+//         // SmartDashboard.putNumber("April Tag ID PoseEstimator", fiducialld);
 
-//     //     SmartDashboard.putString("April Tag Rotation PoseEstimator", targetPose.getRotation().toString());
-//     //     SmartDashboard.putString("Translation PoseEstimator", targetPose.getTranslation().toString());
-//     //     SmartDashboard.putString("Photon Pose estimator ", getCurrentPose().getTranslation().toString());
-//     //     Transform3d camToTarget = target.getBestCameraToTarget();
-//     //     Pose3d camPose = targetPose.transformBy(camToTarget.inverse());
+//         // SmartDashboard.putString("April Tag Rotation PoseEstimator", targetPose.getRotation().toString());
+//         // SmartDashboard.putString("Translation PoseEstimator", targetPose.getTranslation().toString());
+//         // SmartDashboard.putString("Photon Pose estimator ", getCurrentPose().getTranslation().toString());
 
-//     //     var visionMeasurement = camPose.transformBy(Constants.VisionConstants.APRILTAG_CAMERA_TO_ROBOT);
-//     //     poseEstimator.addVisionMeasurement(visionMeasurement.toPose2d(), previousTimeStamp,visionMeasurementStdDevs);
+//         Transform3d camToTarget = target.getBestCameraToTarget();
+//         Pose3d camPose = targetPose.transformBy(camToTarget.inverse());
 
-//     //   }
+//         var visionMeasurement = camPose.transformBy(Constants.VisionConstants.APRILTAG_CAMERA_TO_ROBOT);
+//         Robot.m_drivetrain.m_odometry.addVisionMeasurement(visionMeasurement.toPose2d(), previousTimeStamp,visionMeasurementStdDevs);
 
-//     // // This method will be called once per scheduler run
+//       }
+
+//     // This method will be called once per scheduler run
 //   }
 
-//   poseEstimator.updateWithTime(resultTimestamp, drivetrain.getGyroscopeRotation(), drivetrain.getModulePositions());
+//   Robot.m_drivetrain.m_odometry.updateWithTime(resultTimestamp, drivetrain.getGyroscopeRotation(), drivetrain.getModulePositions());
 //   field2d.setRobotPose(getCurrentPose());
 //   SmartDashboard.putData(field2d);
 
@@ -123,7 +122,7 @@
 // }
 
 //   public Pose2d getCurrentPose(){
-//     return poseEstimator.getEstimatedPosition();
+//     return Robot.m_drivetrain.m_odometry.getEstimatedPosition();
 //   }
 
   

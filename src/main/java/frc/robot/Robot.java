@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -38,6 +39,7 @@ public class Robot extends TimedRobot {
 	public static Shintake shintake;
 	public static Climber climber;
 	public static DriveSubsystem m_drivetrain;
+	//public static PhotonEstimator estimator;
 	//public static PhotonEstimator photonestimator;
 	public static PhotonCamera camera1;
 	public static PhotonCamera camera2;
@@ -51,7 +53,7 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
-
+		
 		camera1 = new PhotonCamera("2791camera");
 		camera2 = new PhotonCamera("testCamera");
 		shintake = new Shintake();
@@ -65,7 +67,9 @@ public class Robot extends TimedRobot {
 		m_drivetrain = new DriveSubsystem();
 		m_robotContainer = new RobotContainer();
 		climber = new Climber();
+
 		pdp = new PowerDistribution(1, ModuleType.kRev);
+		//estimator = new PhotonEstimator(camera1, m_drivetrain);
 
 		//photonestimator = new PhotonEstimator(camera1, m_drivetrain);
 		
@@ -84,8 +88,6 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotPeriodic() {
-
-		SmartDashboard.putNumber("intake Voltage", Robot.shintake.getIntakeCurrent());
 
 		// SmartDashboard.putNumber("Radio VRM", pdp.getCurrent(15));
 		// SmartDashboard.putNumber("Brain Box", pdp.getCurrent(16));
