@@ -6,11 +6,14 @@ package frc.robot;
 
 import java.lang.reflect.Field;
 
+import org.opencv.video.Video;
 import org.photonvision.PhotonCamera;
 
 import com.pathplanner.lib.util.PIDConstants;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cscore.VideoMode;
 //import frc.robot.subsystems.PhotonEstimator;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -58,8 +61,10 @@ public class Robot extends TimedRobot {
 		camera2 = new PhotonCamera("testCamera");
 		shintake = new Shintake();
 
-		CameraServer.startAutomaticCapture();
-
+		final UsbCamera drivercam = CameraServer.startAutomaticCapture();
+		VideoMode videoMode = new VideoMode(1, 320, 240, 100);//VideoMode.PixelFormat.kMJPEG
+		drivercam.setVideoMode(videoMode);
+		//CameraServer.startAutomaticCapture();
 		arm = new Arm();
 		// Instantiate our RobotContainer. This will perform all our button bindings,
 		// and put our
