@@ -22,10 +22,13 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 
+import java.util.List;
+
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
+
 
 public class PhotonAngle extends Command {
 	PIDController drivepid = new PIDController(.001, 0, 0);
@@ -36,12 +39,15 @@ public class PhotonAngle extends Command {
   double armAngle;
   double  power;
   PIDController armpid = new PIDController(.015,0,0);
+
+
   
 //   armpid.setTolerance(1.0);
   double distance;
 
   Timer timer= new Timer();
   double proportion;
+  List<PhotonTrackedTarget>targets;
 	
 
 	public PhotonAngle() {
@@ -57,15 +63,31 @@ public class PhotonAngle extends Command {
 	}
 
 	public void execute() {
-		PhotonPipelineResult result = Robot.camera1.getLatestResult();
-
-		if (result.hasTargets() && (result.getBestTarget().getFiducialId() == 7 || result.getBestTarget().getFiducialId()==4)) {
+		//PhotonPipelineResult result = Robot.camera1.getLatestResult();
 
 
+		var result = Robot.camera1.getLatestResult();
+    
+      
+    
+    	if (result.hasTargets()) {
+		//LIST of targets photon vision has
+		targets = result.getTargets();
 
-			// PhotonTrackedTarget target = result.getBestTarget();
+		//checks to see if there is a list of apriltags to check. if no targets are visable, end command
+		if (targets.isEmpty()) {
+			SmartDashboard.putBoolean("done", true);
+		}
 
-			distance = PhotonUtils.calculateDistanceToTargetMeters(
+		var foundTargets = targets.stream()
+    .filter(t -> (t.getFiducialId() == 4 || t.getFiducialId() == 7))
+    .filter(t -> !t.equals(4) && t.getPoseAmbiguity() <= .2 && t.getPoseAmbiguity() != -1)
+    .findFirst();
+
+		if (foundTargets.isPresent()) {
+		//do stuff here
+
+		distance = PhotonUtils.calculateDistanceToTargetMeters(
 				Units.inchesToMeters(9.451),
 				Constants.VisionConstants.kAprilTagHeight,
 				Constants.VisionConstants.kCameraPitchRadians,
@@ -107,24 +129,9 @@ public class PhotonAngle extends Command {
 
       		Robot.m_drivetrain.drive(-MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftY(), OIConstants.kDriveDeadband), -MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftX(), OIConstants.kDriveDeadband), drivepid.calculate(x, setPoint), false, false);
 			
+	}}
 
-			
-
-			
-
-			SmartDashboard.putNumber("(Photon) Distance to AprilTag (feet)", Units.metersToFeet(distance));
-			SmartDashboard.putNumber("arm set angle",armAngle);
-			SmartDashboard.putNumber("theta to speaker", theta);
-			SmartDashboard.putNumber("target pitch", Units.degreesToRadians(result.getBestTarget().getPitch()));
-			SmartDashboard.putNumber("align", x);
-
-
-			
-
-			
-		}
-
-		else{
+	else{
 			Robot.arm.hold();
 			Robot.m_drivetrain.drive(-MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftY(), OIConstants.kDriveDeadband),  -MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftX(), OIConstants.kDriveDeadband), -MathUtil.applyDeadband(RobotContainer.m_driverController.getRightX(),OIConstants.kDriveDeadband) , false, false);
 			RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, 0);
@@ -132,6 +139,12 @@ public class PhotonAngle extends Command {
 			Robot.shintake.setShooter(0, 0);
 
 		}
+
+
+
+	
+
+		
 	}
 
 
