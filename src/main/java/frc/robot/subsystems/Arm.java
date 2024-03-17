@@ -33,7 +33,7 @@ public class Arm extends SubsystemBase {
   private PIDController pid;
   public PIDController extensionPID;
 
-  private double Fg;
+
   public double setExtension;
   public double setpoint;
 
@@ -45,6 +45,12 @@ public class Arm extends SubsystemBase {
     armLeft = new CANSparkMax(32, MotorType.kBrushless);
     armRight = new CANSparkMax(31, MotorType.kBrushless);
     armRight.follow(armLeft, true);
+    
+    // armLeft.getPIDController().setOutputRange(-.5, .5);
+    // armRight.getPIDController().setOutputRange(-.5, .5);
+
+    armRight.setOpenLoopRampRate(.5);
+    armLeft.setOpenLoopRampRate(.5);
 
     extensionMotor = new CANSparkMax(33, MotorType.kBrushless);
     extensionMotor.setIdleMode(IdleMode.kBrake);

@@ -86,6 +86,7 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
  */
 public class RobotContainer {
 
+
 	public static XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
 	public static CommandXboxController m_operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
 	public static CommandXboxController m_pitController = new CommandXboxController(2);
@@ -161,29 +162,23 @@ public class RobotContainer {
 		configureButtonBindings();
 
 		driverB.whileTrue(new TagAllignContinuous(Robot.camera1, m_robotDrive, m_driverController));
-		// driverRB.toggleOnTrue(new Climb(m_driverController));
-		// driverLB.toggleOnTrue(new ClimbRelease());
 		driverLB.whileTrue(new Shoot());
 		driverDPadLeft.whileTrue(new LeftClimbUp());
 		driverDPadRight.whileTrue(new LeftRelease());
 		driverDPadUp.whileTrue(new RightRelease());
 		driverDPadDown.whileTrue(new RightClimbUp());
-		
-		// driverDPadUp.whileTrue(manualangleup);
-		// driverDPadDown.whileTrue(manualangledown);
-
 
 		operatorX.whileTrue(new SetShooter());
-		operatorB.whileTrue(new PhotonAngle());
+		operatorRT.whileTrue(new PhotonAngleCommand());
+		operatorRT.whileFalse(new ResetPosition());
 		operatorA.whileTrue(new SequentialCommandGroup(new IntakeSequence(), new Intake()));
 		operatorA.whileFalse(new IntakeReset());
 		operatortinyright.whileTrue(new Intake());
 	
-		//operatorA.whileTrue(new Intake());
 		
 		operatorY.whileTrue(new SpitOut());
-		// operatorB.whileTrue(new SequentialCommandGroup(new AmpPivot(), new FullExtensionAmp(), new SetShooter()));
-		// operatorB.whileFalse(new SequentialCommandGroup(new ParallelCommandGroup(new ResetPosition(), new FullRetraction())));
+		operatorB.whileTrue(new SequentialCommandGroup(new AmpPivot(), new FullExtensionAmp(), new SetShooter()));
+		operatorB.whileFalse(new SequentialCommandGroup(new ParallelCommandGroup(new ResetPosition(), new FullRetraction())));
 		operatorRB.whileTrue(new ManualExtension());
 		operatorLB.whileTrue(new ManualRetraction());
 		operatorLeftYNeg.whileTrue(manualangledown);
@@ -255,6 +250,8 @@ public class RobotContainer {
 		operatorX = m_operatorController.x();
 		operatorRB = m_operatorController.rightBumper();
 		operatorLB = m_operatorController.leftBumper();
+		operatorLT = m_operatorController.leftTrigger(.5);
+		operatorRT = m_operatorController.rightTrigger(0.5);
 		operatorDPadUp = m_operatorController.povUp();
 		operatorDPadDown = m_operatorController.povDown();
 		operatorDPadRight = m_operatorController.povRight();
@@ -269,6 +266,7 @@ public class RobotContainer {
 		operatorRightYNeg = m_operatorController.axisLessThan(5, -.4);
 		operatortinyright = m_operatorController.start();
 		operatorTinyLeft = m_operatorController.back();
+
 
 
 

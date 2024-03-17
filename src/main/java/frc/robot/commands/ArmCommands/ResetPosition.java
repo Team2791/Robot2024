@@ -26,6 +26,8 @@ public class ResetPosition extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    Robot.shintake.stopIntake();
+    Robot.shintake.setShooter(0, 0);
     Robot.arm.hold();
   }
 

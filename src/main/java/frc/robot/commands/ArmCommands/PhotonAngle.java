@@ -118,8 +118,10 @@ public class PhotonAngle extends Command {
 			
 			if(armpid.atSetpoint()){
 
+				Robot.arm.armLeft.set(armpid.calculate(Robot.arm.getArmPot(),armAngle));
 				RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, .3);
    				RobotContainer.m_operatorController.getHID().setRumble(RumbleType.kBothRumble, .5);
+				x = result.getBestTarget().getDetectedCorners().stream().mapToDouble((a) -> a.x).sum() / 4;
 				Robot.m_drivetrain.drive(-MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftY(), OIConstants.kDriveDeadband), -MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftX(), OIConstants.kDriveDeadband), drivepid.calculate(x, setPoint), false, false);		
 			}
 
