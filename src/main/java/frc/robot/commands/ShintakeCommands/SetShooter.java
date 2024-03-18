@@ -58,7 +58,7 @@ public class SetShooter extends Command {
   @Override
   public boolean isFinished() {
 
-    return timer.get()>1.5;
+    return timer.get()>.75;
 
   }
 }

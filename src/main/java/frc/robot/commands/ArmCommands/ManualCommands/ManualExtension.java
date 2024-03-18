@@ -35,6 +35,6 @@ public class ManualExtension extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Robot.arm.getExtensionPot() >90;
+    return Robot.arm.getExtensionPot() >95;
   }
 }

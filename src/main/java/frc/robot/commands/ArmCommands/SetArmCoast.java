@@ -8,39 +8,31 @@ import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
-import frc.robot.RobotContainer;
-import frc.robot.Constants.ArmConstants;
 
-public class IntakePivot extends Command {
-  boolean aPressedOnInit = false;
-  
-
-  /** Creates a new IntakePivot. */
-  public IntakePivot() {
+public class SetArmCoast extends Command {
+  /** Creates a new SetArmCoast. */
+  public SetArmCoast() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    Robot.arm.moveDown(.3);
+    Robot.arm.armLeft.setIdleMode(IdleMode.kCoast);
+    Robot.arm.armRight.setIdleMode(IdleMode.kCoast);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    Robot.arm.hold();
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Robot.arm.getArmPot()>ArmConstants.kArmPivotIntakePos;
+    return true;
   }
 }

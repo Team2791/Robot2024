@@ -23,7 +23,7 @@ public class Arm extends SubsystemBase {
   PhotonCamera camera;
 
   public CANSparkMax armLeft;
-  private CANSparkMax armRight;
+  public CANSparkMax armRight;
   public CANSparkMax extensionMotor;
 
   private final PIDController leftPID;
@@ -49,13 +49,10 @@ public class Arm extends SubsystemBase {
     // armLeft.getPIDController().setOutputRange(-.5, .5);
     // armRight.getPIDController().setOutputRange(-.5, .5);
 
-    armRight.setOpenLoopRampRate(.5);
-    armLeft.setOpenLoopRampRate(.5);
-
     extensionMotor = new CANSparkMax(33, MotorType.kBrushless);
     extensionMotor.setIdleMode(IdleMode.kBrake);
 
-    slope = (ArmConstants.kMaxAngle - ArmConstants.kMinAngle) / (ArmConstants.kMaxPot - ArmConstants.kMinPot);
+    slope = (ArmConstants.kMaxAngle - ArmConstants.kMinAngle) / (ArmConstants.krange);
     intercept = ArmConstants.kMinAngle - (ArmConstants.kMinPot * slope);
 
     armPot = new AnalogPotentiometer(1, slope, intercept);
@@ -119,6 +116,10 @@ public class Arm extends SubsystemBase {
     extensionMotor.set(0);
   }
 
+  public double getRawPivotPot(){
+    return (getArmPot()-intercept)/slope;
+  }
+
 
 
 
@@ -129,7 +130,7 @@ public class Arm extends SubsystemBase {
 
     setpoint = getArmPot();
     SmartDashboard.putNumber("Pivot Angle", armPot);
-    SmartDashboard.putNumber("Raw pivot pot", (armPot - intercept) / slope);
+    SmartDashboard.putNumber("Raw pivot pot", getRawPivotPot());
     SmartDashboard.putNumber("Extension", extPot);
     SmartDashboard.putNumber("Raw extension pot", (extPot - extIntercept) / extSlope);
 

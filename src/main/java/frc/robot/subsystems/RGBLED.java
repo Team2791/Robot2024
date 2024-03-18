@@ -5,9 +5,8 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import javax.management.timer.Timer;
-
+import frc.robot.Robot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 
@@ -19,13 +18,14 @@ public class RGBLED extends SubsystemBase {
   Timer timer;
 
   public RGBLED() {
+
     timer = new Timer();
     rgbled = new AddressableLED(0);
+    ledLength = 25;
     rBuffer = new AddressableLEDBuffer(ledLength);
     rgbled.setLength(rBuffer.getLength());
     rgbled.setData(rBuffer);
     rgbled.start();
-    ledLength = 60;
     timer.reset();
     timer.start();
   }
@@ -62,5 +62,7 @@ public class RGBLED extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+
+    //if(Robot.shintake.isin())flash(0,255,0,3);
   }
 }

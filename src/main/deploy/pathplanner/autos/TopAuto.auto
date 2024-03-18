@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.749954642766429,
-      "y": 6.860626292681157
+      "x": 0.7352951848760846,
+      "y": 6.728691171668058
     },
     "rotation": 57.99461679191639
   },
@@ -15,12 +15,6 @@
           "type": "named",
           "data": {
             "name": "SetShooter"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.75
           }
         },
         {
@@ -36,9 +30,39 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "IntakeReset"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Angle"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "TopNoteScore"
+            "pathName": "TopLeftNotetoMid"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "yes"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Angle"
           }
         },
         {

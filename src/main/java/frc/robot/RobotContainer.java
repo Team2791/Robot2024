@@ -24,6 +24,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AprilTagCommands.TagAllignContinuous;
 import frc.robot.commands.ArmCommands.AmpPivot;
+import frc.robot.commands.ArmCommands.ArmSetAngle;
 import frc.robot.commands.ArmCommands.FullExtensionAmp;
 import frc.robot.commands.ArmCommands.FullExtensionIntake;
 import frc.robot.commands.ArmCommands.FullRetraction;
@@ -149,7 +150,7 @@ public class RobotContainer {
 		NamedCommands.registerCommand("Shoot", new Shoot());
 		NamedCommands.registerCommand("Intake", new Intake());
 		NamedCommands.registerCommand("Angle", new PhotonAngleCommand());
-		NamedCommands.registerCommand("esetArm", new ResetPosition());
+		NamedCommands.registerCommand("ResetArm", new ResetPosition());
 
 		autoChooser = AutoBuilder.buildAutoChooser();
 		SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -168,12 +169,13 @@ public class RobotContainer {
 		driverDPadUp.whileTrue(new RightRelease());
 		driverDPadDown.whileTrue(new RightClimbUp());
 
-		operatorX.whileTrue(new SetShooter());
-		operatorRT.whileTrue(new PhotonAngleCommand());
-		operatorRT.whileFalse(new ResetPosition());
+		//operatorX.whileTrue(new SetShooter());
+		operatorX.whileTrue(new PhotonAngle());
+		operatorX.whileFalse(new ResetPosition());
 		operatorA.whileTrue(new SequentialCommandGroup(new IntakeSequence(), new Intake()));
 		operatorA.whileFalse(new IntakeReset());
 		operatortinyright.whileTrue(new Intake());
+		operatorTinyLeft.whileTrue(new ArmSetAngle(45));
 	
 		
 		operatorY.whileTrue(new SpitOut());

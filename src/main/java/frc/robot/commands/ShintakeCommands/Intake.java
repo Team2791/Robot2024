@@ -28,6 +28,7 @@ public class Intake extends Command {
   public void initialize() {
     timer.reset();
     timer.start();
+    Robot.led.setColor(255,99,71);
     Robot.shintake.takeIn();
     Robot.shintake.setShooter(-.1, -.1);
   }
@@ -51,10 +52,12 @@ public class Intake extends Command {
     RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, .3);
     RobotContainer.m_operatorController.getHID().setRumble(RumbleType.kBothRumble, .5);
     
+    Robot.led.setColor(0, 255, 0);
     while(Robot.shintake.isin()){
       Robot.shintake.slowOut();
       Robot.shintake.setShooter(-.1, -.1);
     }
+    
     Robot.shintake.stopIntake();
     Robot.shintake.setShooter(0, 0);
     Robot.arm.hold();

@@ -113,7 +113,7 @@ public class Shintake extends SubsystemBase {
     // SmartDashboard.putBoolean("Beam Break?", isin());
     // SmartDashboard.putNumber("left speed", getSpeedLeft());
     // SmartDashboard.putNumber("Right speed", getSpeedRight());
-    // SmartDashboard.putNumber("RPM", getRPM());
+    SmartDashboard.putNumber("RPM", getRPM());
   }
 
   

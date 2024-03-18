@@ -32,6 +32,6 @@ public class ManualRetraction extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Robot.arm.getExtensionPot()<8;
+    return Robot.arm.getExtensionPot()<5;
   }
 }

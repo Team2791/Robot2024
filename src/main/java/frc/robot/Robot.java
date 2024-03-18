@@ -18,6 +18,7 @@ import edu.wpi.first.cscore.VideoMode;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -26,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.RGBLED;
 import frc.robot.subsystems.Shintake;
 
 /**
@@ -47,7 +49,7 @@ public class Robot extends TimedRobot {
 	public static PhotonCamera camera1;
 	public static PhotonCamera camera2;
 	public static PowerDistribution pdp;
-	Timer timer = new Timer();
+	public static RGBLED led;
 
 	/**
 	 * This function is run when the robot is first started up and should be used
@@ -61,9 +63,11 @@ public class Robot extends TimedRobot {
 		camera2 = new PhotonCamera("testCamera");
 		shintake = new Shintake();
 
+		
 		final UsbCamera drivercam = CameraServer.startAutomaticCapture();
 		VideoMode videoMode = new VideoMode(1, 320, 240, 100);//VideoMode.PixelFormat.kMJPEG
 		drivercam.setVideoMode(videoMode);
+		led = new RGBLED();
 		//CameraServer.startAutomaticCapture();
 		arm = new Arm();
 		// Instantiate our RobotContainer. This will perform all our button bindings,
@@ -74,9 +78,12 @@ public class Robot extends TimedRobot {
 		climber = new Climber();
 
 		pdp = new PowerDistribution(1, ModuleType.kRev);
+		led.setColor(0, 0, 255);
 		//estimator = new PhotonEstimator(camera1, m_drivetrain);
 
 		//photonestimator = new PhotonEstimator(camera1, m_drivetrain);
+
+		//Constants.ArmConstants.kMinPot = Robot.arm.getRawPivotPot();
 		
 
 	}
@@ -116,10 +123,12 @@ public class Robot extends TimedRobot {
 	/** This function is called once each time the robot enters Disabled mode. */
 	@Override
 	public void disabledInit() {
+		led.setColor(0, 255, 0);
 	}
 
 	@Override
-	public void disabledPeriodic() {}
+	public void disabledPeriodic() {
+	}
 
 	/**
 	 * This autonomous runs the autonomous command selected by your
@@ -151,6 +160,11 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
+		RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, 0);
+		RobotContainer.m_operatorController.getHID().setRumble(RumbleType.kBothRumble, 0);
+		Robot.led.setColor(255,255, 255);
+
+		//Constants.ArmConstants.kMinPot = Robot.arm.getRawPivotPot();
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
