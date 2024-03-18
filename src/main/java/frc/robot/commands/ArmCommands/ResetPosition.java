@@ -28,7 +28,7 @@ public class ResetPosition extends Command {
   public void end(boolean interrupted) {
     Robot.arm.hold();
     Robot.shintake.stopIntake();
-    Robot.shintake.setShooter(0, 0);
+    Robot.shintake.setShooter(0);
     
   }
 

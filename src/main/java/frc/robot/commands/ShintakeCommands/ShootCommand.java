@@ -21,7 +21,7 @@ public class ShootCommand extends Command {
   public void initialize() {
     timer.reset();
     timer.start();
-    Robot.shintake.setShooter(1,1);
+    Robot.shintake.setShooterPID(2000);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -35,13 +35,13 @@ public class ShootCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-      Robot.shintake.setShooter(0, 0);
+      Robot.shintake.setShooterPID(2000);
       Robot.shintake.stopIntake();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return timer.get()>3; 
+    return timer.get()>3;
   }
 }

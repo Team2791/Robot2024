@@ -24,7 +24,6 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AprilTagCommands.TagAllignContinuous;
 import frc.robot.commands.ArmCommands.AmpPivot;
-import frc.robot.commands.ArmCommands.ArmSetAngle;
 import frc.robot.commands.ArmCommands.FullExtensionAmp;
 import frc.robot.commands.ArmCommands.FullExtensionIntake;
 import frc.robot.commands.ArmCommands.FullRetraction;
@@ -49,7 +48,7 @@ import frc.robot.commands.PitstickCommands.LeftClimbUp;
 import frc.robot.commands.PitstickCommands.LeftRelease;
 import frc.robot.commands.PitstickCommands.RightClimbUp;
 import frc.robot.commands.PitstickCommands.RightRelease;
-import frc.robot.commands.ShintakeCommands.AmpShoot;
+
 import frc.robot.commands.ShintakeCommands.Intake;
 import frc.robot.commands.ShintakeCommands.SetShooter;
 import frc.robot.commands.ShintakeCommands.Shoot;
@@ -175,7 +174,6 @@ public class RobotContainer {
 		operatorA.whileTrue(new SequentialCommandGroup(new IntakeSequence(), new Intake()));
 		operatorA.whileFalse(new IntakeReset());
 		operatortinyright.whileTrue(new Intake());
-		operatorTinyLeft.whileTrue(new ArmSetAngle(45));
 	
 		
 		operatorY.whileTrue(new SpitOut());
