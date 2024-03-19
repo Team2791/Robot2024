@@ -106,7 +106,7 @@ public class PhotonAngle extends Command {
 			proportion = distance / 8.3;
 
 
-			Robot.shintake.setShooter(-2000);
+			Robot.shintake.setShooter(1,1);
 			
 			armAngle = ((53-theta)+6.0)-(8*Math.pow(proportion,4)); // 6, 2 , 5,4
 			if(distance > 3.5)armAngle-=proportion*3;
@@ -134,7 +134,7 @@ public class PhotonAngle extends Command {
 			
 
       		Robot.m_drivetrain.drive(-MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftY(), OIConstants.kDriveDeadband), -MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftX(), OIConstants.kDriveDeadband), drivepid.calculate(x, setPoint), false, false);
-			Robot.shintake.setShooter(-2000);
+			Robot.shintake.setShooter(1,1);
 			
 	}}
 
@@ -144,7 +144,7 @@ public class PhotonAngle extends Command {
 			Robot.m_drivetrain.drive(-MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftY(), OIConstants.kDriveDeadband),  -MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftX(), OIConstants.kDriveDeadband), -MathUtil.applyDeadband(RobotContainer.m_driverController.getRightX(),OIConstants.kDriveDeadband) , false, false);
 			RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, 0);
 			RobotContainer.m_operatorController.getHID().setRumble(RumbleType.kBothRumble, 0);
-			Robot.shintake.setShooter(-2000);
+			Robot.shintake.setShooter(1,1);
 
 		}
 

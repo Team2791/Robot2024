@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
@@ -20,8 +19,8 @@ import frc.robot.RobotMap;
 
 public class Shintake extends SubsystemBase {
 
-  private CANSparkMax shooterLeader;
-  private CANSparkMax shooterFollower;
+  private CANSparkMax leftMotor;
+  private CANSparkMax rightMotor;
   public CANSparkMax intakeMotor;
   private SparkLimitSwitch beamBrake;
   public PIDController speedController;
@@ -29,56 +28,55 @@ public class Shintake extends SubsystemBase {
   Timer timer = new Timer();
   /** Creates a new Shooter. */
   public Shintake() {
-    shooterLeader = new CANSparkMax(21, MotorType.kBrushless);
-    shooterFollower = new CANSparkMax(22, MotorType.kBrushless);
-    shooterLeader.setIdleMode(IdleMode.kCoast);
-    shooterFollower.setIdleMode(IdleMode.kCoast);
-    shooterFollower.follow(shooterLeader, true);
-
-    shooterLeader.setSmartCurrentLimit(40);
-    shooterFollower.setSmartCurrentLimit(40);
-
-    beamBrake = shooterFollower.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
-
-
-
-
+    leftMotor = new CANSparkMax(21, MotorType.kBrushless);
+    rightMotor = new CANSparkMax(22, MotorType.kBrushless);
+    leftMotor.setSmartCurrentLimit(40);
+    rightMotor.setSmartCurrentLimit(40);
     intakeMotor = new CANSparkMax(RobotMap.intakeMotor, MotorType.kBrushless);
+    speedController = new PIDController(Constants.ShintakeConstants.kShooterP, Constants.ShintakeConstants.kShooterI, Constants.ShintakeConstants.kShooterD);
+    speedController.setTolerance(.01);
+    leftMotor.setIdleMode(IdleMode.kCoast);
+    rightMotor.setIdleMode(IdleMode.kCoast);
 
-    
-
-    
+    beamBrake = rightMotor.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
     }
 
-  public void setShooter(final double output){
-    shooterLeader.set(output);
-  }
+  // public void setShooter(double speed){
+  //   leftMotor.set(speedController.calculate(leftMotor.getEncoder().getVelocity(),speed));
+  //   rightMotor.set(speedController.calculate(leftMotor.getEncoder().getVelocity(),speed));
+  // }
 
-  public void setShooterPID(final double setpoint){
-    if (setpoint == 0) {
-        setShooter(setpoint);
-    } else {
-        shooterLeader.getPIDController().setReference(setpoint, ControlType.kVelocity);
-    }
-  }
+  // public void setShooter(double leftSpeed, double rightSpeed){
+  //   leftMotor.set(speedController.calculate(leftMotor.getEncoder().getVelocity(),leftSpeed));
+  //   rightMotor.set(speedController.calculate(leftMotor.getEncoder().getVelocity(),rightSpeed));
+  // }
 
   public double getRPM(){
-    return shooterLeader.getEncoder().getVelocity();
+    return (leftMotor.getEncoder().getVelocity() + rightMotor.getEncoder().getVelocity())/2;
+  }
+
+  public void setShooter(double leftSpeed, double rightSpeed){
+    leftMotor.set(leftSpeed);
+    rightMotor.set(-rightSpeed);
   }
 
 
-    public void takeIn(){
-      intakeMotor.set(-.6);
-    }
 
-    public void spitOut(){
-      intakeMotor.set(.6);
-    }
+  public void takeIn(){
+    intakeMotor.set(-.55);
+  }
 
-    public void stopIntake(){
-      intakeMotor.set(0);
-    }
+  public void spitOut(){
+    intakeMotor.set(.6);
+  }
 
+  public void stopIntake(){
+    intakeMotor.set(0);
+  }
+
+  public void index(){
+    intakeMotor.set(-.3);
+  }
 
   public boolean isin(){ //false when note is out
     return !beamBrake.isPressed();
@@ -86,6 +84,16 @@ public class Shintake extends SubsystemBase {
 
   public void slowOut(){
     intakeMotor.set(.3);
+  }
+
+  public double getSpeedRight(){
+    return rightMotor.getEncoder().getVelocity();
+
+
+  }
+
+  public double getSpeedLeft(){
+    return leftMotor.getEncoder().getVelocity();
   }
 
   public double getIntakeCurrent(){

@@ -14,20 +14,18 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 
-public class SetShooter extends Command {
+public class SetAmpShooter extends Command {
   Timer timer = new Timer();
   
   /** Creates a new Shoot. */
-  public SetShooter() {
+  public SetAmpShooter() {
   }
   
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    timer.reset();
-    timer.start();
-    Robot.shintake.setShooter(1,1);
+    Robot.shintake.setShooter(.1,.1);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -46,7 +44,7 @@ public class SetShooter extends Command {
   @Override
   public void end(boolean interrupted) {
 
-    // Robot.shintake.setShooter(0, 0);
+    Robot.shintake.setShooter(0, 0);
     RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, 0);
     RobotContainer.m_operatorController.getHID().setRumble(RumbleType.kBothRumble, 0);
 
@@ -58,7 +56,7 @@ public class SetShooter extends Command {
   @Override
   public boolean isFinished() {
 
-    return timer.get()>.75;
+    return RobotContainer.m_driverController.getRightTriggerAxis()>.5 || timer.get()>10;
 
   }
 }

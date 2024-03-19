@@ -30,7 +30,7 @@ public class Intake extends Command {
     timer.start();
     Robot.led.setColor(255,99,71);
     Robot.shintake.takeIn();
-    Robot.shintake.setShooter(200);
+    Robot.shintake.setShooter(-.1, -.1);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -55,11 +55,11 @@ public class Intake extends Command {
     Robot.led.setColor(0, 255, 0);
     while(Robot.shintake.isin()){
       Robot.shintake.slowOut();
-      Robot.shintake.setShooter(200);
+      Robot.shintake.setShooter(-.1, -.1);
     }
     
     Robot.shintake.stopIntake();
-    Robot.shintake.setShooter(0);
+    Robot.shintake.setShooter(0, 0);
     Robot.arm.hold();
     RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, 0);
     RobotContainer.m_operatorController.getHID().setRumble(RumbleType.kBothRumble, 0);

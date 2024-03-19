@@ -7,6 +7,7 @@ package frc.robot.commands.ShintakeCommands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
+import frc.robot.RobotContainer;
 
 public class Shoot extends Command {
   Timer timer = new Timer();
@@ -39,7 +40,7 @@ public class Shoot extends Command {
     while(timer.get()<.5){
       
     }
-    Robot.shintake.setShooter(0);
+    Robot.shintake.setShooter(0, 0);
     Robot.shintake.stopIntake();
     
   }
