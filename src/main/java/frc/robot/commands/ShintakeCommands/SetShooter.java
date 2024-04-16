@@ -29,9 +29,9 @@ public class SetShooter extends Command {
     timer.start();
     
     if(Robot.arm.getArmPot()>60){
-      Robot.shintake.setShooter(.5,.5);
+      Robot.shintake.setShooter(.25,.25);
     }
-    else Robot.shintake.setShooter(1,1);
+    else Robot.shintake.setShooter(.4,.4);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

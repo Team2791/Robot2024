@@ -173,8 +173,8 @@ public class RobotContainer {
 		driverTinyLeft.whileTrue(new ResetGyro());
 
 		//operatorX.whileTrue(new SetShooter());
-		operatorX.whileTrue(new PhotonAngle());
-		operatorX.whileFalse(new ArmSetAngle(0));
+		//operatorX.whileTrue(new PhotonAngle());
+		//operatorX.whileFalse(new ArmSetAngle(0));
 		operatorA.whileTrue(new ParallelCommandGroup(new IntakeSequence(), new Intake()));
 		operatorA.whileFalse(new IntakeReset());
 		operatortinyright.whileTrue(new Intake());
@@ -189,8 +189,8 @@ public class RobotContainer {
 		operatorLeftYNeg.whileTrue(manualangledown);
 		operatorLeftYPos.whileTrue(manualangleup);//manualangleup
 
-		operatorRightYPos.whileTrue(new ClimberActivate());
-		operatorRightYNeg.whileTrue(new ClimberDeactivate());
+		//operatorRightYPos.whileTrue(new ClimberActivate());
+		//operatorRightYNeg.whileTrue(new ClimberDeactivate());
 
 		pitStickLB.whileTrue(leftclimbup);
 		pitStickRB.whileTrue(leftrelease);
