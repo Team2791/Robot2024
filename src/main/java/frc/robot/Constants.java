@@ -139,11 +139,11 @@ public final class Constants {
 
 	public static final class AutoConstants {
 
-		public static final double kRotationP = .5;
+		public static final double kRotationP = 2;
 		public static final double kRotationI = 0;
 		public static final double kRotationD = 0;
 
-		public static final double kTranslationP = .2;
+		public static final double kTranslationP = 2;
 		public static final double kTranslationI = 0;
 		public static final double kTranslationD = 0;
 
@@ -193,13 +193,14 @@ public final class Constants {
 		public static final double kArmPivotIntakePos = 2; //intake setpoint
 
 
-		//public static final double kMaxPot = 0.1980;
-		public static double kMinPot = 0.5683;
-		//public static double kzero = .2567;
-		public static double krange = -.0582;
+		public static double kMinPot = .3667;//3593
+		public static double kMaxPot = .3038;
 
-		public static final double kMaxAngle = 111.0;
-		public static final double kMinAngle = 0.0;//-10.4;
+
+		// public static double kMinPot = 0;
+		// public static double krange = 35.73;
+		public static final double kMaxAngle = 110.0;
+		public static final double kMinAngle = -10;//-10.4;
 
 		public static final double kExtendMinPot = 0.1395;
 		public static final double kExtendMaxPot = .4725;

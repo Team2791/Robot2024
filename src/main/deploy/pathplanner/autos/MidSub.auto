@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7352951848760846,
-      "y": 6.728691171668058
+      "x": 1.3656518741608918,
+      "y": 5.541275082550166
     },
-    "rotation": 57.99461679191639
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -26,19 +26,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "topStart"
+            "pathName": "MidStart"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MidSub2"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "IntakeReset"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Angle"
+            "name": "SetShooter"
           }
         },
         {
@@ -48,27 +48,21 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "IntakeReset"
+            "pathName": "SpeakerToMidline"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "TopLeftNotetoMid"
+            "pathName": "MiddleMiddleNoteScore"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "yes"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Angle"
+            "pathName": "MidSub2"
           }
         },
         {
@@ -80,6 +74,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "SubAutos",
   "choreoAuto": false
 }

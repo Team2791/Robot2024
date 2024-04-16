@@ -22,6 +22,8 @@ import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.ResetGyro;
+import frc.robot.commands.AprilTagCommands.NoteAlign;
 import frc.robot.commands.AprilTagCommands.TagAllignContinuous;
 import frc.robot.commands.ArmCommands.AmpPivot;
 import frc.robot.commands.ArmCommands.ArmSetAngle;
@@ -116,7 +118,7 @@ public class RobotContainer {
 	// private final ManualAngle armdown = new ManualAngle(false);
 
 	private Trigger driverX, driverY, driverA, driverB, driverLB, driverRB, driverLT, driverRT,
-			driverStart, driverBack;
+			driverStart, driverTinyLeft;
 	private Trigger operatorX, operatorY, operatorA, operatorB, operatorLB, operatorRB, operatorLT,
 			operatorRT;
 
@@ -168,14 +170,15 @@ public class RobotContainer {
 		driverDPadRight.whileTrue(new LeftRelease());
 		driverDPadUp.whileTrue(new RightRelease());
 		driverDPadDown.whileTrue(new RightClimbUp());
+		driverTinyLeft.whileTrue(new ResetGyro());
 
 		//operatorX.whileTrue(new SetShooter());
 		operatorX.whileTrue(new PhotonAngle());
-		operatorX.whileFalse(new ResetPosition());
-		operatorA.whileTrue(new SequentialCommandGroup(new IntakeSequence(), new Intake()));
+		operatorX.whileFalse(new ArmSetAngle(0));
+		operatorA.whileTrue(new ParallelCommandGroup(new IntakeSequence(), new Intake()));
 		operatorA.whileFalse(new IntakeReset());
 		operatortinyright.whileTrue(new Intake());
-		operatorTinyLeft.whileTrue(new ArmSetAngle(45));
+		operatorTinyLeft.whileTrue(new SetShooter());
 	
 		
 		operatorY.whileTrue(new SpitOut());
@@ -184,7 +187,7 @@ public class RobotContainer {
 		operatorRB.whileTrue(new ManualExtension());
 		operatorLB.whileTrue(new ManualRetraction());
 		operatorLeftYNeg.whileTrue(manualangledown);
-		operatorLeftYPos.whileTrue(manualangleup);
+		operatorLeftYPos.whileTrue(manualangleup);//manualangleup
 
 		operatorRightYPos.whileTrue(new ClimberActivate());
 		operatorRightYNeg.whileTrue(new ClimberDeactivate());
@@ -244,6 +247,7 @@ public class RobotContainer {
 		driverRB = new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value);
 		driverRT = new JoystickButton(m_driverController, XboxController.Axis.kRightTrigger.value);
 		driverLT = new JoystickButton(m_driverController, XboxController.Axis.kLeftTrigger.value);
+		driverTinyLeft = new JoystickButton(m_driverController, XboxController.Button.kBack.value);
 
 		//operator configs
 		operatorA = m_operatorController.a();

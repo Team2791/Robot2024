@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.65,
-        "y": 4.1
+        "x": 8.754018650894446,
+        "y": 4.046010377735041
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.6985376827896514,
-        "y": 4.119307667186764
+        "x": 7.802556333684098,
+        "y": 4.065318044921805
       },
       "isLocked": false,
       "linkedName": null
@@ -53,11 +53,28 @@
           ]
         }
       }
+    },
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.85,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "SetShooter"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 6.0,
-    "maxAcceleration": 5.0,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 360.0,
     "maxAngularAcceleration": 180.0
   },

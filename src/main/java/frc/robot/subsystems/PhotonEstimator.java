@@ -50,7 +50,7 @@ public class PhotonEstimator extends SubsystemBase {
   }
 
 
-  public void setAlliance(Alliance alliance) {
+  public void setAlliance(Alliance alliance) { 
     boolean allianceChanged = false;
     switch(alliance) {
       case Blue:

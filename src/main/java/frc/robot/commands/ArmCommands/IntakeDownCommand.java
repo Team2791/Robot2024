@@ -19,7 +19,7 @@ public class IntakeDownCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    Robot.arm.moveUp(.25);
+    Robot.arm.moveUp(.3);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -37,6 +37,6 @@ public class IntakeDownCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Robot.arm.getArmPot()<0;
+    return Robot.arm.getArmPot()<-5;
   }
 }

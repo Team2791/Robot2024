@@ -11,14 +11,12 @@ import frc.robot.Robot;
 import frc.robot.RobotContainer;
 
 public class ArmSetAngle extends Command {
-  PIDController armpid;
   double angle;
 
   /** Creates a new ArmSetAngle. */
   public ArmSetAngle(double a) {
-    this.angle = a;
-    armpid = new PIDController(.0168,0,0);
-    // Use addRequirements() here to declare subsystem dependencies.
+    angle = a;
+    addRequirements(Robot.arm);
   }
 
   // Called when the command is initially scheduled.
@@ -33,23 +31,24 @@ public class ArmSetAngle extends Command {
     if(angle<0) angle=0;
 			if(angle>53)angle = 53;
 
-			Robot.arm.armLeft.set(armpid.calculate(Robot.arm.getArmPot(),angle));
+			Robot.arm.setAngle(angle);
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, .5);
-    RobotContainer.m_operatorController.getHID().setRumble(RumbleType.kBothRumble, .5);
+    //RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, .5);
+    //RobotContainer.m_operatorController.getHID().setRumble(RumbleType.kBothRumble, .5);
 
     Robot.arm.hold();
+    Robot.shintake.setShooter(0,0);
     
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return armpid.atSetpoint();
+    return Robot.arm.leftPID.atSetpoint();
   }
 }

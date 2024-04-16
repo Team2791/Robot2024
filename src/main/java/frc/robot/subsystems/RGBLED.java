@@ -37,26 +37,16 @@ public class RGBLED extends SubsystemBase {
     rgbled.setData(rBuffer);
   }
 
-  public void delay(Timer timer, double s){
-    double current = timer.get();
-    while(timer.get()<current+s)
-    {
-
-    }
-    return;
-  }
 
 
-  public void flash(int r, int g, int b, double time){
-    double current = timer.get();
-    while(timer.get()<current + time)
-    {
+  public void flash(int r, int g, int b){
+    timer.reset();
+    timer.start();
+    
+    while(timer.get()<.5){
       setColor(255, 255, 255);
-      delay(timer, 0.5);
-      setColor(0, 0, 0);
-      delay(timer, 0.5);
     }
-    return;
+    setColor(0, 0, 0);
   }
 
   @Override

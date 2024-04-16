@@ -35,10 +35,10 @@ public class PhotonAngle extends Command {
 	double theta=0;
 
 	double x;
-  double setPoint = 420;
+  double setPoint = 430;
   double armAngle;
   double  power;
-  PIDController armpid = new PIDController(.02,0,0);
+  PIDController armpid = new PIDController(.027,0,0);
 
 
   
@@ -58,7 +58,7 @@ public class PhotonAngle extends Command {
 
 	public void initialize(){
 
-		armpid.setTolerance(2);
+		armpid.setTolerance(0.5);
 		timer.reset();
 		timer.start();
 	}
@@ -80,10 +80,7 @@ public class PhotonAngle extends Command {
 			SmartDashboard.putBoolean("done", true);
 		}
 
-		var foundTargets = targets.stream()
-    .filter(t -> (t.getFiducialId() == 4 || t.getFiducialId() == 7))
-    .filter(t -> !t.equals(4) && t.getPoseAmbiguity() <= .2 && t.getPoseAmbiguity() != -1)
-    .findFirst();
+		var foundTargets = targets.stream().filter(t -> (t.getFiducialId() == 4 || t.getFiducialId() == 7)).filter(t -> !t.equals(4) && t.getPoseAmbiguity() <= .6 && t.getPoseAmbiguity() != -1).findFirst();
 
 		if (foundTargets.isPresent()) {
 
@@ -94,28 +91,28 @@ public class PhotonAngle extends Command {
 				Units.inchesToMeters(9.451),
 				Constants.VisionConstants.kAprilTagHeight,
 				Constants.VisionConstants.kCameraPitchRadians,
-				Units.degreesToRadians(result.getBestTarget().getPitch()));
-
+				Units.degreesToRadians(foundTargets.get().getPitch()));
+			SmartDashboard.putNumber("distance", distance);
 		
 
 			theta = Units.radiansToDegrees(Math.atan(Constants.VisionConstants.kspeakerHeight/distance));
 
 
 
-			x = result.getBestTarget().getDetectedCorners().stream().mapToDouble((a) -> a.x).sum() / 4;
+			x = foundTargets.get().getDetectedCorners().stream().mapToDouble((a) -> a.x).sum() / 4;
 			proportion = distance / 8.3;
-
+			SmartDashboard.putNumber("X", x);
 
 			Robot.shintake.setShooter(1,1);
 			
-			armAngle = ((53-theta)+6.0)-(8*Math.pow(proportion,4)); // 6, 2 , 5,4
-			if(distance > 3.5)armAngle-=proportion*3;
+			armAngle = ((53-theta)+7)-(8*Math.pow(proportion,4)); // 6, 2 , 5,4
+			if(distance > 3.5)armAngle-=proportion*5;
 			SmartDashboard.putNumber("set angle", armAngle);
 			// armAngle = (3.33*Math.pow(distance,3) - 32.5 *(Math.pow(distance,2) )+ 108.17*distance -92.375);
 
 			if(armAngle<0) armAngle=0;
 			if(armAngle>53)armAngle = 53;
-
+			//armpid.calculate(Robot.arm.getArmPot(),armAngle);
 			Robot.arm.armLeft.set(armpid.calculate(Robot.arm.getArmPot(),armAngle));
 			SmartDashboard.putNumber("set arm angle", armAngle);
 
@@ -124,9 +121,9 @@ public class PhotonAngle extends Command {
 			if(armpid.atSetpoint()){
 				RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, .3);
    				RobotContainer.m_operatorController.getHID().setRumble(RumbleType.kBothRumble, .5);
-				x = result.getBestTarget().getDetectedCorners().stream().mapToDouble((a) -> a.x).sum() / 4;
+				x = foundTargets.get().getDetectedCorners().stream().mapToDouble((a) -> a.x).sum() / 4;
 				Robot.arm.armLeft.set(armpid.calculate(Robot.arm.getArmPot(),armAngle));
-				Robot.m_drivetrain.drive(-MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftY(), OIConstants.kDriveDeadband), -MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftX(), OIConstants.kDriveDeadband), drivepid.calculate(x, setPoint), false, false);		
+				Robot.m_drivetrain.drive(.5*-MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftY(), .5*OIConstants.kDriveDeadband), -MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftX(), OIConstants.kDriveDeadband), drivepid.calculate(x, setPoint), false, false);		
 			}
 
 
@@ -134,13 +131,13 @@ public class PhotonAngle extends Command {
 			
 
       		Robot.m_drivetrain.drive(-MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftY(), OIConstants.kDriveDeadband), -MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftX(), OIConstants.kDriveDeadband), drivepid.calculate(x, setPoint), false, false);
-			Robot.shintake.setShooter(1,1);
+			//Robot.shintake.setShooter(1,1);
 			
 	}}
 
 	else{
 			Robot.arm.hold();
-			Robot.led.setColor(255,99,71);
+			Robot.led.setColor(255,0,0);
 			Robot.m_drivetrain.drive(-MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftY(), OIConstants.kDriveDeadband),  -MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftX(), OIConstants.kDriveDeadband), -MathUtil.applyDeadband(RobotContainer.m_driverController.getRightX(),OIConstants.kDriveDeadband) , false, false);
 			RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, 0);
 			RobotContainer.m_operatorController.getHID().setRumble(RumbleType.kBothRumble, 0);

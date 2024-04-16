@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.3949707899415804,
-        "y": 1.5099241627054687
+        "x": 3.344678689357379,
+        "y": 5.585253456221199
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.394970789941582,
-        "y": 1.5099241627054687
+        "x": 2.6850030842918833,
+        "y": 5.585253456221199
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.168765194673247,
-        "y": 1.5099241627054687
+        "x": 1.3509924162705473,
+        "y": 5.585253456221199
       },
       "prevControl": {
-        "x": 2.168765194673247,
-        "y": 1.5099241627054687
+        "x": 2.098624768678109,
+        "y": 5.585253456221199
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,7 +30,25 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "IntakeReset"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.0,
     "maxAcceleration": 3.0,
@@ -43,7 +61,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "MidSub",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

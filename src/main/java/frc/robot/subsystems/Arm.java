@@ -10,12 +10,16 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.CAN;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.RobotMap;
 
 
@@ -26,16 +30,17 @@ public class Arm extends SubsystemBase {
   public CANSparkMax armRight;
   public CANSparkMax extensionMotor;
 
-  private final PIDController leftPID;
-  private final PIDController rightPID;
+  public final PIDController leftPID;
   private AnalogPotentiometer armPot;
   private AnalogPotentiometer extenpot;
-  private PIDController pid;
+  //private PIDController pid;
   public PIDController extensionPID;
 
 
   public double setExtension;
   public double setpoint;
+  
+  public double power;
 
   private double slope, intercept;
   private double extSlope, extIntercept;
@@ -52,7 +57,7 @@ public class Arm extends SubsystemBase {
     extensionMotor = new CANSparkMax(33, MotorType.kBrushless);
     extensionMotor.setIdleMode(IdleMode.kBrake);
 
-    slope = (ArmConstants.kMaxAngle - ArmConstants.kMinAngle) / (ArmConstants.krange);
+    slope = (ArmConstants.kMaxAngle - ArmConstants.kMinAngle) / (ArmConstants.kMaxPot - ArmConstants.kMinPot);
     intercept = ArmConstants.kMinAngle - (ArmConstants.kMinPot * slope);
 
     armPot = new AnalogPotentiometer(1, slope, intercept);
@@ -62,12 +67,12 @@ public class Arm extends SubsystemBase {
     extIntercept = - ArmConstants.kExtendMinPot * extSlope;
     extenpot = new AnalogPotentiometer(0, extSlope, extIntercept);
 
-    leftPID = new PIDController(.1,0,0);
-    rightPID = new PIDController(.1,0,0);
+    leftPID = new PIDController(.02,0,0);
+    leftPID.setTolerance(1);
+
     setExtension = getExtensionPot();
     extensionPID = new PIDController(.7,0,0);
 
-    pid = new PIDController(.1,0,0);
     setpoint = getArmPot();
 
   }
@@ -75,7 +80,12 @@ public class Arm extends SubsystemBase {
 
   public void setAngle(double angle){
     armLeft.setIdleMode(IdleMode.kBrake);
-    //setpoint = angle;
+    power = leftPID.calculate(getArmPot(), angle);
+
+    if(power>.5)power=.5;
+    else if(power<-.5)power=-.5;
+
+    armLeft.set(power);
   }
 
   public void moveUp(double speed){
@@ -98,6 +108,7 @@ public class Arm extends SubsystemBase {
 
   public double getArmPot(){
     return armPot.get();
+    //return armLeft.getEncoder().getPosition();
   }
 
   public void manualExtend(){
@@ -133,7 +144,10 @@ public class Arm extends SubsystemBase {
     SmartDashboard.putNumber("Raw pivot pot", getRawPivotPot());
     SmartDashboard.putNumber("Extension", extPot);
     SmartDashboard.putNumber("Raw extension pot", (extPot - extIntercept) / extSlope);
-
+    // if(leftPID.atSetpoint()){
+    //   RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, 1);
+    // }
+    //SmartDashboard.putNumber("Encoder", armLeft.getEncoder().getPosition());
     
     //armLeft.set(leftPID.calculate(getArmPot(),setpoint)+Constants.ArmConstants.armLeftFF * Math.cos(Math.toRadians(getArmPot())));
 

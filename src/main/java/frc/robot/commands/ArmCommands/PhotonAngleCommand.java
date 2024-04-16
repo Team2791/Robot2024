@@ -35,10 +35,10 @@ public class PhotonAngleCommand extends Command {
 	double theta=0;
 
 	double x;
-  double setPoint = 420;
+  double setPoint = 450;
   double armAngle;
   double  power;
-  PIDController armpid = new PIDController(.02,0,0);
+  PIDController armpid = new PIDController(.027,0,0);
 
 
   
@@ -101,14 +101,14 @@ public class PhotonAngleCommand extends Command {
 
 
 
-			x = result.getBestTarget().getDetectedCorners().stream().mapToDouble((a) -> a.x).sum() / 4;
+			x = foundTargets.get().getDetectedCorners().stream().mapToDouble((a) -> a.x).sum() / 4;
 			proportion = distance / 8.3;
 
 
 			Robot.shintake.setShooter(1,1);
 			
-			armAngle = ((53-theta)+6.0)-(8*Math.pow(proportion,4)); // 6, 2 , 5,4
-			if(distance > 3.5)armAngle-=proportion*3;
+			armAngle = ((53-theta)+7)-(8*Math.pow(proportion,4)); // 6, 2 , 5,4
+			if(distance > 3.5)armAngle-=proportion*5;
 			SmartDashboard.putNumber("set angle", armAngle);
 			// armAngle = (3.33*Math.pow(distance,3) - 32.5 *(Math.pow(distance,2) )+ 108.17*distance -92.375);
 
@@ -123,7 +123,7 @@ public class PhotonAngleCommand extends Command {
 			if(armpid.atSetpoint()){
 				RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, .3);
    				RobotContainer.m_operatorController.getHID().setRumble(RumbleType.kBothRumble, .5);
-				x = result.getBestTarget().getDetectedCorners().stream().mapToDouble((a) -> a.x).sum() / 4;
+				   x = foundTargets.get().getDetectedCorners().stream().mapToDouble((a) -> a.x).sum() / 4;
 				Robot.arm.armLeft.set(armpid.calculate(Robot.arm.getArmPot(),armAngle));
 				Robot.m_drivetrain.drive(-MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftY(), OIConstants.kDriveDeadband), -MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftX(), OIConstants.kDriveDeadband), drivepid.calculate(x, setPoint), false, false);		
 			}
@@ -171,6 +171,6 @@ public class PhotonAngleCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return armpid.atSetpoint();
+    return armpid.atSetpoint() || (timer.get()>3);
   }
 }

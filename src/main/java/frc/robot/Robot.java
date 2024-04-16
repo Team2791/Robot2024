@@ -58,9 +58,13 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
+
 		
 		camera1 = new PhotonCamera("2791camera");
-		camera2 = new PhotonCamera("testCamera");
+		camera1.setDriverMode(false);
+		camera2 = new PhotonCamera("drivercam");
+		camera2.setDriverMode(true);
+		
 		shintake = new Shintake();
 
 		
@@ -79,6 +83,7 @@ public class Robot extends TimedRobot {
 
 		pdp = new PowerDistribution(1, ModuleType.kRev);
 		led.setColor(0, 0, 255);
+		//Robot.arm.armLeft.getEncoder().setPosition(0);
 		//estimator = new PhotonEstimator(camera1, m_drivetrain);
 
 		//photonestimator = new PhotonEstimator(camera1, m_drivetrain);

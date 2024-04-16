@@ -27,17 +27,22 @@ public class SetShooter extends Command {
   public void initialize() {
     timer.reset();
     timer.start();
-    Robot.shintake.setShooter(1,1);
+    
+    if(Robot.arm.getArmPot()>60){
+      Robot.shintake.setShooter(.5,.5);
+    }
+    else Robot.shintake.setShooter(1,1);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    
 
-    if(Robot.shintake.getRPM()>-Constants.ShintakeConstants.kRPM){
-      RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, .3);
-      RobotContainer.m_operatorController.getHID().setRumble(RumbleType.kBothRumble, .5);
-    }
+    // if(Robot.shintake.getRPM()>-Constants.ShintakeConstants.kRPM){
+    //   RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, .3);
+    //   RobotContainer.m_operatorController.getHID().setRumble(RumbleType.kBothRumble, .5);
+    // }
 
   
   }
@@ -45,11 +50,6 @@ public class SetShooter extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-
-    // Robot.shintake.setShooter(0, 0);
-    RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, 0);
-    RobotContainer.m_operatorController.getHID().setRumble(RumbleType.kBothRumble, 0);
-
 
   }
 

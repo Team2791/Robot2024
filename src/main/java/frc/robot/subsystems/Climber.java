@@ -36,6 +36,10 @@ public class Climber extends SubsystemBase {
 
 		leftLock.setBoundsMicroseconds(2000, 0, 0, 0, 1000);
 		rightLock.setBoundsMicroseconds(2000, 0, 0, 0, 1000);
+		leftMotor.setIdleMode(IdleMode.kBrake);
+		rightMotor.setIdleMode(IdleMode.kBrake);
+		leftMotor.setOpenLoopRampRate(.1);
+		rightMotor.setOpenLoopRampRate(.1);
 	}
 
 	/**  Used to tilt during climbing and unclimbing */

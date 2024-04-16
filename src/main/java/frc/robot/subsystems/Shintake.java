@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.RobotMap;
 
 public class Shintake extends SubsystemBase {
@@ -114,6 +115,10 @@ public class Shintake extends SubsystemBase {
     // SmartDashboard.putNumber("left speed", getSpeedLeft());
     // SmartDashboard.putNumber("Right speed", getSpeedRight());
     SmartDashboard.putNumber("RPM", getRPM());
+    // if(isin()){
+    //   Robot.led.flash(255,255,0);
+    // }
+    SmartDashboard.putBoolean("Beam Brake", isin());
   }
 
   

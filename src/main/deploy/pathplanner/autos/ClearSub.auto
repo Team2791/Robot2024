@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7450681568029801,
-      "y": 4.382929443824989
+      "x": 0.7059762690953959,
+      "y": 4.368518451322617
     },
-    "rotation": -60.46121774044183
+    "rotation": -60.01836063115067
   },
   "command": {
     "type": "sequential",
@@ -26,7 +26,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BottomToNote"
+            "pathName": "New Path"
           }
         },
         {
@@ -36,9 +36,9 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Angle"
+            "pathName": "endpathToSub"
           }
         },
         {
@@ -50,6 +50,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "SubAutos",
   "choreoAuto": false
 }
