@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj.smartdashboard.*;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class TagAllignContinuous extends Command {
+public class TagAlignContinuous extends Command {
 
   PhotonCamera camera;
   DriveSubsystem drivetrain;
@@ -36,7 +36,7 @@ public class TagAllignContinuous extends Command {
   PIDController pid;
 
   /** Creates a new TagAllign. */
-  public TagAllignContinuous(PhotonCamera camera, DriveSubsystem driveSubsystem, XboxController drivController) {
+  public TagAlignContinuous(PhotonCamera camera, DriveSubsystem driveSubsystem, XboxController drivController) {
     this.controller = drivController;
     this.camera = camera;
     this.drivetrain = driveSubsystem;

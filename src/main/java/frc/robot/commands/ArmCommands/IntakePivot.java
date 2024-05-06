@@ -41,6 +41,6 @@ public class IntakePivot extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Robot.arm.getArmPot()>ArmConstants.kArmPivotIntakePos;
+    return Robot.arm.GetAngle()>ArmConstants.kArmPivotIntakePos;
   }
 }

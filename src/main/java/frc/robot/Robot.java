@@ -43,7 +43,7 @@ public class Robot extends TimedRobot {
 	private RobotContainer m_robotContainer;
 	public static Shintake shintake;
 	public static Climber climber;
-	public static DriveSubsystem m_drivetrain;
+	public static DriveSubsystem drivetrain;
 	//public static PhotonEstimator estimator;
 	//public static PhotonEstimator photonestimator;
 	public static PhotonCamera camera1;
@@ -77,7 +77,7 @@ public class Robot extends TimedRobot {
 		// Instantiate our RobotContainer. This will perform all our button bindings,
 		// and put our
 		// autonomous chooser on the dashboard.
-		m_drivetrain = new DriveSubsystem();
+		drivetrain = new DriveSubsystem();
 		m_robotContainer = new RobotContainer();
 		climber = new Climber();
 
@@ -90,7 +90,7 @@ public class Robot extends TimedRobot {
 
 		//Constants.ArmConstants.kMinPot = Robot.arm.getRawPivotPot();
 		
-
+		arm.ResetPivotEncoder();
 	}
 
 	/**

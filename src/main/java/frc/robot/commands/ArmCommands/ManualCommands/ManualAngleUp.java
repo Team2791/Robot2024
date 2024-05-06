@@ -42,6 +42,6 @@ public class ManualAngleUp extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Robot.arm.getArmPot()<-10;
+    return Robot.arm.GetAngle()<-10;
   }
 }

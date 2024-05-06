@@ -70,7 +70,7 @@ public class PhotonEstimator extends SubsystemBase {
       // Since a tag was seen, and the tags are all relative to the coordinate system, the estimated pose
       // needs to be transformed to the new coordinate system.
       var newPose = flipAlliance(getCurrentPose());
-      Robot.m_drivetrain.m_odometry.resetPosition(drivetrain.getGyroscopeRotation(), drivetrain.getModulePositions(), newPose);
+      Robot.drivetrain.m_odometry.resetPosition(drivetrain.getGyroscopeRotation(), drivetrain.getModulePositions(), newPose);
     }
   }
   private Pose2d flipAlliance(Pose2d poseToFlip) {
@@ -107,14 +107,14 @@ public class PhotonEstimator extends SubsystemBase {
         Pose3d camPose = targetPose.transformBy(camToTarget.inverse());
 
         var visionMeasurement = camPose.transformBy(Constants.VisionConstants.APRILTAG_CAMERA_TO_ROBOT);
-        Robot.m_drivetrain.m_odometry.addVisionMeasurement(visionMeasurement.toPose2d(), previousTimeStamp,visionMeasurementStdDevs);
+        Robot.drivetrain.m_odometry.addVisionMeasurement(visionMeasurement.toPose2d(), previousTimeStamp,visionMeasurementStdDevs);
 
       }
 
     // This method will be called once per scheduler run
   }
 
-  Robot.m_drivetrain.m_odometry.updateWithTime(resultTimestamp, drivetrain.getGyroscopeRotation(), drivetrain.getModulePositions());
+  Robot.drivetrain.m_odometry.updateWithTime(resultTimestamp, drivetrain.getGyroscopeRotation(), drivetrain.getModulePositions());
   field2d.setRobotPose(getCurrentPose());
   SmartDashboard.putData(field2d);
 
@@ -122,7 +122,7 @@ public class PhotonEstimator extends SubsystemBase {
 }
 
   public Pose2d getCurrentPose(){
-    return Robot.m_drivetrain.m_odometry.getEstimatedPosition();
+    return Robot.drivetrain.m_odometry.getEstimatedPosition();
   }
 
   

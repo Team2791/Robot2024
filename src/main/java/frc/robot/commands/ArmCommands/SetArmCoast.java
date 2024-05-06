@@ -18,8 +18,8 @@ public class SetArmCoast extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    Robot.arm.armLeft.setIdleMode(IdleMode.kCoast);
-    Robot.arm.armRight.setIdleMode(IdleMode.kCoast);
+    Robot.arm.LeftMotor.setIdleMode(IdleMode.kCoast);
+    Robot.arm.RightMotor.setIdleMode(IdleMode.kCoast);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

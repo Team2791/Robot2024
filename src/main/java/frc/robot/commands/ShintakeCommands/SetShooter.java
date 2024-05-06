@@ -28,7 +28,7 @@ public class SetShooter extends Command {
     timer.reset();
     timer.start();
     
-    if(Robot.arm.getArmPot()>60){
+    if(Robot.arm.GetAngle()>60){
       Robot.shintake.setShooter(.5,.5);
     }
     else Robot.shintake.setShooter(1,1);

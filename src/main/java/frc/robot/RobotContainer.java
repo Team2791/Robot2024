@@ -24,7 +24,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ResetGyro;
 import frc.robot.commands.AprilTagCommands.NoteAlign;
-import frc.robot.commands.AprilTagCommands.TagAllignContinuous;
+import frc.robot.commands.AprilTagCommands.TagAlignContinuous;
 import frc.robot.commands.ArmCommands.AmpPivot;
 import frc.robot.commands.ArmCommands.ArmSetAngle;
 import frc.robot.commands.ArmCommands.FullExtensionAmp;
@@ -41,7 +41,6 @@ import frc.robot.commands.ArmCommands.ManualCommands.ManualExtension;
 import frc.robot.commands.ArmCommands.ManualCommands.ManualRetraction;
 import frc.robot.commands.AutoCommands.IntakeReset;
 import frc.robot.commands.AutoCommands.IntakeSequence;
-import frc.robot.commands.ClimberCommands.Climb;
 import frc.robot.commands.ClimberCommands.activate.ClimberActivate;
 import frc.robot.commands.ClimberCommands.activate.ClimberDeactivate;
 // import frc.robot.commands.ClimberCommands.ClimbRelease;
@@ -94,7 +93,7 @@ public class RobotContainer {
 	public static CommandXboxController m_operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
 	public static CommandXboxController m_pitController = new CommandXboxController(2);
 	// The robot's subsystems
-	private final DriveSubsystem m_robotDrive = Robot.m_drivetrain;
+	private final DriveSubsystem m_robotDrive = Robot.drivetrain;
 
 
 	//commands
@@ -164,7 +163,7 @@ public class RobotContainer {
 		// Configure the button bindings
 		configureButtonBindings();
 
-		driverB.whileTrue(new TagAllignContinuous(Robot.camera1, m_robotDrive, m_driverController));
+		driverB.whileTrue(new TagAlignContinuous(Robot.camera1, m_robotDrive, m_driverController));
 		driverLB.whileTrue(new Shoot());
 		driverDPadLeft.whileTrue(new LeftClimbUp());
 		driverDPadRight.whileTrue(new LeftRelease());

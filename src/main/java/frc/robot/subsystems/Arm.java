@@ -7,151 +7,131 @@ package frc.robot.subsystems;
 import org.photonvision.PhotonCamera;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
-import edu.wpi.first.wpilibj.CAN;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
-import frc.robot.Constants;
-import frc.robot.RobotContainer;
-import frc.robot.RobotMap;
-
 
 public class Arm extends SubsystemBase {
-  PhotonCamera camera;
+	PhotonCamera camera;
 
-  public CANSparkMax armLeft;
-  public CANSparkMax armRight;
-  public CANSparkMax extensionMotor;
+	public final CANSparkMax LeftMotor;
+	public final CANSparkMax RightMotor;
+	public final CANSparkMax ExtensionMotor; 
 
-  public final PIDController leftPID;
-  private AnalogPotentiometer armPot;
-  private AnalogPotentiometer extenpot;
-  //private PIDController pid;
-  public PIDController extensionPID;
+	public final RelativeEncoder PivotEncoder;
+	public final AnalogPotentiometer ExtPot;
 
+	public final PIDController PivotCtl;
+	// private PIDController pid;
+	public PIDController extensionPID;
 
-  public double setExtension;
-  public double setpoint;
-  
-  public double power;
+	public double setExtension;
+	public double setpoint;
 
-  private double slope, intercept;
-  private double extSlope, extIntercept;
+	public double power;
 
-  /** Creates a new Turret. */
-  public Arm() {
-    armLeft = new CANSparkMax(32, MotorType.kBrushless);
-    armRight = new CANSparkMax(31, MotorType.kBrushless);
-    armRight.follow(armLeft, true);
-    
-    // armLeft.getPIDController().setOutputRange(-.5, .5);
-    // armRight.getPIDController().setOutputRange(-.5, .5);
+	private final double PivSlope, PivIntercept;
+	private final double ExtSlope, ExtIntercept;
 
-    extensionMotor = new CANSparkMax(33, MotorType.kBrushless);
-    extensionMotor.setIdleMode(IdleMode.kBrake);
+	/** Creates a new Turret. */
+	public Arm() {
+		LeftMotor = new CANSparkMax(32, MotorType.kBrushless);
+		RightMotor = new CANSparkMax(31, MotorType.kBrushless);
+		ExtensionMotor = new CANSparkMax(33, MotorType.kBrushless);
 
-    slope = (ArmConstants.kMaxAngle - ArmConstants.kMinAngle) / (ArmConstants.kMaxPot - ArmConstants.kMinPot);
-    intercept = ArmConstants.kMinAngle - (ArmConstants.kMinPot * slope);
+		RightMotor.follow(LeftMotor, true);
+		ExtensionMotor.setIdleMode(IdleMode.kBrake);
 
-    armPot = new AnalogPotentiometer(1, slope, intercept);
-    armLeft.setIdleMode(IdleMode.kBrake);
-    armRight.setIdleMode(IdleMode.kBrake);
-    extSlope = 100 / (ArmConstants.kExtendMaxPot - ArmConstants.kExtendMinPot);
-    extIntercept = - ArmConstants.kExtendMinPot * extSlope;
-    extenpot = new AnalogPotentiometer(0, extSlope, extIntercept);
+		PivotEncoder = LeftMotor.getEncoder();
 
-    leftPID = new PIDController(.02,0,0);
-    leftPID.setTolerance(1);
+		PivSlope = (ArmConstants.AngleMax - ArmConstants.AngleMin) / (ArmConstants.EncoderMax - ArmConstants.EncoderMin);
+		PivIntercept = ArmConstants.AngleMin - (ArmConstants.EncoderMin * PivSlope);
 
-    setExtension = getExtensionPot();
-    extensionPID = new PIDController(.7,0,0);
+		LeftMotor.setIdleMode(IdleMode.kBrake);
+		RightMotor.setIdleMode(IdleMode.kBrake);
 
-    setpoint = getArmPot();
+		ExtSlope = 100 / (ArmConstants.kExtendMaxPot - ArmConstants.kExtendMinPot);
+		ExtIntercept = -ArmConstants.kExtendMinPot * ExtSlope;
+		ExtPot = new AnalogPotentiometer(0, ExtSlope, ExtIntercept);
 
-  }
+		PivotCtl = new PIDController(.02, 0, 0);
+		PivotCtl.setTolerance(1);
 
+		setExtension = getExtensionPot();
+		extensionPID = new PIDController(.7, 0, 0);
 
-  public void setAngle(double angle){
-    armLeft.setIdleMode(IdleMode.kBrake);
-    power = leftPID.calculate(getArmPot(), angle);
+		setpoint = GetAngle();
+	}
 
-    if(power>.5)power=.5;
-    else if(power<-.5)power=-.5;
+	/** MUST BE CALLED BY A PERIODIC OR EXECUTE */
+	public void StepTowardsAngle(double angle) {
+		LeftMotor.setIdleMode(IdleMode.kBrake);
+		power = PivotCtl.calculate(GetAngle(), angle);
 
-    armLeft.set(power);
-  }
+		if (power > .5) power = .5;
+		else if (power < -.5) power = -.5;
 
-  public void moveUp(double speed){
-    armLeft.set(-speed);
-    //setpoint = getArmPot();
-  }
+		LeftMotor.set(power);
+	}
 
-  public void moveDown(double speed){
-    armLeft.set(speed);
-    //setpoint = getArmPot();
+	public void moveUp(double speed) {
+		LeftMotor.set(-speed);
+		// setpoint = getArmPot();
+	}
 
-  }
+	public void moveDown(double speed) {
+		LeftMotor.set(speed);
+		// setpoint = getArmPot();
 
-  public void hold(){
-    armLeft.set(0);
-    armLeft.setIdleMode(IdleMode.kBrake);
-    armRight.setIdleMode(IdleMode.kBrake);
-  }
+	}
 
+	public void hold() {
+		LeftMotor.set(0);
+		LeftMotor.setIdleMode(IdleMode.kBrake);
+		RightMotor.setIdleMode(IdleMode.kBrake);
+	}
 
-  public double getArmPot(){
-    return armPot.get();
-    //return armLeft.getEncoder().getPosition();
-  }
+	public double GetAngle() {
+		return (PivotEncoder.getPosition() * PivSlope) + PivIntercept;
+	}
 
-  public void manualExtend(){
-    extensionMotor.set(ArmConstants.kExtensionSpeed);
-  }
+	public void manualExtend() {
+		ExtensionMotor.set(ArmConstants.kExtensionSpeed);
+	}
 
-  public void manualRetract(){
-    extensionMotor.set(-ArmConstants.kRetractionSpeed);
-  }
+	public void manualRetract() {
+		ExtensionMotor.set(-ArmConstants.kRetractionSpeed);
+	}
 
-  public double getExtensionPot(){
-    return extenpot.get();
-  }
+	public double getExtensionPot() {
+		return ExtPot.get();
+	}
 
-  public void stopExtension(){
-    extensionMotor.set(0);
-  }
+	public void stopExtension() {
+		ExtensionMotor.set(0);
+	}
 
-  public double getRawPivotPot(){
-    return (getArmPot()-intercept)/slope;
-  }
+	public double RawPivotEncoder() {
+		return PivotEncoder.getPosition();
+	}
 
+	public void ResetPivotEncoder() {
+		PivotEncoder.setPosition(0);
+	}
 
+	@Override
+	public void periodic() {
+		double angle = GetAngle();
+		double extPot = getExtensionPot();
 
-
-  @Override
-  public void periodic() {
-    double armPot = getArmPot();
-    double extPot = getExtensionPot();
-
-    setpoint = getArmPot();
-    SmartDashboard.putNumber("Pivot Angle", armPot);
-    SmartDashboard.putNumber("Raw pivot pot", getRawPivotPot());
-    SmartDashboard.putNumber("Extension", extPot);
-    SmartDashboard.putNumber("Raw extension pot", (extPot - extIntercept) / extSlope);
-    // if(leftPID.atSetpoint()){
-    //   RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, 1);
-    // }
-    //SmartDashboard.putNumber("Encoder", armLeft.getEncoder().getPosition());
-    
-    //armLeft.set(leftPID.calculate(getArmPot(),setpoint)+Constants.ArmConstants.armLeftFF * Math.cos(Math.toRadians(getArmPot())));
-
-  }
-
-
+		SmartDashboard.putNumber("Pivot Angle", angle);
+		SmartDashboard.putNumber("Pivot Raw Encoder", RawPivotEncoder());
+		SmartDashboard.putNumber("Extension", extPot);
+		SmartDashboard.putNumber("Raw extension pot", (extPot - ExtIntercept) / ExtSlope);
+	}
 }

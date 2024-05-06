@@ -52,7 +52,7 @@ public class PhotonAngle extends Command {
 
 	public PhotonAngle() {
 		
-		addRequirements(Robot.m_drivetrain);
+		addRequirements(Robot.drivetrain);
 		addRequirements(Robot.arm);
 	}
 
@@ -113,7 +113,7 @@ public class PhotonAngle extends Command {
 			if(armAngle<0) armAngle=0;
 			if(armAngle>53)armAngle = 53;
 			//armpid.calculate(Robot.arm.getArmPot(),armAngle);
-			Robot.arm.armLeft.set(armpid.calculate(Robot.arm.getArmPot(),armAngle));
+			Robot.arm.LeftMotor.set(armpid.calculate(Robot.arm.GetAngle(),armAngle));
 			SmartDashboard.putNumber("set arm angle", armAngle);
 
 			
@@ -122,15 +122,15 @@ public class PhotonAngle extends Command {
 				RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, .3);
    				RobotContainer.m_operatorController.getHID().setRumble(RumbleType.kBothRumble, .5);
 				x = foundTargets.get().getDetectedCorners().stream().mapToDouble((a) -> a.x).sum() / 4;
-				Robot.arm.armLeft.set(armpid.calculate(Robot.arm.getArmPot(),armAngle));
-				Robot.m_drivetrain.drive(.5*-MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftY(), .5*OIConstants.kDriveDeadband), -MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftX(), OIConstants.kDriveDeadband), drivepid.calculate(x, setPoint), false, false);		
+				Robot.arm.LeftMotor.set(armpid.calculate(Robot.arm.GetAngle(),armAngle));
+				Robot.drivetrain.drive(.5*-MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftY(), .5*OIConstants.kDriveDeadband), -MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftX(), OIConstants.kDriveDeadband), drivepid.calculate(x, setPoint), false, false);		
 			}
 
 
 
 			
 
-      		Robot.m_drivetrain.drive(-MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftY(), OIConstants.kDriveDeadband), -MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftX(), OIConstants.kDriveDeadband), drivepid.calculate(x, setPoint), false, false);
+      		Robot.drivetrain.drive(-MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftY(), OIConstants.kDriveDeadband), -MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftX(), OIConstants.kDriveDeadband), drivepid.calculate(x, setPoint), false, false);
 			//Robot.shintake.setShooter(1,1);
 			
 	}}
@@ -138,7 +138,7 @@ public class PhotonAngle extends Command {
 	else{
 			Robot.arm.hold();
 			Robot.led.setColor(255,0,0);
-			Robot.m_drivetrain.drive(-MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftY(), OIConstants.kDriveDeadband),  -MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftX(), OIConstants.kDriveDeadband), -MathUtil.applyDeadband(RobotContainer.m_driverController.getRightX(),OIConstants.kDriveDeadband) , false, false);
+			Robot.drivetrain.drive(-MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftY(), OIConstants.kDriveDeadband),  -MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftX(), OIConstants.kDriveDeadband), -MathUtil.applyDeadband(RobotContainer.m_driverController.getRightX(),OIConstants.kDriveDeadband) , false, false);
 			RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, 0);
 			RobotContainer.m_operatorController.getHID().setRumble(RumbleType.kBothRumble, 0);
 			Robot.shintake.setShooter(1,1);

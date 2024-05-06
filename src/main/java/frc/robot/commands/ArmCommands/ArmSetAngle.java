@@ -31,7 +31,7 @@ public class ArmSetAngle extends Command {
     if(angle<0) angle=0;
 			if(angle>53)angle = 53;
 
-			Robot.arm.setAngle(angle);
+			Robot.arm.StepTowardsAngle(angle);
 
   }
 
@@ -49,6 +49,6 @@ public class ArmSetAngle extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Robot.arm.leftPID.atSetpoint();
+    return Robot.arm.PivotCtl.atSetpoint();
   }
 }
