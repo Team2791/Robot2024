@@ -21,7 +21,7 @@ public class ShootCommand extends Command {
   public void initialize() {
     timer.reset();
     timer.start();
-    Robot.shintake.setShooter(1,1);
+    Robot.shintake.setShooter(0.5,0.5);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

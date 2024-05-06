@@ -10,9 +10,9 @@ import frc.robot.Robot;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ClimberConstants;
 
-public class Climb extends Command {
+public class climb extends Command {
   /** Creates a new Climb. */
-  public Climb() {
+  public climb() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
