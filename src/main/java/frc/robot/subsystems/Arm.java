@@ -8,6 +8,8 @@ import org.photonvision.PhotonCamera;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
@@ -26,13 +28,12 @@ public class Arm extends SubsystemBase {
 	public final RelativeEncoder PivotEncoder;
 	public final AnalogPotentiometer ExtPot;
 
-	public final PIDController PivotCtl;
 	// private PIDController pid;
+	private SparkPIDController PivotCtl;
 	public PIDController extensionPID;
 
 	public double setExtension;
 	public double setpoint;
-
 	public double power;
 
 	private final double PivSlope, PivIntercept;
@@ -45,9 +46,9 @@ public class Arm extends SubsystemBase {
 		ExtensionMotor = new CANSparkMax(33, MotorType.kBrushless);
 
 		RightMotor.follow(LeftMotor, true);
-		ExtensionMotor.setIdleMode(IdleMode.kBrake);
-
 		PivotEncoder = LeftMotor.getEncoder();
+		
+		ExtensionMotor.setIdleMode(IdleMode.kBrake);
 
 		PivSlope = (ArmConstants.AngleMax - ArmConstants.AngleMin) / (ArmConstants.EncoderMax - ArmConstants.EncoderMin);
 		PivIntercept = ArmConstants.AngleMin - (ArmConstants.EncoderMin * PivSlope);
@@ -59,8 +60,12 @@ public class Arm extends SubsystemBase {
 		ExtIntercept = -ArmConstants.kExtendMinPot * ExtSlope;
 		ExtPot = new AnalogPotentiometer(0, ExtSlope, ExtIntercept);
 
-		PivotCtl = new PIDController(.02, 0, 0);
-		PivotCtl.setTolerance(1);
+		PivotCtl = LeftMotor.getPIDController();
+		PivotCtl.setP(0.02);
+		PivotCtl.setI(0);
+		PivotCtl.setD(0);
+		PivotCtl.setFF(0);
+		PivotCtl.setSmartMotionMaxAccel(0.2, 0);
 
 		setExtension = getExtensionPot();
 		extensionPID = new PIDController(.7, 0, 0);
@@ -68,15 +73,14 @@ public class Arm extends SubsystemBase {
 		setpoint = GetAngle();
 	}
 
-	/** MUST BE CALLED BY A PERIODIC OR EXECUTE */
-	public void StepTowardsAngle(double angle) {
+	public void SetAngleTarget(double angle) {
 		LeftMotor.setIdleMode(IdleMode.kBrake);
-		power = PivotCtl.calculate(GetAngle(), angle);
+		setpoint = (angle - PivIntercept) / PivSlope;
+		PivotCtl.setReference(setpoint, ControlType.kPosition);
+	}
 
-		if (power > .5) power = .5;
-		else if (power < -.5) power = -.5;
-
-		LeftMotor.set(power);
+	public boolean AtAngleTarget() {
+		return Math.abs(RawPivotEncoder() - setpoint) < 2;
 	}
 
 	public void moveUp(double speed) {
@@ -94,6 +98,8 @@ public class Arm extends SubsystemBase {
 		LeftMotor.set(0);
 		LeftMotor.setIdleMode(IdleMode.kBrake);
 		RightMotor.setIdleMode(IdleMode.kBrake);
+
+		SetAngleTarget(GetAngle());
 	}
 
 	public double GetAngle() {
@@ -128,6 +134,7 @@ public class Arm extends SubsystemBase {
 	public void periodic() {
 		double angle = GetAngle();
 		double extPot = getExtensionPot();
+
 
 		SmartDashboard.putNumber("Pivot Angle", angle);
 		SmartDashboard.putNumber("Pivot Raw Encoder", RawPivotEncoder());

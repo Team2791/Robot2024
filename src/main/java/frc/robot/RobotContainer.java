@@ -183,8 +183,9 @@ public class RobotContainer {
 		operatorY.whileTrue(new SpitOut());
 		operatorB.whileTrue(new SequentialCommandGroup(new AmpPivot(), new FullExtensionAmp(), new SetShooter()));
 		operatorB.whileFalse(new SequentialCommandGroup(new ParallelCommandGroup(new ResetPosition(), new FullRetraction())));
-		operatorRB.whileTrue(new ManualExtension());
-		operatorLB.whileTrue(new ManualRetraction());
+//		operatorRB.whileTrue(new ManualExtension());
+//		operatorLB.whileTrue(new ManualRetraction());
+
 		operatorLeftYNeg.whileTrue(manualangledown);
 		operatorLeftYPos.whileTrue(manualangleup);//manualangleup
 
@@ -198,8 +199,6 @@ public class RobotContainer {
 		pitX.whileTrue(new ShootCommand());
 		pitA.toggleOnTrue(new LinearLock());
 		pitB.toggleOnTrue(new LinearUnlock());
-
-
 
 
 
