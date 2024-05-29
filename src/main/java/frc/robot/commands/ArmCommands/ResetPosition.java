@@ -16,7 +16,11 @@ public class ResetPosition extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    Robot.arm.moveUp(.2);
+
+    //if(Robot.arm.armLeft.getEncoder().getPosition()>20) {Robot.arm.moveDown(.2);}
+
+    //else{ 
+    Robot.arm.moveUp(.2);//}  
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -35,6 +39,6 @@ public class ResetPosition extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Robot.arm.armLeft.getEncoder().getPosition()>15;
+    return Robot.arm.armLeft.getEncoder().getPosition()<10;
   }
 }

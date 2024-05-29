@@ -173,12 +173,12 @@ public class RobotContainer {
 		driverTinyLeft.whileTrue(new ResetGyro());
 
 		//operatorX.whileTrue(new SetShooter());
-		operatorX.whileTrue(new PhotonAngle());
-		operatorX.whileFalse(new ArmSetAngle(0));
+		operatorX.whileTrue(new SetShooter());
+		operatorX.whileFalse(new ResetPosition());
 		operatorA.whileTrue(new ParallelCommandGroup(new IntakeSequence(), new Intake()));
 		operatorA.whileFalse(new IntakeReset());
 		operatortinyright.whileTrue(new Intake());
-		operatorTinyLeft.whileTrue(new SetShooter());
+		//operatorTinyLeft.whileTrue(new SetShooter());
 	
 		
 		operatorY.whileTrue(new SpitOut());
