@@ -183,11 +183,11 @@ public class RobotContainer {
 		
 		operatorY.whileTrue(new SpitOut());
 		operatorB.whileTrue(new SequentialCommandGroup(new AmpPivot(), new FullExtensionAmp(), new SetShooter()));
-		operatorB.whileFalse(new SequentialCommandGroup(new ParallelCommandGroup(new ResetPosition(), new FullRetraction())));
+		operatorB.whileFalse(new SequentialCommandGroup(new ResetPosition(), new FullRetraction()));
 		operatorRB.whileTrue(new ManualExtension());
 		operatorLB.whileTrue(new ManualRetraction());
-		operatorLeftYNeg.whileTrue(manualangledown);
-		operatorLeftYPos.whileTrue(manualangleup);//manualangleup
+		operatorLeftYNeg.whileTrue(new ManualAngleDown());
+		operatorLeftYPos.whileTrue(new ManualAngleUp());//manualangleup
 
 		operatorRightYPos.whileTrue(new ClimberActivate());
 		operatorRightYNeg.whileTrue(new ClimberDeactivate());

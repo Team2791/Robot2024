@@ -96,7 +96,6 @@ public class Arm extends SubsystemBase {
   public void moveDown(double speed){
     armLeft.set(speed);
     //setpoint = getArmPot();
-
   }
 
   public void hold(){
@@ -144,6 +143,7 @@ public class Arm extends SubsystemBase {
     SmartDashboard.putNumber("Raw pivot pot", getRawPivotPot());
     SmartDashboard.putNumber("Extension", extPot);
     SmartDashboard.putNumber("Raw extension pot", (extPot - extIntercept) / extSlope);
+    SmartDashboard.putNumber("Raw extension ENC", armLeft.getEncoder().getPosition());
     // if(leftPID.atSetpoint()){
     //   RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, 1);
     // }

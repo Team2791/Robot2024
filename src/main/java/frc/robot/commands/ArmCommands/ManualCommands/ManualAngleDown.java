@@ -37,14 +37,15 @@ public class ManualAngleDown extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    timer.reset();
-    timer.start();
+    //timer.reset();
+    //timer.start();
     Robot.arm.hold();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Robot.arm.getArmPot()>95;
+    return false;
+    //return Robot.arm.getArmPot()>95;
   }
 }

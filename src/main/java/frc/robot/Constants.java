@@ -188,9 +188,9 @@ public final class Constants {
 
 		public static final double armLeftFF = .1;
 		
-		public static final double kArmSpeedDown = 0.15; //max pivot down speed
-		public static final double kArmSpeedUp = 0.15; //max pivot up speed
-		public static final double kArmPivotIntakePos = 2; //intake setpoint
+		public static final double kArmSpeedDown = 0.2; //max pivot down speed
+		public static final double kArmSpeedUp = 0.2; //max pivot up speed
+		public static final double kArmPivotIntakePos = 8; //intake setpoint
 
 
 		public static double kMinPot = .3667;//3593
