@@ -41,7 +41,6 @@ import frc.robot.commands.ArmCommands.ManualCommands.ManualExtension;
 import frc.robot.commands.ArmCommands.ManualCommands.ManualRetraction;
 import frc.robot.commands.AutoCommands.IntakeReset;
 import frc.robot.commands.AutoCommands.IntakeSequence;
-import frc.robot.commands.ClimberCommands.Climb;
 import frc.robot.commands.ClimberCommands.activate.ClimberActivate;
 import frc.robot.commands.ClimberCommands.activate.ClimberDeactivate;
 // import frc.robot.commands.ClimberCommands.ClimbRelease;

@@ -11,7 +11,7 @@ public class ManualAngleDown extends Command {
 	public ManualAngleDown() {}
 
 	public void execute() {
-		Robot.arm.pivot(false);
+		// Robot.arm.pivot(false);
 	}
 
 	public boolean isFinished() {

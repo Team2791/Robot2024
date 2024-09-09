@@ -67,6 +67,8 @@ public class Robot extends TimedRobot {
 		
 		shintake = new Shintake();
 
+
+		frckt.robot.AppKt.test();
 		
 		final UsbCamera drivercam = CameraServer.startAutomaticCapture();
 		VideoMode videoMode = new VideoMode(1, 320, 240, 100);//VideoMode.PixelFormat.kMJPEG
