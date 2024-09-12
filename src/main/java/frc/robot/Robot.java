@@ -13,7 +13,11 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.*;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.RGBLED;
+import frc.robot.subsystems.Shintake;
+import frckt.robot.subsystems.Drivetrain;
 import org.photonvision.PhotonCamera;
 
 /**
@@ -26,7 +30,7 @@ public class Robot extends TimedRobot {
     public static Arm arm;
     public static Shintake shintake;
     public static Climber climber;
-    public static DriveSubsystem m_drivetrain;
+    public static Drivetrain m_drivetrain;
     //public static PhotonEstimator estimator;
     //public static PhotonEstimator photonestimator;
     public static PhotonCamera camera1;
@@ -62,7 +66,7 @@ public class Robot extends TimedRobot {
         // Instantiate our RobotContainer. This will perform all our button bindings,
         // and put our
         // autonomous chooser on the dashboard.
-        m_drivetrain = new DriveSubsystem();
+        m_drivetrain = new Drivetrain();
         m_robotContainer = new RobotContainer();
         climber = new Climber();
 

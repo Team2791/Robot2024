@@ -5,16 +5,19 @@ import com.pathplanner.lib.auto.AutoBuilder
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig
 import com.pathplanner.lib.util.PIDConstants
 import com.pathplanner.lib.util.ReplanningConfig
+
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator
 import edu.wpi.first.math.filter.SlewRateLimiter
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.kinematics.ChassisSpeeds
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics
+import edu.wpi.first.math.kinematics.SwerveModuleState
 import edu.wpi.first.util.WPIUtilJNI
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.SPI
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+
 import frckt.robot.constants.AutoConstants
 import frckt.robot.constants.CanIds
 import frckt.robot.constants.DriveConstants
@@ -22,6 +25,7 @@ import frckt.robot.swerve.SwerveModule
 import frckt.robot.swerve.angleDifference
 import frckt.robot.swerve.normalizeAngle
 import frckt.robot.swerve.stepTowardsAngle
+
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.atan2
@@ -131,7 +135,14 @@ class Drivetrain : SubsystemBase() {
         )
     }
 
-    fun drive(speeds: ChassisSpeeds, rateLimit: Boolean) {
+    /**
+     * Swerve drive control
+     *
+     * @param speeds The desired field-relative speeds
+     * @param fieldRelative Whether the speeds are field-relative
+     * @param rateLimit Whether to rate limit the translation and rotation speeds
+     */
+    fun drive(speeds: ChassisSpeeds, fieldRelative: Boolean = true, rateLimit: Boolean = true) {
         var xspeed = speeds.vxMetersPerSecond
         var yspeed = speeds.vyMetersPerSecond
         var rspeed = speeds.omegaRadiansPerSecond
@@ -143,19 +154,19 @@ class Drivetrain : SubsystemBase() {
         if (rateLimit) {
             val theta = atan2(yspeed, xspeed)
             val mag = hypot(yspeed, xspeed)
-            val angleDiff = angleDifference(theta, translationDir)
+            val offset = angleDifference(theta, translationDir)
             val slew = when {
                 translationMag == 0.0 -> 500.0
                 else -> abs(DriveConstants.SlewRate.kDirection / translationMag)
             }
 
             when {
-                angleDiff < 0.45 * PI -> {
+                offset < 0.45 * PI -> {
                     translationDir = stepTowardsAngle(translationDir, theta, slew * elapsed)
                     translationMag = magLimiter.calculate(mag)
                 }
 
-                angleDiff > 0.85 * PI -> {
+                offset > 0.85 * PI -> {
                     if (translationMag > 1e-4) {
                         translationDir = normalizeAngle(translationDir + PI)
                         translationMag = magLimiter.calculate(mag)
@@ -179,9 +190,38 @@ class Drivetrain : SubsystemBase() {
         yspeed *= DriveConstants.kMaxSpeedMps
         rspeed *= DriveConstants.kMaxSpeedAnglular
 
-        chassisSpeeds = ChassisSpeeds(xspeed, yspeed, rspeed)
+        chassisSpeeds = when {
+            fieldRelative -> ChassisSpeeds.fromFieldRelativeSpeeds(xspeed, yspeed, rspeed, heading)
+            else -> ChassisSpeeds(xspeed, yspeed, rspeed)
+        }
     }
 
-    fun drive(speeds: ChassisSpeeds) = drive(speeds, true)
-    fun drive(xspeed: Double, yspeed: Double, rspeed: Double) = drive(ChassisSpeeds(xspeed, yspeed, rspeed))
+    /**
+     * Swerve drive control with manual speed inputs
+     *
+     * @param xspeed The desired x-axis speed in meters per second
+     * @param yspeed The desired y-axis speed in meters per second
+     * @param rspeed The desired rotation speed in radians per second
+     * @param fieldRelative Whether the speeds are field-relative
+     * @param rateLimit Whether to rate limit the translation and rotation speeds
+     */
+    fun drive(xspeed: Double, yspeed: Double, rspeed: Double, fieldRelative: Boolean, rateLimit: Boolean) =
+        drive(ChassisSpeeds(xspeed, yspeed, rspeed), fieldRelative, rateLimit)
+
+    fun resetGyro() = gyro.reset()
+
+    /**
+     * Stop the movement of the drivetrain
+     */
+    fun stop() = modules.forEach(SwerveModule::stop)
+
+    /**
+     * Lock the drivetrain in place with an X formation of the wheels
+     */
+    fun lock() {
+        frontLeft.desiredState = SwerveModuleState(0.0, Rotation2d.fromDegrees(45.0))
+        frontRight.desiredState = SwerveModuleState(0.0, Rotation2d.fromDegrees(-45.0))
+        rearLeft.desiredState = SwerveModuleState(0.0, Rotation2d.fromDegrees(-45.0))
+        rearRight.desiredState = SwerveModuleState(0.0, Rotation2d.fromDegrees(45.0))
+    }
 }
