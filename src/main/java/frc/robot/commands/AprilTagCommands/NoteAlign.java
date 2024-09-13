@@ -37,9 +37,9 @@ public class NoteAlign extends Command {
         if (result != null && result.hasTargets()) {
             output = pid.calculate(result.getBestTarget().getYaw()); // -8
 
-            Drivetrain.drive(0, -output, 0, false, false);
+            Robot.m_drivetrain.drive(0, -output, 0, false, false);
             if (result.getBestTarget().getYaw() < nonPIDTolerance && result.getBestTarget().getYaw() > -nonPIDTolerance) {
-                Drivetrain.stop();
+                Robot.m_drivetrain.stop();
             }
         }
 
@@ -51,7 +51,7 @@ public class NoteAlign extends Command {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        Drivetrain.stop();
+        Robot.m_drivetrain.stop();
     }
 
     // Returns true when the command should end.
