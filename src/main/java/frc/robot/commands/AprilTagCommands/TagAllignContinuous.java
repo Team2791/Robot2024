@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.OIConstants;
-import frckt.robot.subsystems.Drivetrain;
+import frc.robotkt.subsystems.Drivetrain;
 import org.photonvision.PhotonCamera;
 
 public class TagAllignContinuous extends Command {
@@ -77,7 +77,7 @@ public class TagAllignContinuous extends Command {
     @Override
     public void end(boolean interrupted) {
         controller.setRumble(RumbleType.kBothRumble, 0);
-        drivetrain.stopModules();
+        drivetrain.stop();
     }
 
     // Returns true when the command should end.

@@ -1,4 +1,4 @@
-package frckt.robot.subsystems
+package frc.robotkt.subsystems
 
 import com.kauailabs.navx.frc.AHRS
 import com.pathplanner.lib.auto.AutoBuilder
@@ -16,15 +16,16 @@ import edu.wpi.first.math.kinematics.SwerveModuleState
 import edu.wpi.first.util.WPIUtilJNI
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.SPI
+import edu.wpi.first.wpilibj.smartdashboard.Field2d
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
-
-import frckt.robot.constants.AutoConstants
-import frckt.robot.constants.CanIds
-import frckt.robot.constants.DriveConstants
-import frckt.robot.swerve.SwerveModule
-import frckt.robot.swerve.angleDifference
-import frckt.robot.swerve.normalizeAngle
-import frckt.robot.swerve.stepTowardsAngle
+import frc.robotkt.constants.AutoConstants
+import frc.robotkt.constants.CanIds
+import frc.robotkt.constants.DriveConstants
+import frc.robotkt.swerve.SwerveModule
+import frc.robotkt.swerve.angleDifference
+import frc.robotkt.swerve.normalizeAngle
+import frc.robotkt.swerve.stepTowardsAngle
 
 import kotlin.math.PI
 import kotlin.math.abs
@@ -63,8 +64,11 @@ class Drivetrain : SubsystemBase() {
     val magLimiter = SlewRateLimiter(DriveConstants.SlewRate.kMagnitude)
     val rotLimiter = SlewRateLimiter(DriveConstants.SlewRate.kRotation)
 
-    val heading: Rotation2d
-        get() = Rotation2d.fromDegrees(gyro.angle * DriveConstants.kGyroFactor)
+    val heading
+        get() = Rotation2d.fromDegrees(gyro.angle * DriveConstants.kGyroFactor)!!
+
+    val gyroAngle
+        get() = Rotation2d.fromDegrees(gyro.angle)!!
 
     val modules
         get() = listOf(frontLeft, frontRight, rearLeft, rearRight)
@@ -97,6 +101,8 @@ class Drivetrain : SubsystemBase() {
         Pose2d()
     )
 
+    val field = Field2d()
+
     var timer = WPIUtilJNI.now() * 1e-6
 
     var rotation = 0.0
@@ -127,7 +133,7 @@ class Drivetrain : SubsystemBase() {
                 ReplanningConfig()
             ),
             {
-                val alliance = DriverStation.getAlliance()
+                val alliance = DriverStation.getAlliance()!!
                 if (alliance.isPresent) alliance.get() == DriverStation.Alliance.Red
                 else false
             },
@@ -208,7 +214,15 @@ class Drivetrain : SubsystemBase() {
     fun drive(xspeed: Double, yspeed: Double, rspeed: Double, fieldRelative: Boolean, rateLimit: Boolean) =
         drive(ChassisSpeeds(xspeed, yspeed, rspeed), fieldRelative, rateLimit)
 
+    /**
+     * Reset the gyro angle to zero
+     */
     fun resetGyro() = gyro.reset()
+
+    /**
+     * Reset the swerve encoders
+     */
+    fun resetEncoders() = modules.forEach(SwerveModule::resetEncoders)
 
     /**
      * Stop the movement of the drivetrain
@@ -223,5 +237,18 @@ class Drivetrain : SubsystemBase() {
         frontRight.desiredState = SwerveModuleState(0.0, Rotation2d.fromDegrees(-45.0))
         rearLeft.desiredState = SwerveModuleState(0.0, Rotation2d.fromDegrees(-45.0))
         rearRight.desiredState = SwerveModuleState(0.0, Rotation2d.fromDegrees(45.0))
+    }
+
+    override fun periodic() {
+        // Update the odometry
+        odometry.updateWithTime(WPIUtilJNI.now() * 1e-6, heading, modulePositions)
+        field.robotPose = odometry.estimatedPosition
+
+        // SmartDashboard updates
+        SmartDashboard.putNumber("Heading (degrees)", heading.degrees)
+        SmartDashboard.putNumber("X Speed (m/s)", chassisSpeeds.vxMetersPerSecond)
+        SmartDashboard.putNumber("Y Speed (m/s)", chassisSpeeds.vyMetersPerSecond)
+        SmartDashboard.putNumber("Rotation Speed (rad/s)", chassisSpeeds.omegaRadiansPerSecond)
+        SmartDashboard.putData(field)
     }
 }

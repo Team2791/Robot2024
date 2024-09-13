@@ -17,7 +17,8 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.RGBLED;
 import frc.robot.subsystems.Shintake;
-import frckt.robot.subsystems.Drivetrain;
+import frc.robotkt.subsystems.Drivetrain;
+import frc.robotkt.subsystems.PhotonEstimator;
 import org.photonvision.PhotonCamera;
 
 /**
@@ -37,6 +38,7 @@ public class Robot extends TimedRobot {
     public static PhotonCamera camera2;
     public static PowerDistribution pdp;
     public static RGBLED led;
+    public static PhotonEstimator poseEstimator;
     private Command m_autonomousCommand;
     private RobotContainer m_robotContainer;
 
@@ -72,6 +74,7 @@ public class Robot extends TimedRobot {
 
         pdp = new PowerDistribution(1, ModuleType.kRev);
         led.setColor(0, 0, 255);
+        poseEstimator = new PhotonEstimator(camera1, m_drivetrain);
         //Robot.arm.armLeft.getEncoder().setPosition(0);
         //estimator = new PhotonEstimator(camera1, m_drivetrain);
 

@@ -1,4 +1,4 @@
-package frckt.robot.constants
+package frc.robotkt.constants
 
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics

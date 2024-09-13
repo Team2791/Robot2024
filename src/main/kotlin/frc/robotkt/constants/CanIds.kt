@@ -1,4 +1,4 @@
-package frckt.robot.constants
+package frc.robotkt.constants
 
 object CanIds {
     object Drivetrain {

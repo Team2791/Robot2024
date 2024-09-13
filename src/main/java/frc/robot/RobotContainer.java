@@ -36,7 +36,7 @@ import frc.robot.commands.PitstickCommands.RightClimbUp;
 import frc.robot.commands.PitstickCommands.RightRelease;
 import frc.robot.commands.ResetGyro;
 import frc.robot.commands.ShintakeCommands.*;
-import frckt.robot.subsystems.Drivetrain;
+import frc.robotkt.subsystems.Drivetrain;
 
 /*
  * This class is where the bulk of the robot should be declared. Since Command-based is a

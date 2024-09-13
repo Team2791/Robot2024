@@ -1,4 +1,4 @@
-package frckt.robot.constants
+package frc.robotkt.constants
 
 object AutoConstants {
     object TranslationPid {
@@ -12,6 +12,6 @@ object AutoConstants {
         const val kI = 0.0
         const val kD = 0.0
     }
-    
+
     const val kMaxModuleSpeed = 6.0
 }

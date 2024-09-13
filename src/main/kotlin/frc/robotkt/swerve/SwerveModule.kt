@@ -1,4 +1,4 @@
-package frckt.robot.swerve
+package frc.robotkt.swerve
 
 import com.revrobotics.CANSparkBase.ControlType
 import com.revrobotics.CANSparkLowLevel.MotorType
@@ -10,8 +10,7 @@ import com.revrobotics.SparkPIDController
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.kinematics.SwerveModulePosition
 import edu.wpi.first.math.kinematics.SwerveModuleState
-
-import frckt.robot.constants.ModuleConstants
+import frc.robotkt.constants.ModuleConstants
 
 class SwerveModule(driveID: Int, turnID: Int, val angularOffset: Double) {
     val drive = CANSparkMax(driveID, MotorType.kBrushless)

@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.Robot;
+import frc.robotkt.subsystems.Drivetrain;
 import org.photonvision.PhotonCamera;
 
 public class PhotonEstimator extends SubsystemBase {
@@ -29,14 +29,14 @@ public class PhotonEstimator extends SubsystemBase {
     private final Field2d field2d = new Field2d();
     private final boolean sawTag = false;
     PhotonCamera camera;
-    DriveSubsystem drivetrain;
+    Drivetrain drivetrain;
     private OriginPosition originPosition = OriginPosition.kBlueAllianceWallRightSide;
     private double previousTimeStamp = 0;
 
     /**
      * Creates a new PoseEstimator.
      */
-    public PhotonEstimator(PhotonCamera camera, DriveSubsystem drivetrain) {
+    public PhotonEstimator(PhotonCamera camera, Drivetrain drivetrain) {
         this.camera = camera;
         this.drivetrain = drivetrain;
 
@@ -64,7 +64,7 @@ public class PhotonEstimator extends SubsystemBase {
             // Since a tag was seen, and the tags are all relative to the coordinate system, the estimated pose
             // needs to be transformed to the new coordinate system.
             var newPose = flipAlliance(getCurrentPose());
-            Robot.m_drivetrain.getOdometry().resetPosition(drivetrain.getGyroscopeRotation(), drivetrain.getModulePositions(), newPose);
+            drivetrain.getOdometry().resetPosition(drivetrain.getGyroAngle(), drivetrain.getModulePositions(), newPose);
         }
     }
 
@@ -102,14 +102,14 @@ public class PhotonEstimator extends SubsystemBase {
                 Pose3d camPose = targetPose.transformBy(camToTarget.inverse());
 
                 var visionMeasurement = camPose.transformBy(Constants.VisionConstants.APRILTAG_CAMERA_TO_ROBOT);
-                Robot.m_drivetrain.getOdometry().addVisionMeasurement(visionMeasurement.toPose2d(), previousTimeStamp, visionMeasurementStdDevs);
+                drivetrain.getOdometry().addVisionMeasurement(visionMeasurement.toPose2d(), previousTimeStamp, visionMeasurementStdDevs);
 
             }
 
             // This method will be called once per scheduler run
         }
 
-        Robot.m_drivetrain.getOdometry().updateWithTime(resultTimestamp, drivetrain.getGyroscopeRotation(), drivetrain.getModulePositions());
+        drivetrain.getOdometry().updateWithTime(resultTimestamp, drivetrain.getGyroAngle(), drivetrain.getModulePositions());
         field2d.setRobotPose(getCurrentPose());
         SmartDashboard.putData(field2d);
 
@@ -117,7 +117,7 @@ public class PhotonEstimator extends SubsystemBase {
     }
 
     public Pose2d getCurrentPose() {
-        return Robot.m_drivetrain.getOdometry().getEstimatedPosition();
+        return drivetrain.getOdometry().getEstimatedPosition();
     }
 
 
