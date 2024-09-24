@@ -1,7 +1,7 @@
 package frc.robotkt.constants
 
-object CanIds {
-    object Drivetrain {
+object IOConstants {
+    object DrivetrainCan {
         const val kFrontLeftDrive = 40
         const val kFrontRightDrive = 30
         const val kRearLeftDrive = 20
@@ -11,5 +11,18 @@ object CanIds {
         const val kFrontRightTurn = 35
         const val kRearLeftTurn = 25
         const val kRearRightTurn = 15
+    }
+
+    object ArmCan {
+        const val kRightMotor = 31
+        const val kLeftMotor = 32
+        const val kExtMotor = 33
+        const val kPotChannel = 0
+    }
+
+    object Controller {
+        const val kDriverPort = 0
+        const val kOperatorPort = 1
+        const val kDeadband = 0.1
     }
 }

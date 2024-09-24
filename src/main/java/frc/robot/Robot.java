@@ -4,22 +4,10 @@
 
 package frc.robot;
 
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.cscore.UsbCamera;
-import edu.wpi.first.cscore.VideoMode;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.RGBLED;
-import frc.robot.subsystems.Shintake;
-import frc.robotkt.subsystems.Drivetrain;
-import frc.robotkt.subsystems.PhotonEstimator;
-import org.photonvision.PhotonCamera;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -28,166 +16,57 @@ import org.photonvision.PhotonCamera;
  * project.
  */
 public class Robot extends TimedRobot {
-    public static Arm arm;
-    public static Shintake shintake;
-    public static Climber climber;
-    public static Drivetrain m_drivetrain;
-    //public static PhotonEstimator estimator;
-    //public static PhotonEstimator photonestimator;
-    public static PhotonCamera camera1;
-    public static PhotonCamera camera2;
-    public static PowerDistribution pdp;
-    public static RGBLED led;
-    public static PhotonEstimator poseEstimator;
-    private Command m_autonomousCommand;
-    private RobotContainer m_robotContainer;
+    private final RobotContainer container = new RobotContainer();
+    private Command auto;
 
     /**
-     * This function is run when the robot is first started up and should be used
-     * for any
      * initialization code.
      */
-    @Override
     public void robotInit() {
-
-
-        camera1 = new PhotonCamera("2791camera");
-        camera1.setDriverMode(false);
-        camera2 = new PhotonCamera("drivercam");
-        camera2.setDriverMode(true);
-
-        shintake = new Shintake();
-
-
-        final UsbCamera drivercam = CameraServer.startAutomaticCapture();
-        VideoMode videoMode = new VideoMode(1, 320, 240, 100);//VideoMode.PixelFormat.kMJPEG
-        drivercam.setVideoMode(videoMode);
-        led = new RGBLED();
-        //CameraServer.startAutomaticCapture();
-        arm = new Arm();
-        // Instantiate our RobotContainer. This will perform all our button bindings,
-        // and put our
-        // autonomous chooser on the dashboard.
-        m_drivetrain = new Drivetrain();
-        m_robotContainer = new RobotContainer();
-        climber = new Climber();
-
-        pdp = new PowerDistribution(1, ModuleType.kRev);
-        led.setColor(0, 0, 255);
-        poseEstimator = new PhotonEstimator(camera1, m_drivetrain);
-        //Robot.arm.armLeft.getEncoder().setPosition(0);
-        //estimator = new PhotonEstimator(camera1, m_drivetrain);
-
-        //photonestimator = new PhotonEstimator(camera1, m_drivetrain);
-
-        //Constants.ArmConstants.kMinPot = Robot.arm.getRawPivotPot();
-
-
     }
 
     /**
-     * This function is called every 20 ms, no matter the mode. Use this for items
-     * like diagnostics
-     * that you want ran during disabled, autonomous, teleoperated and test.
-     *
-     * <p>
-     * This runs after the mode specific periodic functions, but before LiveWindow
-     * and
-     * SmartDashboard integrated updating.
+     * Called every 20ms
      */
     @Override
     public void robotPeriodic() {
-
-        // SmartDashboard.putNumber("Radio VRM", pdp.getCurrent(15));
-        // SmartDashboard.putNumber("Brain Box", pdp.getCurrent(16));
-        // SmartDashboard.putNumber("Raspi VRM", pdp.getCurrent(19));
-
-
-        // Runs the Scheduler. This is responsible for polling buttons, adding
-        // newly-scheduled
-        // commands, running already-scheduled commands, removing finished or
-        // interrupted commands,
-        // and running subsystem periodic() methods. This must be called from the
-        // robot's periodic
-        // block in order for anything in the Command-based framework to work.
+        // Run the command scheduler
         CommandScheduler.getInstance().run();
     }
 
     /**
      * This function is called once each time the robot enters Disabled mode.
      */
-    @Override
     public void disabledInit() {
-        led.setColor(0, 255, 0);
-    }
-
-    @Override
-    public void disabledPeriodic() {
+        container.led.setColor(255, 0, 0);
     }
 
     /**
-     * This autonomous runs the autonomous command selected by your
-     * {@link RobotContainer} class.
+     * Runs the autonomous command.
      */
-    @Override
     public void autonomousInit() {
+        auto = this.container.getAutonomousCommand();
+        if (auto == null) return;
 
-
-        m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-        /*
-         * String autoSelected = SmartDashboard.getString("Auto Selector",
-         * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-         * = new MyAutoCommand(); break; case "Default Auto": default:
-         * autonomousCommand = new ExampleCommand(); break; }
-         */
-
-        // schedule the autonomous command (example)
-        if (m_autonomousCommand != null) {
-            m_autonomousCommand.schedule();
-        }
+        auto.schedule();
     }
 
-    /**
-     * This function is called periodically during autonomous.
-     */
-    @Override
-    public void autonomousPeriodic() {
-    }
-
-    @Override
     public void teleopInit() {
-        RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, 0);
-        RobotContainer.m_operatorController.getHID().setRumble(RumbleType.kBothRumble, 0);
-        Robot.led.setColor(255, 255, 255);
+        auto.cancel();
 
-        //Constants.ArmConstants.kMinPot = Robot.arm.getRawPivotPot();
-        // This makes sure that the autonomous stops running when
-        // teleop starts running. If you want the autonomous to
-        // continue until interrupted by another command, remove
-        // this line or comment it out.
-        if (m_autonomousCommand != null) {
-            m_autonomousCommand.cancel();
-        }
+        RobotContainer.driverctl.getHID().setRumble(RumbleType.kBothRumble, 0);
+        RobotContainer.operctl.getHID().setRumble(RumbleType.kBothRumble, 0);
+
+        container.led.setColor(255, 255, 255);
     }
 
     /**
      * This function is called periodically during operator control.
      */
-    @Override
     public void teleopPeriodic() {
     }
 
-    @Override
     public void testInit() {
-        // Cancels all running commands at the start of test mode.
         CommandScheduler.getInstance().cancelAll();
-    }
-
-    /**
-     * This function is called periodically during test mode.
-     */
-    @Override
-    public void testPeriodic() {
     }
 }

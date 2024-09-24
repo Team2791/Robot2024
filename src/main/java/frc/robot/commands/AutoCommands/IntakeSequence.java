@@ -6,18 +6,18 @@ package frc.robot.commands.AutoCommands;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.ArmCommands.FullExtensionIntake;
-import frc.robot.commands.ArmCommands.IntakeDownCommand;
-import frc.robot.commands.ArmCommands.IntakePivot;
+import frc.robot.commands.ArmCommands.ArmToGround;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class IntakeSequence extends SequentialCommandGroup {
-  /** Creates a new IntakeSequence. */
-  public IntakeSequence() {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new ParallelCommandGroup(new IntakePivot(), new FullExtensionIntake()), new IntakeDownCommand());
-  }
+    /**
+     * Creates a new IntakeSequence.
+     */
+    public IntakeSequence() {
+        // Add your commands in the addCommands() call, e.g.
+        // addCommands(new FooCommand(), new BarCommand());
+        addCommands(new ParallelCommandGroup(new IntakePivot(), new IntakeExtension()), new ArmToGround());
+    }
 }

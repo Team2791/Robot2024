@@ -5,7 +5,7 @@ import com.pathplanner.lib.auto.AutoBuilder
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig
 import com.pathplanner.lib.util.PIDConstants
 import com.pathplanner.lib.util.ReplanningConfig
-
+import edu.wpi.first.math.MathUtil
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator
 import edu.wpi.first.math.filter.SlewRateLimiter
 import edu.wpi.first.math.geometry.Pose2d
@@ -19,14 +19,15 @@ import edu.wpi.first.wpilibj.SPI
 import edu.wpi.first.wpilibj.smartdashboard.Field2d
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
-import frc.robotkt.constants.AutoConstants
-import frc.robotkt.constants.CanIds
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import frc.robotkt.constants.DriveConstants
+import frc.robotkt.constants.IOConstants
+import frc.robotkt.constants.ModuleConstants
+import frc.robotkt.constants.PidConstants
 import frc.robotkt.swerve.SwerveModule
 import frc.robotkt.swerve.angleDifference
 import frc.robotkt.swerve.normalizeAngle
 import frc.robotkt.swerve.stepTowardsAngle
-
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.atan2
@@ -36,26 +37,26 @@ import kotlin.math.sin
 
 class Drivetrain : SubsystemBase() {
     val frontLeft = SwerveModule(
-        CanIds.Drivetrain.kFrontLeftDrive,
-        CanIds.Drivetrain.kFrontLeftTurn,
+        IOConstants.DrivetrainCan.kFrontLeftDrive,
+        IOConstants.DrivetrainCan.kFrontLeftTurn,
         DriveConstants.AngularOffsets.kFrontLeft
     )
 
     val frontRight = SwerveModule(
-        CanIds.Drivetrain.kFrontRightDrive,
-        CanIds.Drivetrain.kFrontRightTurn,
+        IOConstants.DrivetrainCan.kFrontRightDrive,
+        IOConstants.DrivetrainCan.kFrontRightTurn,
         DriveConstants.AngularOffsets.kFrontRight
     )
 
     val rearLeft = SwerveModule(
-        CanIds.Drivetrain.kRearLeftDrive,
-        CanIds.Drivetrain.kRearLeftTurn,
+        IOConstants.DrivetrainCan.kRearLeftDrive,
+        IOConstants.DrivetrainCan.kRearLeftTurn,
         DriveConstants.AngularOffsets.kRearLeft
     )
 
     val rearRight = SwerveModule(
-        CanIds.Drivetrain.kRearRightDrive,
-        CanIds.Drivetrain.kRearRightTurn,
+        IOConstants.DrivetrainCan.kRearRightDrive,
+        IOConstants.DrivetrainCan.kRearRightTurn,
         DriveConstants.AngularOffsets.kRearRight
     )
 
@@ -119,16 +120,16 @@ class Drivetrain : SubsystemBase() {
             this::chassisSpeeds::set,
             HolonomicPathFollowerConfig(
                 PIDConstants(
-                    AutoConstants.TranslationPid.kP,
-                    AutoConstants.TranslationPid.kI,
-                    AutoConstants.TranslationPid.kD
+                    PidConstants.AutoTranslation.kP,
+                    PidConstants.AutoTranslation.kI,
+                    PidConstants.AutoTranslation.kD
                 ),
                 PIDConstants(
-                    AutoConstants.RotationPid.kP,
-                    AutoConstants.RotationPid.kI,
-                    AutoConstants.RotationPid.kD
+                    PidConstants.AutoRotation.kP,
+                    PidConstants.AutoRotation.kI,
+                    PidConstants.AutoRotation.kD
                 ),
-                AutoConstants.kMaxModuleSpeed,
+                ModuleConstants.kMaxAutoSpeed,
                 DriveConstants.Dimensions.kDriveBaseRadius,
                 ReplanningConfig()
             ),
@@ -211,8 +212,38 @@ class Drivetrain : SubsystemBase() {
      * @param fieldRelative Whether the speeds are field-relative
      * @param rateLimit Whether to rate limit the translation and rotation speeds
      */
-    fun drive(xspeed: Double, yspeed: Double, rspeed: Double, fieldRelative: Boolean, rateLimit: Boolean) =
+    fun drive(
+        xspeed: Double,
+        yspeed: Double,
+        rspeed: Double,
+        fieldRelative: Boolean = true,
+        rateLimit: Boolean = true
+    ) =
         drive(ChassisSpeeds(xspeed, yspeed, rspeed), fieldRelative, rateLimit)
+
+    /**
+     * Driving for note and tag alignment
+     * @param controller The controller to use for driving
+     */
+    fun drive(controller: CommandXboxController, rot: Double) =
+        drive(
+            -MathUtil.applyDeadband(controller.leftY, IOConstants.Controller.kDeadband),
+            -MathUtil.applyDeadband(controller.leftX, IOConstants.Controller.kDeadband),
+            rot,
+            rateLimit = true
+        )
+
+    /**
+     * Default controller driving
+     * @param controller The controller to use for driving
+     */
+    fun drive(controller: CommandXboxController) =
+        drive(
+            -MathUtil.applyDeadband(controller.leftY, IOConstants.Controller.kDeadband),
+            -MathUtil.applyDeadband(controller.leftX, IOConstants.Controller.kDeadband),
+            -MathUtil.applyDeadband(controller.rightX, IOConstants.Controller.kDeadband),
+            rateLimit = false
+        )
 
     /**
      * Reset the gyro angle to zero

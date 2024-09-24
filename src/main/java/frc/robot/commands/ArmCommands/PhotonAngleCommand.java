@@ -15,7 +15,6 @@ import frc.robot.Constants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
-import frc.robotkt.subsystems.Drivetrain;
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -43,7 +42,7 @@ public class PhotonAngleCommand extends Command {
 
     public PhotonAngleCommand() {
 
-        addRequirements(Robot.m_drivetrain);
+        addRequirements(Robot.drivetrain);
         addRequirements(Robot.arm);
     }
 
@@ -108,24 +107,24 @@ public class PhotonAngleCommand extends Command {
 
 
                 if (armpid.atSetpoint()) {
-                    RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, .3);
-                    RobotContainer.m_operatorController.getHID().setRumble(RumbleType.kBothRumble, .5);
+                    RobotContainer.driverctl.setRumble(RumbleType.kBothRumble, .3);
+                    RobotContainer.operctl.getHID().setRumble(RumbleType.kBothRumble, .5);
                     x = foundTargets.get().getDetectedCorners().stream().mapToDouble((a) -> a.x).sum() / 4;
                     Robot.arm.armLeft.set(armpid.calculate(Robot.arm.getArmPot(), armAngle));
-                    Robot.m_drivetrain.drive(-MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftY(), OIConstants.kDriveDeadband), -MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftX(), OIConstants.kDriveDeadband), drivepid.calculate(x, setPoint), false, false);
+                    Robot.drivetrain.drive(-MathUtil.applyDeadband(RobotContainer.driverctl.getLeftY(), OIConstants.kDriveDeadband), -MathUtil.applyDeadband(RobotContainer.driverctl.getLeftX(), OIConstants.kDriveDeadband), drivepid.calculate(x, setPoint), false, false);
                 }
 
 
-                Robot.m_drivetrain.drive(-MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftY(), OIConstants.kDriveDeadband), -MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftX(), OIConstants.kDriveDeadband), drivepid.calculate(x, setPoint), false, false);
+                Robot.drivetrain.drive(-MathUtil.applyDeadband(RobotContainer.driverctl.getLeftY(), OIConstants.kDriveDeadband), -MathUtil.applyDeadband(RobotContainer.driverctl.getLeftX(), OIConstants.kDriveDeadband), drivepid.calculate(x, setPoint), false, false);
                 Robot.shintake.setShooter(1, 1);
 
             }
         } else {
             Robot.arm.hold();
             Robot.led.setColor(255, 99, 71);
-            Robot.m_drivetrain.drive(-MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftY(), OIConstants.kDriveDeadband), -MathUtil.applyDeadband(RobotContainer.m_driverController.getLeftX(), OIConstants.kDriveDeadband), -MathUtil.applyDeadband(RobotContainer.m_driverController.getRightX(), OIConstants.kDriveDeadband), false, false);
-            RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, 0);
-            RobotContainer.m_operatorController.getHID().setRumble(RumbleType.kBothRumble, 0);
+            Robot.drivetrain.drive(-MathUtil.applyDeadband(RobotContainer.driverctl.getLeftY(), OIConstants.kDriveDeadband), -MathUtil.applyDeadband(RobotContainer.driverctl.getLeftX(), OIConstants.kDriveDeadband), -MathUtil.applyDeadband(RobotContainer.driverctl.getRightX(), OIConstants.kDriveDeadband), false, false);
+            RobotContainer.driverctl.setRumble(RumbleType.kBothRumble, 0);
+            RobotContainer.operctl.getHID().setRumble(RumbleType.kBothRumble, 0);
             Robot.shintake.setShooter(1, 1);
 
         }
@@ -141,8 +140,8 @@ public class PhotonAngleCommand extends Command {
         if (timer.get() > .5) {
             Robot.arm.armLeft.set(armpid.calculate(Robot.arm.getArmPot(), armAngle));
             Robot.shintake.takeIn();
-            RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, 0);
-            RobotContainer.m_operatorController.getHID().setRumble(RumbleType.kBothRumble, 0);
+            RobotContainer.driverctl.setRumble(RumbleType.kBothRumble, 0);
+            RobotContainer.operctl.getHID().setRumble(RumbleType.kBothRumble, 0);
         }
     }
 

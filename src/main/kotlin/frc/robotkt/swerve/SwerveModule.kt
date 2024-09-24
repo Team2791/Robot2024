@@ -6,7 +6,6 @@ import com.revrobotics.CANSparkMax
 import com.revrobotics.RelativeEncoder
 import com.revrobotics.SparkAbsoluteEncoder
 import com.revrobotics.SparkPIDController
-
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.kinematics.SwerveModulePosition
 import edu.wpi.first.math.kinematics.SwerveModuleState
@@ -28,7 +27,7 @@ class SwerveModule(driveID: Int, turnID: Int, val angularOffset: Double) {
             corrected.speedMetersPerSecond = desired.speedMetersPerSecond
             corrected.angle = desired.angle.plus(Rotation2d(angularOffset))
 
-            val optimized = SwerveModuleState.optimize(corrected, Rotation2d(turnEncoder.position))
+            val optimized = SwerveModuleState.optimize(corrected, Rotation2d(turnEncoder.position))!!
             drivePID.setReference(optimized.speedMetersPerSecond, ControlType.kVelocity)
             turnPID.setReference(optimized.angle.radians, ControlType.kPosition)
 

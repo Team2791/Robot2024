@@ -56,5 +56,6 @@ object ModuleConstants {
         const val kMaxPidInput = kPositionFactor
     }
 
+    const val kMaxAutoSpeed = 6.0
     val kIdleMode = IdleMode.kBrake
 }

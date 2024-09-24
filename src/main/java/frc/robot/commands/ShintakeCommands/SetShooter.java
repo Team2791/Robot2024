@@ -4,61 +4,56 @@
 
 package frc.robot.commands.ShintakeCommands;
 
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-
-import java.lang.constant.Constable;
-
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.RobotContainer;
 
 public class SetShooter extends Command {
-  Timer timer = new Timer();
-  
-  /** Creates a new Shoot. */
-  public SetShooter() {
-  }
-  
+    Timer timer = new Timer();
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    timer.reset();
-    timer.start();
-    
-    if(Robot.arm.getArmPot()>60){
-      Robot.shintake.setShooter(.25,.25);
+    /**
+     * Creates a new Shoot.
+     */
+    public SetShooter() {
     }
-    else Robot.shintake.setShooter(.4,.4);
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    
-
-    // if(Robot.shintake.getRPM()>-Constants.ShintakeConstants.kRPM){
-    //   RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, .3);
-    //   RobotContainer.m_operatorController.getHID().setRumble(RumbleType.kBothRumble, .5);
-    // }
-
-  
-  }
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-
-  }
 
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {
+        timer.reset();
+        timer.start();
 
-    return timer.get()>.75;
+        if (Robot.arm.getArmPot() > 60) {
+            Robot.shintake.setShooter(.25, .25);
+        } else Robot.shintake.setShooter(.4, .4);
+    }
 
-  }
+    // Called every time the scheduler runs while the command is scheduled.
+    @Override
+    public void execute() {
+
+
+        // if(Robot.shintake.getRPM()>-Constants.ShintakeConstants.kRPM){
+        //   RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, .3);
+        //   RobotContainer.m_operatorController.getHID().setRumble(RumbleType.kBothRumble, .5);
+        // }
+
+
+    }
+
+    // Called once the command ends or is interrupted.
+    @Override
+    public void end(boolean interrupted) {
+        Robot.shintake.setShooter(0, 0);
+    }
+
+
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+
+        return false;
+
+    }
 }

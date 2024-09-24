@@ -1,0 +1,51 @@
+package frc.robotkt.constants
+
+object PidConstants {
+    object AutoTranslation {
+        const val kP = 2.0
+        const val kI = 0.0
+        const val kD = 0.0
+    }
+
+    object AutoRotation {
+        const val kP = 2.0
+        const val kI = 0.0
+        const val kD = 0.0
+    }
+
+    object DriveMotor {
+        const val kP = 0.15
+        const val kI = 0.0
+        const val kD = 0.01
+        const val kFF = 1 / ModuleConstants.Wheel.kFreeSpeed
+        const val kPidMin = -1.0
+        const val kPidMax = 1.0
+    }
+
+    object TurnMotor {
+        const val kP = 0.3
+        const val kI = 0.0
+        const val kD = 0.02
+        const val kFF = 0.0
+        const val kPidMin = -1.0
+        const val kPidMax = 1.0
+    }
+
+    object PhotonAlign {
+        const val kP = 0.1
+        const val kI = 0.0
+        const val kD = 0.0
+    }
+
+    object Arm {
+        const val kPivP = 0.2
+        const val kPivI = 0.0
+        const val kPivD = 0.0
+        const val kPivFF = 0.0
+
+        const val kExtP = 0.7
+        const val kExtI = 0.0
+        const val kExtD = 0.0
+        const val kExtFF = 0.0
+    }
+}

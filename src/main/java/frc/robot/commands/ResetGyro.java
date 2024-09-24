@@ -18,7 +18,7 @@ public class ResetGyro extends Command {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        Robot.m_drivetrain.resetGyro();
+        Robot.drivetrain.resetGyro();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
