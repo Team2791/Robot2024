@@ -7,34 +7,37 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 
 public class ManualExtension extends Command {
-  boolean inout = false;
-  /** Creates a new Extension. */
-  public ManualExtension() {
-    
-  }
+    boolean inout = false;
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    Robot.arm.manualExtend();
+    /**
+     * Creates a new Extension.
+     */
+    public ManualExtension() {
 
-  }
+    }
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    
-  }
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {
+        Robot.arm.manualExtend();
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    Robot.arm.stopExtension();
-  }
+    }
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return Robot.arm.getExtensionPot() >95;
-  }
+    // Called every time the scheduler runs while the command is scheduled.
+    @Override
+    public void execute() {
+
+    }
+
+    // Called once the command ends or is interrupted.
+    @Override
+    public void end(boolean interrupted) {
+        Robot.arm.stopExtension();
+    }
+
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+        return Robot.arm.GetExtension() > 95;
+    }
 }
