@@ -1,4 +1,4 @@
-package frc.robot.commands.AprilTagCommands;
+package frc.robot.commands.VisionCommands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;

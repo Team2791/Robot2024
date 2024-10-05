@@ -31,7 +31,7 @@ object ArmConstants {
     }
 
     const val kExtSpeed = 0.8
-    const val kArmSpeed = 0.15
+    const val kPivSpeed = 0.15
     const val kMaxAccel = 0.2
 
     const val kValueTolerance = 2.0

@@ -12,8 +12,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.AprilTagCommands.TagAlign;
-import frc.robot.commands.ArmCommands.*;
+import frc.robot.commands.ArmCommands.ArmToAmp;
 import frc.robot.commands.ArmCommands.ManualCommands.ManualAngleUp;
 import frc.robot.commands.ArmCommands.ManualCommands.ManualExtension;
 import frc.robot.commands.ArmCommands.ManualCommands.ManualRetraction;
@@ -28,6 +27,7 @@ import frc.robot.commands.ShintakeCommands.Intake;
 import frc.robot.commands.ShintakeCommands.SetShooter;
 import frc.robot.commands.ShintakeCommands.Shoot;
 import frc.robot.commands.ShintakeCommands.SpitOut;
+import frc.robot.commands.VisionCommands.TagAlign;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.RGBLED;
 import frc.robot.subsystems.Shintake;
@@ -76,8 +76,7 @@ public class RobotContainer {
 
         // Default commands
         drivetrain.setDefaultCommand(new RunCommand(() -> drivetrain.drive(driverctl), drivetrain));
-        camera.setDefaultCommand(new RunCommand(() -> camera.setMode(Camera.CameraMode.AprilTag), camera));
-        arm.setDefaultCommand(new ResetArm(arm));
+        camera.setDefaultCommand(new RunCommand(camera::reset, camera));
 
         // Shuffleboard/Driver camera
         drivercam.setDriverMode(true);

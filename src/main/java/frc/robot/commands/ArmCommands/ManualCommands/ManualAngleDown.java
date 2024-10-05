@@ -6,45 +6,48 @@ package frc.robot.commands.ArmCommands.ManualCommands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Robot;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Robot;
 
 public class ManualAngleDown extends Command {
-  Timer timer = new Timer();
-  /** Creates a new ManualAngle. */
-  public ManualAngleDown() {
+    Timer timer = new Timer();
 
-    // Use addRequirements() here to declare subsystem dependencies.
-  }
+    /**
+     * Creates a new ManualAngle.
+     */
+    public ManualAngleDown() {
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    timer.reset();
-    timer.start();
-    Robot.arm.moveDown(ArmConstants.kArmSpeedDown);
-  }
+        // Use addRequirements() here to declare subsystem dependencies.
+    }
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {
+        timer.reset();
+        timer.start();
+        Robot.arm.moveDown(ArmConstants.kArmSpeedDown);
+    }
 
-    // if(timer.get()<ArmConstants.kAccelerationTime){
-    //   Robot.arm.moveUp((ArmConstants.kArmSpeedDown/ArmConstants.kAccelerationTime)*timer.get());}
+    // Called every time the scheduler runs while the command is scheduled.
+    @Override
+    public void execute() {
 
-  }
+        // if(timer.get()<ArmConstants.kAccelerationTime){
+        //   Robot.arm.moveUp((ArmConstants.kArmSpeedDown/ArmConstants.kAccelerationTime)*timer.get());}
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    timer.reset();
-    timer.start();
-    Robot.arm.hold();
-  }
+    }
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return Robot.arm.getArmPot()>95;
-  }
+    // Called once the command ends or is interrupted.
+    @Override
+    public void end(boolean interrupted) {
+        timer.reset();
+        timer.start();
+        Robot.arm.hold();
+    }
+
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+        return Robot.arm.getArmPot() > 95;
+    }
 }

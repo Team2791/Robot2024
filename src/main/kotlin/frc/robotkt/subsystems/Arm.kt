@@ -1,12 +1,10 @@
 package frc.robotkt.subsystems
 
-import com.revrobotics.CANSparkBase
+import com.revrobotics.CANSparkBase.ControlType
 import com.revrobotics.CANSparkBase.IdleMode
 import com.revrobotics.CANSparkLowLevel.MotorType
 import com.revrobotics.CANSparkMax
 import com.revrobotics.SparkPIDController
-import edu.wpi.first.math.controller.PIDController
-import edu.wpi.first.wpilibj.AnalogPotentiometer
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robotkt.constants.ArmConstants
@@ -15,49 +13,29 @@ import frc.robotkt.constants.PidConstants
 import kotlin.math.abs
 
 class Arm : SubsystemBase() {
-    val leftMotor = CANSparkMax(IOConstants.ArmCan.kLeftMotor, MotorType.kBrushless)
-    val rightMotor = CANSparkMax(IOConstants.ArmCan.kRightMotor, MotorType.kBrushless)
-    val extMotor = CANSparkMax(IOConstants.ArmCan.kExtMotor, MotorType.kBrushless)
+    private val leftMotor = CANSparkMax(IOConstants.ArmCan.kLeftMotor, MotorType.kBrushless)
+    private val rightMotor = CANSparkMax(IOConstants.ArmCan.kRightMotor, MotorType.kBrushless)
+    private val extMotor = CANSparkMax(IOConstants.ArmCan.kExtMotor, MotorType.kBrushless)
 
-    val pivctl = leftMotor.pidController!!
-    var extctl = PIDController(PidConstants.Arm.kExtP, PidConstants.Arm.kExtI, PidConstants.Arm.kExtD)
+    private val pivenc = leftMotor.absoluteEncoder!!
+    private val extenc = extMotor.absoluteEncoder!!
 
-    val pivenc = leftMotor.encoder!!
-    val extpot = AnalogPotentiometer(
-        IOConstants.ArmCan.kPotChannel,
-        ArmConstants.Extension.kSlope,
-        ArmConstants.Extension.kIntercept
-    )
+    private val pivctl = leftMotor.pidController!!
+    private val extctl = extMotor.pidController!!
 
     var angle
-        get() = rawPivot * ArmConstants.Pivot.kSlope + ArmConstants.Pivot.kIntercept
-        set(value) {
-            pivTarget = (normalizePiv(value) - ArmConstants.Pivot.kIntercept) / ArmConstants.Pivot.kSlope
-        }
+        get() = pivenc.position
+        private set(target) = let { pivctl.setReference(normalizePiv(target), ControlType.kPosition) }
 
     var extension
-        get() = rawExtension * ArmConstants.Extension.kSlope + ArmConstants.Extension.kIntercept
-        set(value) {
-            extTarget = (normalizeExt(value) - ArmConstants.Extension.kIntercept) / ArmConstants.Extension.kSlope
-        }
+        get() = extenc.position
+        private set(target) = let { extctl.setReference(normalizeExt(target), ControlType.kPosition) }
 
-    private var pivTarget = rawPivot
-        set(value) {
-            pivctl.setReference(value, CANSparkBase.ControlType.kPosition)
-            field = value
-        }
+    var pivTarget = 0.0
+        set(value) = let { angle = value; field = value }
 
-    private var extTarget = rawExtension
-        set(value) {
-            extctl.setSetpoint(value)
-            field = value
-        }
-
-    val rawPivot
-        get() = pivenc.position
-
-    val rawExtension
-        get() = (extpot.get() - ArmConstants.Extension.kIntercept) / ArmConstants.Extension.kSlope
+    var extTarget = 0.0
+        set(value) = let { extension = value; field = value }
 
     init {
         rightMotor.follow(leftMotor, true)
@@ -72,7 +50,23 @@ class Arm : SubsystemBase() {
         pivctl.ff = PidConstants.Arm.kPivFF
         pivctl.setSmartMotionAccelStrategy(SparkPIDController.AccelStrategy.kSCurve, 0)
         pivctl.setSmartMotionMaxAccel(ArmConstants.kMaxAccel, 0)
-        extctl.setTolerance(ArmConstants.Extension.kTolerance)
+        pivctl.setSmartMotionMaxVelocity(ArmConstants.kPivSpeed, 0)
+        pivctl.setFeedbackDevice(pivenc)
+
+        pivenc.positionConversionFactor = ArmConstants.Pivot.kSlope
+        pivenc.zeroOffset = ArmConstants.Pivot.kIntercept
+
+        extctl.p = PidConstants.Arm.kExtP
+        extctl.i = PidConstants.Arm.kExtI
+        extctl.d = PidConstants.Arm.kExtD
+        extctl.ff = PidConstants.Arm.kExtFF
+        extctl.setSmartMotionAccelStrategy(SparkPIDController.AccelStrategy.kSCurve, 0)
+        extctl.setSmartMotionMaxAccel(ArmConstants.kMaxAccel, 0)
+        extctl.setSmartMotionMaxVelocity(ArmConstants.kExtSpeed, 0)
+        extctl.setFeedbackDevice(extenc)
+
+        extenc.positionConversionFactor = ArmConstants.Extension.kSlope
+        extenc.zeroOffset = ArmConstants.Extension.kIntercept
     }
 
     companion object {
@@ -83,32 +77,37 @@ class Arm : SubsystemBase() {
         @JvmStatic
         private fun normalizePiv(value: Double) =
             value.coerceIn(ArmConstants.Pivot.kMinAngle, ArmConstants.Pivot.kMaxAngle)
+
+        @JvmStatic
+        private fun limitExt(value: Double) =
+            value.coerceIn(-ArmConstants.kExtSpeed, ArmConstants.kExtSpeed)
+
+        @JvmStatic
+        private fun limitPiv(value: Double) =
+            value.coerceIn(-ArmConstants.kPivSpeed, ArmConstants.kPivSpeed)
     }
 
     fun atPivTarget() = abs(pivenc.position - pivTarget) < ArmConstants.kValueTolerance
-    fun atExtTarget() = abs(rawExtension - extTarget) < ArmConstants.kValueTolerance
+    fun atExtTarget() = abs(extenc.position - extTarget) < ArmConstants.kValueTolerance
 
-    fun moveUp(speed: Double = ArmConstants.kArmSpeed) = leftMotor.set(-speed)
-    fun moveDown(speed: Double = ArmConstants.kArmSpeed) = leftMotor.set(speed)
+    fun angleUp(speed: Double = ArmConstants.kPivSpeed) = pivctl.setReference(limitPiv(speed), ControlType.kDutyCycle)
+    fun angleDown(speed: Double = ArmConstants.kPivSpeed) = angleUp(-speed)
 
-    fun extend(speed: Double = ArmConstants.kExtSpeed) = extMotor.set(speed)
-    fun retract(speed: Double = ArmConstants.kExtSpeed) = extMotor.set(-speed)
+    fun extend(speed: Double = ArmConstants.kExtSpeed) = extctl.setReference(limitExt(speed), ControlType.kDutyCycle)
+    fun retract(speed: Double = ArmConstants.kExtSpeed) = extend(-speed)
 
     fun hold() {
-        leftMotor.set(0.0)
-        pivTarget = rawPivot
+        pivTarget = pivenc.position
+        extTarget = extenc.position
     }
 
-    private fun matchExtTarget() = extMotor.set(extctl.calculate(rawExtension))
-
     override fun periodic() {
-        matchExtTarget()
-
         SmartDashboard.putNumber("Pivot Angle", angle)
-        SmartDashboard.putNumber("Pivot Encoder", rawPivot)
+        SmartDashboard.putNumber("Pivot Encoder", pivenc.position)
         SmartDashboard.putNumber("Pivot Target", pivTarget)
 
-        SmartDashboard.putNumber("Extension Percent", extpot.get())
-        SmartDashboard.putNumber("Extension Encoder", rawExtension)
+        SmartDashboard.putNumber("Extension Percent", extension)
+        SmartDashboard.putNumber("Extension Encoder", extenc.position)
+        SmartDashboard.putNumber("Extension Target", extTarget)
     }
 }

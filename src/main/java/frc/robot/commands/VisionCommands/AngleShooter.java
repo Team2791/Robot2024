@@ -1,4 +1,4 @@
-package frc.robot.commands.AprilTagCommands;
+package frc.robot.commands.VisionCommands;
 
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -96,7 +96,7 @@ public class AngleShooter extends SequentialCommandGroup {
         addCommands(
                 new RunCommand(() -> led.setColor(255, 0, 0), led),
                 aligner,
-                new RunCommand(() -> led.setColor(0, 255, 0), led),
+                new RunCommand(() -> led.setColor(0, 255, 0), led, drivetrain),
                 angler,
                 new RunCommand(() -> led.setColor(0, 0, 255), led),
                 new RunCommand(() -> controller.getHID().setRumble(GenericHID.RumbleType.kRightRumble, 1)),

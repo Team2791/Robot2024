@@ -54,6 +54,10 @@ class Camera(val camera: PhotonCamera, val drivetrain: Drivetrain) : SubsystemBa
     val timestamp
         get() = camera.latestResult!!.timestampSeconds
 
+    fun reset() {
+        mode = CameraMode.AprilTag
+    }
+
     override fun periodic() {
         if (!hasTargets()) return
         if (mode != CameraMode.AprilTag) return
