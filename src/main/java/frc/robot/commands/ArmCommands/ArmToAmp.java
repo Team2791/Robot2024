@@ -4,11 +4,11 @@
 
 package frc.robot.commands.ArmCommands;
 
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robotkt.constants.ArmConstants;
 import frc.robotkt.subsystems.Arm;
 
-public class ArmToAmp extends ParallelCommandGroup {
+public class ArmToAmp extends SequentialCommandGroup {
     public ArmToAmp(Arm arm) {
         addCommands(new AngleArm(arm, ArmConstants.kAmpAngle), new ExtendArm(arm, 100));
     }

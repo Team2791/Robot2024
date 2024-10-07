@@ -120,7 +120,7 @@ class Drivetrain : SubsystemBase() {
         driveTab.addNumber("X Speed (m/s)") { chassisSpeeds.vxMetersPerSecond }
         driveTab.addNumber("Y Speed (m/s)") { chassisSpeeds.vyMetersPerSecond }
         driveTab.addNumber("Rotation Speed (rad/s)") { chassisSpeeds.omegaRadiansPerSecond }
-        driveTab.add { field }
+        driveTab.add("Field") { field }
 
         AutoBuilder.configureHolonomic(
             this::pose::get,

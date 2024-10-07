@@ -14,6 +14,7 @@ class Camera(val camera: PhotonCamera, val drivetrain: Drivetrain) : SubsystemBa
         companion object {
             @JvmStatic
             fun from(pipeline: Int) = when (pipeline) {
+                -1 -> AprilTag
                 0 -> AprilTag
                 1 -> Note
                 else -> throw IllegalArgumentException("Invalid pipeline: $pipeline")
@@ -40,7 +41,7 @@ class Camera(val camera: PhotonCamera, val drivetrain: Drivetrain) : SubsystemBa
         get() = CameraMode.from(camera.pipelineIndex)
         set(value) {
             if (value == mode) return
-            camera.pipelineIndex = value.ordinal
+            //camera.pipelineIndex = value.ordinal
         }
 
     fun hasTargets() = camera.latestResult!!.hasTargets()

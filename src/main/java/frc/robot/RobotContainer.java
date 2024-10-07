@@ -57,7 +57,6 @@ public class RobotContainer {
     public RobotContainer() {
         // Auto commands
         NamedCommands.registerCommand("IntakeSequence", new GroundIntake(arm, shintake, led));
-        NamedCommands.registerCommand("IntakeReset", new ResetArm(arm));
         NamedCommands.registerCommand("SetShooter", new SetShooter(shintake, driverctl));
         NamedCommands.registerCommand("Shoot", new Shoot(shintake));
         NamedCommands.registerCommand("Intake", new Intake(shintake, led));
