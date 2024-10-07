@@ -15,7 +15,6 @@ object ArmConstants {
         const val kMaxAccel = 0.1
     }
 
-    // TODO: check
     object Extension {
         const val kPotMin = 0.1395
         const val kPotMax = 0.4725
@@ -36,8 +35,8 @@ object ArmConstants {
     const val kIntakeAngle = 20
 
     // TODO: check
-    const val kPivotPosHeightMeter = 0.0
-    const val kRobotCenterToPivotPosMeter = 0.0
-    const val kShintakeArmAngleRad = 0.0
-    const val kArmLength = 0.0
+    const val kPivotHeight = 0.0
+    const val kRobotToPivot = 0.0
+    const val kShintakeAngle = 0.0
+    const val kLength = 0.0
 }

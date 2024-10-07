@@ -36,4 +36,12 @@ object IOConstants {
         const val kRightShooter = 22
         const val kIntake = 11
     }
+
+    object Climber {
+        const val kLeft = 41
+        const val kRight = 42
+        
+        const val kLeftLock = 3
+        const val kRightLock = 4
+    }
 }

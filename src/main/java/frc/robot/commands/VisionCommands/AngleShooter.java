@@ -32,13 +32,13 @@ class AngleArm extends Command {
     /// Returns height, hypotenuse between piv pt, wall, speaker
     double[] speakerTriangle() {
         // base height
-        double height = ArmConstants.kPivotPosHeightMeter;
+        double height = ArmConstants.kPivotHeight;
 
         // tag triangle hypotenuse
         Translation3d cam2target = aligner.target.getBestCameraToTarget().getTranslation();
         Translation3d target2cam = cam2target.unaryMinus();
         Translation3d cam2bot = VisionConstants.kCameraToRobot.getTranslation();
-        Translation3d cam2botWithHeight = new Translation3d(cam2bot.getX(), cam2bot.getY(), ArmConstants.kPivotPosHeightMeter - VisionConstants.kCameraHeight);
+        Translation3d cam2botWithHeight = new Translation3d(cam2bot.getX(), cam2bot.getY(), ArmConstants.kPivotHeight - VisionConstants.kCameraHeight);
         double target2bot = target2cam.plus(cam2botWithHeight).getDistance(new Translation3d());
 
         // tag triangle height
@@ -48,7 +48,7 @@ class AngleArm extends Command {
         double base = Math.sqrt(Math.pow(target2bot, 2) - Math.pow(tagHeight, 2));
 
         // add to base for further calculations. currently at robot center, move to pivot pos
-        base += ArmConstants.kRobotCenterToPivotPosMeter;
+        base += ArmConstants.kRobotToPivot;
 
         // speaker height
         // http://firstfrc.blob.core.windows.net/frc2024/Manual/Sections/2024GameManual-05ARENA.pdf page 11
@@ -71,7 +71,7 @@ class AngleArm extends Command {
 
         // law of sines coming in clutch
         // pivot-speaker-shooter
-        double speakerAngle = Math.asin(ArmConstants.kArmLength * (Math.sin(ArmConstants.kShintakeArmAngleRad) / stHypot));
+        double speakerAngle = Math.asin(ArmConstants.kLength * (Math.sin(ArmConstants.kShintakeAngle) / stHypot));
 
         // triangle angles add up to pi rad. calculate the last angle
         double pivotAngle = Math.PI - theta - speakerAngle;

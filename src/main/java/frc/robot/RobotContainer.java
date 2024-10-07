@@ -11,17 +11,12 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ArmCommands.ArmToAmp;
 import frc.robot.commands.ArmCommands.ArmToGround;
 import frc.robot.commands.ArmCommands.ManualCommands.ManualAngle;
 import frc.robot.commands.ArmCommands.ManualCommands.ManualExtend;
 import frc.robot.commands.ArmCommands.ResetArm;
 import frc.robot.commands.AutoCommands.GroundIntake;
-import frc.robot.commands.PitstickCommands.LeftClimbUp;
-import frc.robot.commands.PitstickCommands.LeftRelease;
-import frc.robot.commands.PitstickCommands.RightClimbUp;
-import frc.robot.commands.PitstickCommands.RightRelease;
 import frc.robot.commands.ResetGyro;
 import frc.robot.commands.ShintakeCommands.Intake;
 import frc.robot.commands.ShintakeCommands.Outtake;
@@ -33,6 +28,7 @@ import frc.robot.constants.ShintakeConstants;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Led;
 import frc.robot.subsystems.Shintake;
+import frc.robotkt.constants.IOConstants;
 import frc.robotkt.constants.VisionConstants;
 import frc.robotkt.subsystems.Arm;
 import frc.robotkt.subsystems.Camera;
@@ -41,19 +37,19 @@ import org.photonvision.PhotonCamera;
 
 public class RobotContainer {
     // Controllers
-    final CommandXboxController driverctl = new CommandXboxController(OIConstants.kDriverControllerPort);
-    final CommandXboxController operctl = new CommandXboxController(OIConstants.kOperatorControllerPort);
+    final CommandXboxController driverctl = new CommandXboxController(IOConstants.Controller.kDriverPort);
+    final CommandXboxController operctl = new CommandXboxController(IOConstants.Controller.kOperatorPort);
 
     // Robot subsystems
     final Drivetrain drivetrain = new Drivetrain();
     final Shintake shintake = new Shintake();
-    final Climber climber = new Climber();
+    final Climber climber = new Climber(drivetrain);
     final Led led = new Led();
     final Arm arm = new Arm();
 
     // Cameras
     final Camera camera = new Camera(new PhotonCamera(VisionConstants.kCameraName), drivetrain);
-    final PhotonCamera drivercam = new PhotonCamera(Constants.VisionConstants.kDriverCameraName);
+    final PhotonCamera drivercam = new PhotonCamera(VisionConstants.kDriverCameraName);
 
     // Auto
     final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser();
@@ -83,10 +79,6 @@ public class RobotContainer {
         CameraServer.startAutomaticCapture().setVideoMode(new VideoMode(1, 320, 240, 60));
     }
 
-
-    /**
-     * Mappings
-     */
     private void bindings() {
         // Tag stuff
         driverctl.b().whileTrue(new TagAlign(drivetrain, camera, driverctl));
@@ -94,11 +86,11 @@ public class RobotContainer {
         // Emergency
         driverctl.rightTrigger().whileTrue(new RunCommand(drivetrain::lock, drivetrain));
 
-        // Climber
-        driverctl.povUp().whileTrue(new RightClimbUp());
-        driverctl.povDown().whileTrue(new RightRelease());
-        driverctl.povRight().whileTrue(new LeftClimbUp());
-        driverctl.povLeft().whileTrue(new LeftRelease());
+//        // Climber
+//        driverctl.povUp().whileTrue(new RightClimbUp());
+//        driverctl.povDown().whileTrue(new RightRelease());
+//        driverctl.povRight().whileTrue(new LeftClimbUp());
+//        driverctl.povLeft().whileTrue(new LeftRelease());
 
         // Gyro
         driverctl.back().whileTrue(new ResetGyro(drivetrain));

@@ -15,6 +15,7 @@ object VisionConstants {
     // TODO: check these values
     const val kCameraPitch = 30 * kRadiansPerDegree
     const val kCameraName = "2791camera"
+    const val kDriverCameraName = "drivercam"
     const val kCameraHeight = 9.451 * kMetersPerInch
     const val kTagHeight = 1.451
 
