@@ -13,9 +13,11 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ArmCommands.ArmToAmp;
+import frc.robot.commands.ArmCommands.ArmToGround;
+import frc.robot.commands.ArmCommands.ManualCommands.ManualAngle;
 import frc.robot.commands.ArmCommands.ManualCommands.ManualExtend;
-import frc.robot.commands.AutoCommands.IntakeReset;
-import frc.robot.commands.AutoCommands.IntakeSequence;
+import frc.robot.commands.ArmCommands.ResetArm;
+import frc.robot.commands.AutoCommands.GroundIntake;
 import frc.robot.commands.PitstickCommands.LeftClimbUp;
 import frc.robot.commands.PitstickCommands.LeftRelease;
 import frc.robot.commands.PitstickCommands.RightClimbUp;
@@ -25,7 +27,9 @@ import frc.robot.commands.ShintakeCommands.Intake;
 import frc.robot.commands.ShintakeCommands.Outtake;
 import frc.robot.commands.ShintakeCommands.SetShooter;
 import frc.robot.commands.ShintakeCommands.Shoot;
+import frc.robot.commands.VisionCommands.AngleShooter;
 import frc.robot.commands.VisionCommands.TagAlign;
+import frc.robot.constants.ShintakeConstants;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Led;
 import frc.robot.subsystems.Shintake;
@@ -37,34 +41,32 @@ import org.photonvision.PhotonCamera;
 
 public class RobotContainer {
     // Controllers
-    public final CommandXboxController driverctl = new CommandXboxController(OIConstants.kDriverControllerPort);
-    public final CommandXboxController operctl = new CommandXboxController(OIConstants.kOperatorControllerPort);
+    final CommandXboxController driverctl = new CommandXboxController(OIConstants.kDriverControllerPort);
+    final CommandXboxController operctl = new CommandXboxController(OIConstants.kOperatorControllerPort);
 
     // Robot subsystems
-    public final Drivetrain drivetrain = new Drivetrain();
-    public final Shintake shintake = new Shintake();
-    public final Climber climber = new Climber();
-    public final Led led = new Led();
-    public final Arm arm = new Arm();
+    final Drivetrain drivetrain = new Drivetrain();
+    final Shintake shintake = new Shintake();
+    final Climber climber = new Climber();
+    final Led led = new Led();
+    final Arm arm = new Arm();
 
     // Cameras
-    public final Camera camera = new Camera(new PhotonCamera(VisionConstants.kCameraName), drivetrain);
+    final Camera camera = new Camera(new PhotonCamera(VisionConstants.kCameraName), drivetrain);
+    final PhotonCamera drivercam = new PhotonCamera(Constants.VisionConstants.kDriverCameraName);
 
-    private final PhotonCamera drivercam = new PhotonCamera(Constants.VisionConstants.kDriverCameraName);
-    private final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser();
+    // Auto
+    final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser();
 
-    /**
-     * The container for the robot. Contains subsystems, OI devices, and commands.
-     */
     public RobotContainer() {
         // Auto commands
-        NamedCommands.registerCommand("IntakeSequence", new IntakeSequence());
-        NamedCommands.registerCommand("IntakeReset", new IntakeReset());
-        NamedCommands.registerCommand("SetShooter", new SetShooter());
-        NamedCommands.registerCommand("Shoot", new Shoot());
-        NamedCommands.registerCommand("Intake", new Intake());
-        NamedCommands.registerCommand("Angle", new PhotonAngleCommand());
-        NamedCommands.registerCommand("ResetArm", new ResetPosition());
+        NamedCommands.registerCommand("IntakeSequence", new GroundIntake(arm, shintake, led));
+        NamedCommands.registerCommand("IntakeReset", new ResetArm(arm));
+        NamedCommands.registerCommand("SetShooter", new SetShooter(shintake, driverctl));
+        NamedCommands.registerCommand("Shoot", new Shoot(shintake));
+        NamedCommands.registerCommand("Intake", new Intake(shintake, led));
+        NamedCommands.registerCommand("Angle", new AngleShooter(drivetrain, arm, camera, led, driverctl));
+        NamedCommands.registerCommand("ResetArm", new ResetArm(arm));
 
         // Auto Chooser
         SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -99,26 +101,26 @@ public class RobotContainer {
         driverctl.povLeft().whileTrue(new LeftRelease());
 
         // Gyro
-        driverctl.back().whileTrue(new ResetGyro());
+        driverctl.back().whileTrue(new ResetGyro(drivetrain));
 
         // Ground intake
-        operctl.a().whileTrue(new ParallelCommandGroup(new IntakeSequence(), new Intake()));
-        operctl.a().whileFalse(new IntakeReset());
+        operctl.a().whileTrue(new ParallelCommandGroup(new ArmToGround(arm), new Intake(shintake, led)));
+        operctl.a().whileFalse(new ResetArm(arm));
 
         // Intake and shooter
-        operctl.start().whileTrue(new Intake());
-        operctl.x().toggleOnTrue(new SetShooter());
-        operctl.y().whileTrue(new Outtake());
-        driverctl.leftBumper().onTrue(new Shoot());
+        operctl.start().whileTrue(new Intake(shintake, led));
+        operctl.x().toggleOnTrue(new SetShooter(shintake, driverctl));
+        operctl.y().whileTrue(new Outtake(shintake));
+        driverctl.leftBumper().onTrue(new Shoot(shintake));
 
         // Arm
-        operctl.axisGreaterThan(1, 0.4).whileTrue(new ManualAngleUp());
-        operctl.axisLessThan(1, -0.4).whileTrue(new ManualAngleDown());
-        operctl.rightBumper().whileTrue(new ManualRetraction());
-        operctl.leftBumper().whileTrue(new ManualExtend());
+        operctl.axisGreaterThan(1, 0.4).whileTrue(new ManualAngle(arm, true));
+        operctl.axisLessThan(1, -0.4).whileTrue(new ManualAngle(arm, false));
+        operctl.rightBumper().whileTrue(new ManualExtend(arm, true));
+        operctl.leftBumper().whileTrue(new ManualExtend(arm, false));
 
         // Amp Positioning
-        operctl.b().whileTrue(new SequentialCommandGroup(new ArmToAmp(arm), new SetShooter()));
+        operctl.b().whileTrue(new SequentialCommandGroup(new ArmToAmp(arm), new SetShooter(shintake, driverctl, ShintakeConstants.ShooterSpeeds.kAmpShoot)));
     }
 
     public Command getAutonomousCommand() {

@@ -89,8 +89,8 @@ class AngleArm extends Command {
 }
 
 public class AngleShooter extends SequentialCommandGroup {
-    public AngleShooter(Drivetrain drivetrain, Arm arm, Camera camera, Led led, CommandXboxController controller) {
-        TagAlign aligner = new TagAlign(drivetrain, camera, controller, Set.of(4, 7));
+    public AngleShooter(Drivetrain drivetrain, Arm arm, Camera camera, Led led, CommandXboxController driverctl) {
+        TagAlign aligner = new TagAlign(drivetrain, camera, driverctl, Set.of(4, 7));
         AngleArm angler = new AngleArm(drivetrain, arm, aligner);
 
         addCommands(
@@ -99,9 +99,9 @@ public class AngleShooter extends SequentialCommandGroup {
                 new RunCommand(() -> led.setRGB(0, 255, 0), led, drivetrain),
                 angler,
                 new RunCommand(() -> led.setRGB(0, 0, 255), led),
-                new RunCommand(() -> controller.getHID().setRumble(GenericHID.RumbleType.kRightRumble, 1)),
+                new RunCommand(() -> driverctl.getHID().setRumble(GenericHID.RumbleType.kRightRumble, 1)),
                 new WaitCommand(0.5),
-                new RunCommand(() -> controller.getHID().setRumble(GenericHID.RumbleType.kRightRumble, 0))
+                new RunCommand(() -> driverctl.getHID().setRumble(GenericHID.RumbleType.kRightRumble, 0))
         );
     }
 }
