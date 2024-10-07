@@ -48,4 +48,11 @@ object PidConstants {
         const val kExtD = 0.0
         const val kExtFF = 0.0
     }
+    
+    object Shintake {
+        const val kShooterP = 0.0
+        const val kShooterI = 0.0
+        const val kShooterD = 0.0
+        const val kShooterFF = 0.0
+    }
 }

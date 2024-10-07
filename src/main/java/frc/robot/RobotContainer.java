@@ -13,9 +13,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ArmCommands.ArmToAmp;
-import frc.robot.commands.ArmCommands.ManualCommands.ManualAngleUp;
-import frc.robot.commands.ArmCommands.ManualCommands.ManualExtension;
-import frc.robot.commands.ArmCommands.ManualCommands.ManualRetraction;
+import frc.robot.commands.ArmCommands.ManualCommands.ManualExtend;
 import frc.robot.commands.AutoCommands.IntakeReset;
 import frc.robot.commands.AutoCommands.IntakeSequence;
 import frc.robot.commands.PitstickCommands.LeftClimbUp;
@@ -24,12 +22,12 @@ import frc.robot.commands.PitstickCommands.RightClimbUp;
 import frc.robot.commands.PitstickCommands.RightRelease;
 import frc.robot.commands.ResetGyro;
 import frc.robot.commands.ShintakeCommands.Intake;
+import frc.robot.commands.ShintakeCommands.Outtake;
 import frc.robot.commands.ShintakeCommands.SetShooter;
 import frc.robot.commands.ShintakeCommands.Shoot;
-import frc.robot.commands.ShintakeCommands.SpitOut;
 import frc.robot.commands.VisionCommands.TagAlign;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.RGBLED;
+import frc.robot.subsystems.Led;
 import frc.robot.subsystems.Shintake;
 import frc.robotkt.constants.VisionConstants;
 import frc.robotkt.subsystems.Arm;
@@ -39,14 +37,14 @@ import org.photonvision.PhotonCamera;
 
 public class RobotContainer {
     // Controllers
-    public static CommandXboxController driverctl = new CommandXboxController(OIConstants.kDriverControllerPort);
-    public static CommandXboxController operctl = new CommandXboxController(OIConstants.kOperatorControllerPort);
+    public final CommandXboxController driverctl = new CommandXboxController(OIConstants.kDriverControllerPort);
+    public final CommandXboxController operctl = new CommandXboxController(OIConstants.kOperatorControllerPort);
 
     // Robot subsystems
     public final Drivetrain drivetrain = new Drivetrain();
     public final Shintake shintake = new Shintake();
     public final Climber climber = new Climber();
-    public final RGBLED led = new RGBLED();
+    public final Led led = new Led();
     public final Arm arm = new Arm();
 
     // Cameras
@@ -110,14 +108,14 @@ public class RobotContainer {
         // Intake and shooter
         operctl.start().whileTrue(new Intake());
         operctl.x().toggleOnTrue(new SetShooter());
-        operctl.y().whileTrue(new SpitOut());
+        operctl.y().whileTrue(new Outtake());
         driverctl.leftBumper().onTrue(new Shoot());
 
         // Arm
         operctl.axisGreaterThan(1, 0.4).whileTrue(new ManualAngleUp());
         operctl.axisLessThan(1, -0.4).whileTrue(new ManualAngleDown());
         operctl.rightBumper().whileTrue(new ManualRetraction());
-        operctl.leftBumper().whileTrue(new ManualExtension());
+        operctl.leftBumper().whileTrue(new ManualExtend());
 
         // Amp Positioning
         operctl.b().whileTrue(new SequentialCommandGroup(new ArmToAmp(arm), new SetShooter()));

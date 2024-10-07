@@ -3,16 +3,16 @@ package frc.robotkt.constants
 object ArmConstants {
     // TODO: check
     object Pivot {
-        const val kEncoderMin = 0.0
-        const val kEncoderMax = 35.73
+        const val kEncoderMin = -3.54
+        const val kEncoderMax = 28.9
 
-        const val kMinAngle = -10.0
-        const val kMaxAngle = 110.0
+        const val kMinAngle = -11.0
+        const val kMaxAngle = 90.0
 
-        const val kSlope = (kMaxAngle - kMinAngle) / (kEncoderMax - kEncoderMin)
-        const val kIntercept = kMinAngle - kSlope * kEncoderMin
+        const val kPositionFactor = (kMaxAngle - kMinAngle) / (kEncoderMax - kEncoderMin)
 
         const val kMaxSpeed = 0.15
+        const val kMaxAccel = 0.1
     }
 
     // TODO: check
@@ -23,16 +23,11 @@ object ArmConstants {
         const val kMin = 0.0
         const val kMax = 100.0
 
-        const val kSlope = (kMax - kMin) / (kPotMax - kPotMin)
-        const val kIntercept = kMin - kSlope * kPotMax
+        const val kPositionFactor = (kMax - kMin) / (kPotMax - kPotMin)
 
         const val kMaxSpeed = 0.8
-        const val kTolerance = (kPotMax - kPotMin) / 30.0
+        const val kMaxAccel = 0.2
     }
-
-    const val kExtSpeed = 0.8
-    const val kPivSpeed = 0.15
-    const val kMaxAccel = 0.2
 
     const val kValueTolerance = 2.0
 

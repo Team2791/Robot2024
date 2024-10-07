@@ -16,8 +16,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState
 import edu.wpi.first.util.WPIUtilJNI
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.SPI
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.smartdashboard.Field2d
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import frc.robotkt.constants.DriveConstants
@@ -113,6 +113,15 @@ class Drivetrain : SubsystemBase() {
     init {
         gyro.reset()
 
+        var driveTab = Shuffleboard.getTab("Drive Odometry")!!
+
+        // These are lambda suppliers, therefore only need to be called once
+        driveTab.addNumber("Heading (degrees)") { heading.degrees }
+        driveTab.addNumber("X Speed (m/s)") { chassisSpeeds.vxMetersPerSecond }
+        driveTab.addNumber("Y Speed (m/s)") { chassisSpeeds.vyMetersPerSecond }
+        driveTab.addNumber("Rotation Speed (rad/s)") { chassisSpeeds.omegaRadiansPerSecond }
+        driveTab.add { field }
+
         AutoBuilder.configureHolonomic(
             this::pose::get,
             this::pose::set,
@@ -146,10 +155,11 @@ class Drivetrain : SubsystemBase() {
      * Swerve drive control
      *
      * @param speeds The desired field-relative speeds
-     * @param fieldRelative Whether the speeds are field-relative
-     * @param rateLimit Whether to rate limit the translation and rotation speeds
+     * @param fieldRelative Whether the speeds are field-relative, defaults to true
+     * @param rateLimit Whether to rate limit the translation and rotation speeds, defaults to false
      */
-    fun drive(speeds: ChassisSpeeds, fieldRelative: Boolean = true, rateLimit: Boolean = true) {
+    @JvmOverloads
+    fun drive(speeds: ChassisSpeeds, fieldRelative: Boolean = true, rateLimit: Boolean = false) {
         var xspeed = speeds.vxMetersPerSecond
         var yspeed = speeds.vyMetersPerSecond
         var rspeed = speeds.omegaRadiansPerSecond
@@ -209,40 +219,34 @@ class Drivetrain : SubsystemBase() {
      * @param xspeed The desired x-axis speed in meters per second
      * @param yspeed The desired y-axis speed in meters per second
      * @param rspeed The desired rotation speed in radians per second
-     * @param fieldRelative Whether the speeds are field-relative
-     * @param rateLimit Whether to rate limit the translation and rotation speeds
+     * @param fieldRelative Whether the speeds are field-relative, defaults to true
+     * @param rateLimit Whether to rate limit the translation and rotation speeds, defaults to false
      */
+    @JvmOverloads
     fun drive(
         xspeed: Double,
         yspeed: Double,
         rspeed: Double,
         fieldRelative: Boolean = true,
-        rateLimit: Boolean = true
+        rateLimit: Boolean = false
     ) =
         drive(ChassisSpeeds(xspeed, yspeed, rspeed), fieldRelative, rateLimit)
 
     /**
-     * Driving for note and tag alignment
+     * Driving with controller input
+     *
      * @param controller The controller to use for driving
+     * @param rot Optional rotation speed for note/tag alignment, will use controller input if not provided
      */
-    fun drive(controller: CommandXboxController, rot: Double) =
+    @JvmOverloads
+    fun drive(
+        controller: CommandXboxController,
+        rot: Double = -MathUtil.applyDeadband(controller.rightX, IOConstants.Controller.kDeadband)
+    ) =
         drive(
             -MathUtil.applyDeadband(controller.leftY, IOConstants.Controller.kDeadband),
             -MathUtil.applyDeadband(controller.leftX, IOConstants.Controller.kDeadband),
             rot,
-            rateLimit = true
-        )
-
-    /**
-     * Default controller driving
-     * @param controller The controller to use for driving
-     */
-    fun drive(controller: CommandXboxController) =
-        drive(
-            -MathUtil.applyDeadband(controller.leftY, IOConstants.Controller.kDeadband),
-            -MathUtil.applyDeadband(controller.leftX, IOConstants.Controller.kDeadband),
-            -MathUtil.applyDeadband(controller.rightX, IOConstants.Controller.kDeadband),
-            rateLimit = false
         )
 
     /**
@@ -274,12 +278,5 @@ class Drivetrain : SubsystemBase() {
         // Update the odometry
         odometry.updateWithTime(WPIUtilJNI.now() * 1e-6, heading, modulePositions)
         field.robotPose = odometry.estimatedPosition
-
-        // SmartDashboard updates
-        SmartDashboard.putNumber("Heading (degrees)", heading.degrees)
-        SmartDashboard.putNumber("X Speed (m/s)", chassisSpeeds.vxMetersPerSecond)
-        SmartDashboard.putNumber("Y Speed (m/s)", chassisSpeeds.vyMetersPerSecond)
-        SmartDashboard.putNumber("Rotation Speed (rad/s)", chassisSpeeds.omegaRadiansPerSecond)
-        SmartDashboard.putData(field)
     }
 }

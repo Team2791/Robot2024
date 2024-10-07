@@ -4,70 +4,72 @@
 
 package frc.robot.commands.ShintakeCommands;
 
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Robot;
-import frc.robot.RobotContainer;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.constants.ShintakeConstants;
+import frc.robot.subsystems.Led;
+import frc.robot.subsystems.Shintake;
 
-public class Intake extends Command {
-    Timer timer = new Timer();
-    boolean cancel = false;
+class TakeIn extends Command {
+    final Shintake shintake;
 
-    /**
-     * Creates a new Intake.
-     */
-    public Intake() {
+    public TakeIn(Shintake shintake) {
+        this.shintake = shintake;
 
-
-        addRequirements(Robot.shintake);
-
-        // Use addRequirements() here to declare subsystem dependencies.
+        addRequirements(shintake);
     }
 
-    // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        timer.reset();
-        timer.start();
-        Robot.led.setColor(255, 99, 71);
-        Robot.shintake.takeIn();
-        Robot.shintake.setShooter(-.1, -.1);
+        shintake.setIntake(ShintakeConstants.IntakeSpeeds.kIntake);
     }
 
-    // Called every time the scheduler runs while the command is scheduled.
-    @Override
-    public void execute() {
-        if (Robot.shintake.getIntakeCurrent() > 50) {
-            Robot.arm.moveDown(.1);
-        } else Robot.arm.hold();
-
-
-    }
-
-    // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        RobotContainer.driverctl.setRumble(RumbleType.kBothRumble, .3);
-        RobotContainer.operctl.getHID().setRumble(RumbleType.kBothRumble, .5);
-
-        Robot.led.setColor(0, 255, 0);
-        while (Robot.shintake.isin()) {
-            Robot.shintake.slowOut();
-            Robot.shintake.setShooter(-.1, -.1);
-        }
-
-        Robot.shintake.stopIntake();
-        Robot.shintake.setShooter(0, 0);
-        Robot.arm.hold();
-        RobotContainer.driverctl.setRumble(RumbleType.kBothRumble, 0);
-        RobotContainer.operctl.getHID().setRumble(RumbleType.kBothRumble, 0);
+        shintake.stopIntake();
     }
 
-
-    // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return (Robot.shintake.isin() || timer.get() > 5);
+        return shintake.isLoaded();
+    }
+}
+
+class Load extends Command {
+    final Shintake shintake;
+
+    public Load(Shintake shintake) {
+        this.shintake = shintake;
+        addRequirements(shintake);
+    }
+
+    @Override
+    public void initialize() {
+        shintake.setIntake(ShintakeConstants.IntakeSpeeds.kLoad);
+        shintake.setShooter(ShintakeConstants.ShooterSpeeds.kLoad);
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        shintake.stopIntake();
+        shintake.stopShooter();
+    }
+
+    @Override
+    public boolean isFinished() {
+        return !shintake.isLoaded();
+    }
+}
+
+public class Intake extends SequentialCommandGroup {
+    public Intake(Shintake shintake, Led led) {
+        addCommands(
+                new RunCommand(() -> led.setRGB(255, 0, 0)),
+                new TakeIn(shintake),
+                new RunCommand(() -> led.setRGB(0, 255, 0)),
+                new Load(shintake),
+                new RunCommand(() -> led.setRGB(0, 0, 255))
+        );
     }
 }

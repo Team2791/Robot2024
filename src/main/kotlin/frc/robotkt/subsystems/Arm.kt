@@ -17,8 +17,8 @@ class Arm : SubsystemBase() {
     private val rightMotor = CANSparkMax(IOConstants.ArmCan.kRightMotor, MotorType.kBrushless)
     private val extMotor = CANSparkMax(IOConstants.ArmCan.kExtMotor, MotorType.kBrushless)
 
-    private val pivenc = leftMotor.absoluteEncoder!!
-    private val extenc = extMotor.absoluteEncoder!!
+    private val pivenc = leftMotor.encoder!!
+    private val extenc = extMotor.encoder!!
 
     private val pivctl = leftMotor.pidController!!
     private val extctl = extMotor.pidController!!
@@ -31,7 +31,7 @@ class Arm : SubsystemBase() {
         get() = extenc.position
         private set(target) = let { extctl.setReference(normalizeExt(target), ControlType.kPosition) }
 
-    var pivTarget = 0.0
+    var angleTarget = 0.0
         set(value) = let { angle = value; field = value }
 
     var extTarget = 0.0
@@ -44,29 +44,31 @@ class Arm : SubsystemBase() {
         rightMotor.idleMode = IdleMode.kBrake
         extMotor.idleMode = IdleMode.kBrake
 
+        pivenc.positionConversionFactor = ArmConstants.Pivot.kPositionFactor
+        pivenc.position = 0.0
+
+        extenc.positionConversionFactor = ArmConstants.Extension.kPositionFactor
+        extenc.position = 0.0
+
         pivctl.p = PidConstants.Arm.kPivP
         pivctl.i = PidConstants.Arm.kPivI
         pivctl.d = PidConstants.Arm.kPivD
         pivctl.ff = PidConstants.Arm.kPivFF
-        pivctl.setSmartMotionAccelStrategy(SparkPIDController.AccelStrategy.kSCurve, 0)
-        pivctl.setSmartMotionMaxAccel(ArmConstants.kMaxAccel, 0)
-        pivctl.setSmartMotionMaxVelocity(ArmConstants.kPivSpeed, 0)
-        pivctl.setFeedbackDevice(pivenc)
 
-        pivenc.positionConversionFactor = ArmConstants.Pivot.kSlope
-        pivenc.zeroOffset = ArmConstants.Pivot.kIntercept
+        pivctl.setSmartMotionAccelStrategy(SparkPIDController.AccelStrategy.kTrapezoidal, 0)
+        pivctl.setSmartMotionMaxAccel(ArmConstants.Pivot.kMaxAccel, 0)
+        pivctl.setSmartMotionMaxVelocity(ArmConstants.Pivot.kMaxSpeed, 0)
+        pivctl.setFeedbackDevice(pivenc)
 
         extctl.p = PidConstants.Arm.kExtP
         extctl.i = PidConstants.Arm.kExtI
         extctl.d = PidConstants.Arm.kExtD
         extctl.ff = PidConstants.Arm.kExtFF
-        extctl.setSmartMotionAccelStrategy(SparkPIDController.AccelStrategy.kSCurve, 0)
-        extctl.setSmartMotionMaxAccel(ArmConstants.kMaxAccel, 0)
-        extctl.setSmartMotionMaxVelocity(ArmConstants.kExtSpeed, 0)
-        extctl.setFeedbackDevice(extenc)
 
-        extenc.positionConversionFactor = ArmConstants.Extension.kSlope
-        extenc.zeroOffset = ArmConstants.Extension.kIntercept
+        extctl.setSmartMotionAccelStrategy(SparkPIDController.AccelStrategy.kTrapezoidal, 0)
+        extctl.setSmartMotionMaxAccel(ArmConstants.Extension.kMaxAccel, 0)
+        extctl.setSmartMotionMaxVelocity(ArmConstants.Extension.kMaxSpeed, 0)
+        extctl.setFeedbackDevice(extenc)
     }
 
     companion object {
@@ -77,34 +79,29 @@ class Arm : SubsystemBase() {
         @JvmStatic
         private fun normalizePiv(value: Double) =
             value.coerceIn(ArmConstants.Pivot.kMinAngle, ArmConstants.Pivot.kMaxAngle)
-
-        @JvmStatic
-        private fun limitExt(value: Double) =
-            value.coerceIn(-ArmConstants.kExtSpeed, ArmConstants.kExtSpeed)
-
-        @JvmStatic
-        private fun limitPiv(value: Double) =
-            value.coerceIn(-ArmConstants.kPivSpeed, ArmConstants.kPivSpeed)
     }
 
-    fun atPivTarget() = abs(pivenc.position - pivTarget) < ArmConstants.kValueTolerance
+    fun atPivTarget() = abs(pivenc.position - angleTarget) < ArmConstants.kValueTolerance
     fun atExtTarget() = abs(extenc.position - extTarget) < ArmConstants.kValueTolerance
 
-    fun angleUp(speed: Double = ArmConstants.kPivSpeed) = pivctl.setReference(limitPiv(speed), ControlType.kDutyCycle)
-    fun angleDown(speed: Double = ArmConstants.kPivSpeed) = angleUp(-speed)
+    // Manual control of the arm
+    fun angleUp() = let { angleTarget = ArmConstants.Pivot.kMaxAngle }
+    fun angleDown() = let { angleTarget = ArmConstants.Pivot.kMinAngle }
+    fun holdAngle() = let { angleTarget = angle }
 
-    fun extend(speed: Double = ArmConstants.kExtSpeed) = extctl.setReference(limitExt(speed), ControlType.kDutyCycle)
-    fun retract(speed: Double = ArmConstants.kExtSpeed) = extend(-speed)
+    fun extend() = let { extension = ArmConstants.Extension.kMax }
+    fun retract() = let { extension = ArmConstants.Extension.kMin }
+    fun holdExtension() = let { extension = extTarget }
 
     fun hold() {
-        pivTarget = pivenc.position
-        extTarget = extenc.position
+        holdAngle()
+        holdExtension()
     }
 
     override fun periodic() {
         SmartDashboard.putNumber("Pivot Angle", angle)
         SmartDashboard.putNumber("Pivot Encoder", pivenc.position)
-        SmartDashboard.putNumber("Pivot Target", pivTarget)
+        SmartDashboard.putNumber("Pivot Target", angleTarget)
 
         SmartDashboard.putNumber("Extension Percent", extension)
         SmartDashboard.putNumber("Extension Encoder", extenc.position)

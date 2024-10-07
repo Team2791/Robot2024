@@ -19,7 +19,7 @@ public class AngleArm extends Command {
     }
 
     public void initialize() {
-        arm.setAngle(angle);
+        arm.setAngleTarget(angle);
     }
 
     public boolean isFinished() {

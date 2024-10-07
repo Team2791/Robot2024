@@ -10,10 +10,12 @@ public class ExtendArm extends Command {
     public ExtendArm(Arm arm, double percent) {
         this.arm = arm;
         this.percent = percent;
+
+        addRequirements(arm);
     }
 
     public void initialize() {
-        arm.setExtension(percent);
+        arm.setExtTarget(percent);
     }
 
     public boolean isFinished() {

@@ -4,124 +4,87 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkLimitSwitch;
-
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import com.revrobotics.SparkPIDController;
+import com.revrobotics.SparkPIDController.AccelStrategy;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-import frc.robot.Robot;
-import frc.robot.RobotMap;
+import frc.robot.constants.ShintakeConstants;
+import frc.robotkt.constants.IOConstants;
+import frc.robotkt.constants.PidConstants;
 
 public class Shintake extends SubsystemBase {
+    private final CANSparkMax left;
+    private final CANSparkMax right;
+    private final CANSparkMax intake;
+    private final SparkLimitSwitch beam;
 
-  private CANSparkMax leftMotor;
-  private CANSparkMax rightMotor;
-  public CANSparkMax intakeMotor;
-  private SparkLimitSwitch beamBrake;
-  public PIDController speedController;
-  double power;
-  Timer timer = new Timer();
-  /** Creates a new Shooter. */
-  public Shintake() {
-    leftMotor = new CANSparkMax(21, MotorType.kBrushless);
-    rightMotor = new CANSparkMax(22, MotorType.kBrushless);
-    leftMotor.setSmartCurrentLimit(40);
-    rightMotor.setSmartCurrentLimit(40);
-    intakeMotor = new CANSparkMax(RobotMap.intakeMotor, MotorType.kBrushless);
-    speedController = new PIDController(Constants.ShintakeConstants.kShooterP, Constants.ShintakeConstants.kShooterI, Constants.ShintakeConstants.kShooterD);
-    speedController.setTolerance(.01);
-    leftMotor.setIdleMode(IdleMode.kCoast);
-    rightMotor.setIdleMode(IdleMode.kCoast);
+    private final SparkPIDController shooterctl;
+    private double shooterSpeed = 0;
 
-    beamBrake = rightMotor.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
+    public Shintake() {
+        left = new CANSparkMax(IOConstants.Shintake.kLeftShooter, MotorType.kBrushless);
+        right = new CANSparkMax(IOConstants.Shintake.kRightShooter, MotorType.kBrushless);
+        intake = new CANSparkMax(IOConstants.Shintake.kIntake, MotorType.kBrushless);
+        beam = right.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
+        shooterctl = right.getPIDController();
+
+        left.setSmartCurrentLimit(ShintakeConstants.kCurrentLimit);
+        right.setSmartCurrentLimit(ShintakeConstants.kCurrentLimit);
+        left.setIdleMode(CANSparkMax.IdleMode.kCoast);
+        right.setIdleMode(CANSparkMax.IdleMode.kCoast);
+
+        left.follow(right, true);
+        right.setInverted(true);
+
+        shooterctl.setP(PidConstants.Shintake.kShooterP);
+        shooterctl.setI(PidConstants.Shintake.kShooterI);
+        shooterctl.setD(PidConstants.Shintake.kShooterD);
+        shooterctl.setFF(PidConstants.Shintake.kShooterFF);
+        shooterctl.setSmartMotionAccelStrategy(AccelStrategy.kSCurve, 0);
+
+        ShuffleboardTab tab = Shuffleboard.getTab("Shintake");
+
+        // Lambda expressions only need to be sent once
+        tab.addNumber("Shooter Speed", this::getShooter);
+        tab.addNumber("Intake Speed", this::getIntake);
+        tab.addBoolean("Loaded", this::isLoaded);
     }
 
-  // public void setShooter(double speed){
-  //   leftMotor.set(speedController.calculate(leftMotor.getEncoder().getVelocity(),speed));
-  //   rightMotor.set(speedController.calculate(leftMotor.getEncoder().getVelocity(),speed));
-  // }
+    public double getShooter() {
+        return right.getEncoder().getVelocity();
+    }
 
-  // public void setShooter(double leftSpeed, double rightSpeed){
-  //   leftMotor.set(speedController.calculate(leftMotor.getEncoder().getVelocity(),leftSpeed));
-  //   rightMotor.set(speedController.calculate(leftMotor.getEncoder().getVelocity(),rightSpeed));
-  // }
+    public void setShooter(double speed) {
+        shooterSpeed = speed;
+        shooterctl.setReference(speed, ControlType.kVelocity);
+    }
 
-  public double getRPM(){
-    return (leftMotor.getEncoder().getVelocity() + rightMotor.getEncoder().getVelocity())/2;
-  }
+    public void stopShooter() {
+        setShooter(0);
+    }
 
-  public void setShooter(double leftSpeed, double rightSpeed){
-    leftMotor.set(leftSpeed);
-    rightMotor.set(-rightSpeed);
-  }
+    public boolean atShooterTarget() {
+        return Math.abs(shooterSpeed - right.getEncoder().getVelocity()) < ShintakeConstants.kTolerance;
+    }
 
+    public double getIntake() {
+        return intake.getEncoder().getVelocity();
+    }
 
+    public void setIntake(double speed) {
+        intake.set(speed);
+    }
 
-  public void takeIn(){
-    intakeMotor.set(-.55);
-  }
+    public void stopIntake() {
+        setIntake(0);
+    }
 
-  public void spitOut(){
-    intakeMotor.set(.6);
-  }
-
-  public void stopIntake(){
-    intakeMotor.set(0);
-  }
-
-  public void index(){
-    intakeMotor.set(-.3);
-  }
-
-  public boolean isin(){ //false when note is out
-    return !beamBrake.isPressed();
-  }
-
-  public void slowOut(){
-    intakeMotor.set(.3);
-  }
-
-  public double getSpeedRight(){
-    return rightMotor.getEncoder().getVelocity();
-
-
-  }
-
-  public double getSpeedLeft(){
-    return leftMotor.getEncoder().getVelocity();
-  }
-
-  public double getIntakeCurrent(){
-    return intakeMotor.getOutputCurrent();
-  }
-
-
-
-
-  @Override
-  public void periodic() {
-    // SmartDashboard.putNumber("Left Motor actual velocity", leftMotor.getEncoder().getVelocity());
-    // SmartDashboard.putNumber("Right Motor actual Velocity", rightMotor.getEncoder().getVelocity());
-    // SmartDashboard.putNumber("Left motor set power", leftMotor.get());
-    // SmartDashboard.putNumber("Right motor set power", rightMotor.get());
-    // //SmartDashboard.putData("Speed PID", speedController);
-    // SmartDashboard.putBoolean("Beam Break?", isin());
-    // SmartDashboard.putNumber("left speed", getSpeedLeft());
-    // SmartDashboard.putNumber("Right speed", getSpeedRight());
-    SmartDashboard.putNumber("RPM", getRPM());
-    // if(isin()){
-    //   Robot.led.flash(255,255,0);
-    // }
-    SmartDashboard.putBoolean("Beam Brake", isin());
-  }
-
-  
-
-
+    public boolean isLoaded() {
+        return !beam.isPressed();
+    }
 }

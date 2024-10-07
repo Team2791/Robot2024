@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.subsystems.RGBLED;
+import frc.robot.subsystems.Led;
 import frc.robotkt.constants.ArmConstants;
 import frc.robotkt.constants.VisionConstants;
 import frc.robotkt.subsystems.Arm;
@@ -80,7 +80,7 @@ class AngleArm extends Command {
         double angle = Math.PI - theta - pivotAngle;
 
         // I never want to do this much geometry ever again
-        arm.setAngle(Math.toDegrees(angle));
+        arm.setAngleTarget(Math.toDegrees(angle));
     }
 
     public boolean isFinished() {
@@ -89,16 +89,16 @@ class AngleArm extends Command {
 }
 
 public class AngleShooter extends SequentialCommandGroup {
-    public AngleShooter(Drivetrain drivetrain, Arm arm, Camera camera, RGBLED led, CommandXboxController controller) {
+    public AngleShooter(Drivetrain drivetrain, Arm arm, Camera camera, Led led, CommandXboxController controller) {
         TagAlign aligner = new TagAlign(drivetrain, camera, controller, Set.of(4, 7));
         AngleArm angler = new AngleArm(drivetrain, arm, aligner);
 
         addCommands(
-                new RunCommand(() -> led.setColor(255, 0, 0), led),
+                new RunCommand(() -> led.setRGB(255, 0, 0), led),
                 aligner,
-                new RunCommand(() -> led.setColor(0, 255, 0), led, drivetrain),
+                new RunCommand(() -> led.setRGB(0, 255, 0), led, drivetrain),
                 angler,
-                new RunCommand(() -> led.setColor(0, 0, 255), led),
+                new RunCommand(() -> led.setRGB(0, 0, 255), led),
                 new RunCommand(() -> controller.getHID().setRumble(GenericHID.RumbleType.kRightRumble, 1)),
                 new WaitCommand(0.5),
                 new RunCommand(() -> controller.getHID().setRumble(GenericHID.RumbleType.kRightRumble, 0))

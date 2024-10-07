@@ -38,7 +38,7 @@ public class Robot extends TimedRobot {
      * This function is called once each time the robot enters Disabled mode.
      */
     public void disabledInit() {
-        container.led.setColor(255, 0, 0);
+        container.led.setRGB(255, 0, 0);
     }
 
     /**
@@ -57,7 +57,7 @@ public class Robot extends TimedRobot {
         RobotContainer.driverctl.getHID().setRumble(RumbleType.kBothRumble, 0);
         RobotContainer.operctl.getHID().setRumble(RumbleType.kBothRumble, 0);
 
-        container.led.setColor(255, 255, 255);
+        container.led.setRGB(255, 255, 255);
     }
 
     /**

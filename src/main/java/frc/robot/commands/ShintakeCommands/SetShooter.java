@@ -4,56 +4,51 @@
 
 package frc.robot.commands.ShintakeCommands;
 
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Robot;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.constants.ShintakeConstants;
+import frc.robot.subsystems.Shintake;
 
 public class SetShooter extends Command {
-    Timer timer = new Timer();
+    final Shintake shintake;
+    final CommandXboxController driverctl;
+    final double speed;
 
-    /**
-     * Creates a new Shoot.
-     */
-    public SetShooter() {
+    public SetShooter(Shintake shintake, CommandXboxController driverctl, double speed) {
+        this.shintake = shintake;
+        this.driverctl = driverctl;
+        this.speed = speed;
+
+        addRequirements(shintake);
     }
 
+    public SetShooter(Shintake shintake, CommandXboxController driverctl) {
+        this(shintake, driverctl, ShintakeConstants.ShooterSpeeds.kShoot);
+    }
 
-    // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        timer.reset();
-        timer.start();
-
-        if (Robot.arm.getArmPot() > 60) {
-            Robot.shintake.setShooter(.25, .25);
-        } else Robot.shintake.setShooter(.4, .4);
+        shintake.setShooter(speed);
     }
 
-    // Called every time the scheduler runs while the command is scheduled.
-    @Override
-    public void execute() {
-
-
-        // if(Robot.shintake.getRPM()>-Constants.ShintakeConstants.kRPM){
-        //   RobotContainer.m_driverController.setRumble(RumbleType.kBothRumble, .3);
-        //   RobotContainer.m_operatorController.getHID().setRumble(RumbleType.kBothRumble, .5);
-        // }
-
-
-    }
-
-    // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        Robot.shintake.setShooter(0, 0);
+        driverctl.getHID().setRumble(RumbleType.kBothRumble, 0.3);
+
+        new Thread(() -> {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new Error(e);
+            }
+
+            driverctl.getHID().setRumble(RumbleType.kBothRumble, 0);
+        }).start();
     }
 
-
-    // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-
-        return false;
-
+        return shintake.atShooterTarget();
     }
 }

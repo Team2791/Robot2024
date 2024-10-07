@@ -20,9 +20,20 @@ object IOConstants {
         const val kPotChannel = 0
     }
 
+    object Led {
+        const val kLength = 25
+        const val kPort = 0
+    }
+
     object Controller {
         const val kDriverPort = 0
         const val kOperatorPort = 1
         const val kDeadband = 0.1
+    }
+
+    object Shintake {
+        const val kLeftShooter = 21
+        const val kRightShooter = 22
+        const val kIntake = 11
     }
 }
