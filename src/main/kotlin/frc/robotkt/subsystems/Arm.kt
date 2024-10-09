@@ -21,7 +21,6 @@ class Arm : SubsystemBase() {
     private val extenc = extMotor.encoder!!
 
     private val pivctl = leftMotor.pidController!!
-    private val extctl = extMotor.pidController!!
 
     var angle
         get() = pivenc.position
@@ -29,13 +28,12 @@ class Arm : SubsystemBase() {
 
     var extension
         get() = extenc.position
-        private set(target) = let { extctl.setReference(normalizeExt(target), ControlType.kPosition) }
 
     var angleTarget = 0.0
         set(value) = let { angle = value; field = value }
 
     var extTarget = 0.0
-        set(value) = let { extension = value; field = value }
+        set(value) = let { field = value }
 
     init {
         rightMotor.follow(leftMotor, true)
@@ -59,16 +57,6 @@ class Arm : SubsystemBase() {
         pivctl.setSmartMotionMaxAccel(ArmConstants.Pivot.kMaxAccel, 0)
         pivctl.setSmartMotionMaxVelocity(ArmConstants.Pivot.kMaxSpeed, 0)
         pivctl.setFeedbackDevice(pivenc)
-
-        extctl.p = PidConstants.Arm.kExtP
-        extctl.i = PidConstants.Arm.kExtI
-        extctl.d = PidConstants.Arm.kExtD
-        extctl.ff = PidConstants.Arm.kExtFF
-
-        extctl.setSmartMotionAccelStrategy(SparkPIDController.AccelStrategy.kTrapezoidal, 0)
-        extctl.setSmartMotionMaxAccel(ArmConstants.Extension.kMaxAccel, 0)
-        extctl.setSmartMotionMaxVelocity(ArmConstants.Extension.kMaxSpeed, 0)
-        extctl.setFeedbackDevice(extenc)
     }
 
     companion object {
@@ -98,7 +86,19 @@ class Arm : SubsystemBase() {
         holdExtension()
     }
 
+    fun extendSetpoint() {
+        if (abs(extension - extTarget) < 5 || extension < ArmConstants.Extension.kMin + 10 || extension > ArmConstants.Extension.kMax - 10) {
+            extMotor.set(0.0)
+            return
+        }
+
+        if (extension > extTarget) extMotor.set(-ArmConstants.Extension.kSpeed)
+        else if (extension < extTarget) extMotor.set(ArmConstants.Extension.kSpeed)
+    }
+
     override fun periodic() {
+        extendSetpoint()
+
         SmartDashboard.putNumber("Pivot Angle", angle)
         SmartDashboard.putNumber("Pivot Encoder", pivenc.position)
         SmartDashboard.putNumber("Pivot Target", angleTarget)

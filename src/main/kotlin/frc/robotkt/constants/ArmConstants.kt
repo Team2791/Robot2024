@@ -16,16 +16,14 @@ object ArmConstants {
     }
 
     object Extension {
-        const val kPotMin = 0.1395
-        const val kPotMax = 0.4725
+        const val kEncMin = 0.1395
+        const val kEncMax = 0.4725
 
         const val kMin = 0.0
         const val kMax = 100.0
 
-        const val kPositionFactor = (kMax - kMin) / (kPotMax - kPotMin)
-
-        const val kMaxSpeed = 0.8
-        const val kMaxAccel = 0.2
+        const val kPositionFactor = (kMax - kMin) / (kEncMax - kEncMin)
+        const val kSpeed = 0.8
     }
 
     const val kValueTolerance = 2.0
