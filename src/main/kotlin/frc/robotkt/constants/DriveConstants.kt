@@ -32,7 +32,7 @@ object DriveConstants {
         Translation2d(-Dimensions.kWheelBase / 2, -Dimensions.kTrackWidth / 2)
     )
 
-    const val kMaxSpeedMps = 1.0
+    const val kMaxSpeedMps = 15.0
     const val kMaxSpeedAnglular = kTau
     const val kGyroFactor = -1.0
 }

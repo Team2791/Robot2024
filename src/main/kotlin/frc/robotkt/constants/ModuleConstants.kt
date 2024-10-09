@@ -22,13 +22,6 @@ object ModuleConstants {
         const val kBevelPinionTeeth = 15.0
         const val kReduction = (kBevelGearTeeth * kSpurTeeth) / (kPinionTeeth * kBevelPinionTeeth)
         const val kCurrentLimit = 40
-
-        const val kP = 0.15
-        const val kI = 0.0
-        const val kD = 0.01
-        const val kFF = 1 / Wheel.kFreeSpeed
-        const val kPidMin = -1.0
-        const val kPidMax = 1.0
     }
 
     object DriveEncoder {
@@ -38,13 +31,6 @@ object ModuleConstants {
 
     object TurnMotor {
         const val kCurrentLimit = 40
-
-        const val kP = 0.3
-        const val kI = 0.0
-        const val kD = 0.02
-        const val kFF = 0.0
-        const val kPidMin = -1.0
-        const val kPidMax = 1.0
     }
 
     object TurnEncoder {

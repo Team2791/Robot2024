@@ -10,16 +10,17 @@ import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.kinematics.SwerveModulePosition
 import edu.wpi.first.math.kinematics.SwerveModuleState
 import frc.robotkt.constants.ModuleConstants
+import frc.robotkt.constants.PidConstants
 
-class SwerveModule(driveID: Int, turnID: Int, val angularOffset: Double) {
-    val drive = CANSparkMax(driveID, MotorType.kBrushless)
-    val turn = CANSparkMax(turnID, MotorType.kBrushless)
+class SwerveModule(driveId: Int, turnId: Int, val angularOffset: Double) {
+    val driveMotor = CANSparkMax(driveId, MotorType.kBrushless)
+    val turnMotor = CANSparkMax(turnId, MotorType.kBrushless)
 
     val driveEncoder: RelativeEncoder
     val turnEncoder: SparkAbsoluteEncoder
 
-    val drivePID: SparkPIDController
-    val turnPID: SparkPIDController
+    val drivePid: SparkPIDController
+    val turnPid: SparkPIDController
 
     var desiredState = SwerveModuleState(0.0, Rotation2d())
         set(desired) {
@@ -28,25 +29,25 @@ class SwerveModule(driveID: Int, turnID: Int, val angularOffset: Double) {
             corrected.angle = desired.angle.plus(Rotation2d(angularOffset))
 
             val optimized = SwerveModuleState.optimize(corrected, Rotation2d(turnEncoder.position))!!
-            drivePID.setReference(optimized.speedMetersPerSecond, ControlType.kVelocity)
-            turnPID.setReference(optimized.angle.radians, ControlType.kPosition)
+            drivePid.setReference(optimized.speedMetersPerSecond, ControlType.kVelocity)
+            turnPid.setReference(optimized.angle.radians, ControlType.kPosition)
 
             field = desired
         }
 
     init {
-        drive.restoreFactoryDefaults()
-        turn.restoreFactoryDefaults()
+        driveMotor.restoreFactoryDefaults()
+        turnMotor.restoreFactoryDefaults()
 
         // Setup encoders and PID controllers
-        driveEncoder = drive.encoder
-        turnEncoder = turn.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle)
+        driveEncoder = driveMotor.encoder
+        turnEncoder = turnMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle)
 
-        drivePID = drive.getPIDController()
-        turnPID = turn.getPIDController()
+        drivePid = driveMotor.getPIDController()
+        turnPid = turnMotor.getPIDController()
 
-        drivePID.setFeedbackDevice(driveEncoder)
-        turnPID.setFeedbackDevice(turnEncoder)
+        drivePid.setFeedbackDevice(driveEncoder)
+        turnPid.setFeedbackDevice(turnEncoder)
 
         // Apply position and velocity conversion factors
         driveEncoder.positionConversionFactor = ModuleConstants.DriveEncoder.kPositionFactor
@@ -58,32 +59,35 @@ class SwerveModule(driveID: Int, turnID: Int, val angularOffset: Double) {
         turnEncoder.setInverted(ModuleConstants.TurnEncoder.kInverted)
 
         // Turn PID wrap
-        turnPID.setPositionPIDWrappingEnabled(true)
-        turnPID.setPositionPIDWrappingMinInput(ModuleConstants.TurnEncoder.kMinPidInput)
-        turnPID.setPositionPIDWrappingMaxInput(ModuleConstants.TurnEncoder.kMaxPidInput)
+        turnPid.setPositionPIDWrappingEnabled(true)
+        turnPid.setPositionPIDWrappingMinInput(ModuleConstants.TurnEncoder.kMinPidInput)
+        turnPid.setPositionPIDWrappingMaxInput(ModuleConstants.TurnEncoder.kMaxPidInput)
 
         // Apply PID constants
-        drivePID.setP(ModuleConstants.DriveMotor.kP)
-        drivePID.setI(ModuleConstants.DriveMotor.kI)
-        drivePID.setD(ModuleConstants.DriveMotor.kD)
-        drivePID.setFF(ModuleConstants.DriveMotor.kFF)
-        drivePID.setOutputRange(ModuleConstants.DriveMotor.kPidMin, ModuleConstants.DriveMotor.kPidMax)
+        drivePid.p = PidConstants.DriveMotor.kP
+        drivePid.i = PidConstants.DriveMotor.kI
+        drivePid.d = PidConstants.DriveMotor.kD
+        drivePid.ff = PidConstants.DriveMotor.kFF
+        drivePid.setOutputRange(PidConstants.DriveMotor.kPidMin, PidConstants.DriveMotor.kPidMax)
 
-        turnPID.setP(ModuleConstants.TurnMotor.kP)
-        turnPID.setI(ModuleConstants.TurnMotor.kI)
-        turnPID.setD(ModuleConstants.TurnMotor.kD)
-        turnPID.setFF(ModuleConstants.TurnMotor.kFF)
-        turnPID.setOutputRange(ModuleConstants.TurnMotor.kPidMin, ModuleConstants.TurnMotor.kPidMax)
+        turnPid.p = PidConstants.TurnMotor.kP
+        turnPid.i = PidConstants.TurnMotor.kI
+        turnPid.d = PidConstants.TurnMotor.kD
+        turnPid.ff = PidConstants.TurnMotor.kFF
+        turnPid.setOutputRange(PidConstants.TurnMotor.kPidMin, PidConstants.TurnMotor.kPidMax)
 
         // idle mode and smart current
-        drive.setIdleMode(ModuleConstants.kIdleMode)
-        turn.setIdleMode(ModuleConstants.kIdleMode)
-        drive.setSmartCurrentLimit(ModuleConstants.DriveMotor.kCurrentLimit)
-        turn.setSmartCurrentLimit(ModuleConstants.TurnMotor.kCurrentLimit)
+        driveMotor.setIdleMode(ModuleConstants.kIdleMode)
+        turnMotor.setIdleMode(ModuleConstants.kIdleMode)
+        driveMotor.setSmartCurrentLimit(ModuleConstants.DriveMotor.kCurrentLimit)
+        turnMotor.setSmartCurrentLimit(ModuleConstants.TurnMotor.kCurrentLimit)
+
+        // One module is f*ed up
+        if (driveId == 40) driveMotor.inverted = true
 
         // Maintain configs
-        drive.burnFlash()
-        turn.burnFlash()
+        driveMotor.burnFlash()
+        turnMotor.burnFlash()
 
         // Finish setup
         desiredState.angle = Rotation2d(turnEncoder.position)
@@ -97,8 +101,8 @@ class SwerveModule(driveID: Int, turnID: Int, val angularOffset: Double) {
         get() = SwerveModulePosition(driveEncoder.position, Rotation2d(turnEncoder.position - angularOffset))
 
     fun stop() {
-        drive.stopMotor()
-        turn.stopMotor()
+        driveMotor.stopMotor()
+        turnMotor.stopMotor()
     }
 
     fun resetEncoders() {

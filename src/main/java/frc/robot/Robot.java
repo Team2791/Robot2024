@@ -32,7 +32,7 @@ public class Robot extends TimedRobot {
     }
 
     public void teleopInit() {
-        auto.cancel();
+        if (auto != null) auto.cancel();
         container.led.setRGB(255, 255, 255);
     }
 

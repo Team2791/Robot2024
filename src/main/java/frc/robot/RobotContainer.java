@@ -2,8 +2,6 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.cscore.VideoMode;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -22,18 +20,13 @@ import frc.robot.commands.ShintakeCommands.Intake;
 import frc.robot.commands.ShintakeCommands.Outtake;
 import frc.robot.commands.ShintakeCommands.SetShooter;
 import frc.robot.commands.ShintakeCommands.Shoot;
-import frc.robot.commands.VisionCommands.AngleShooter;
-import frc.robot.commands.VisionCommands.TagAlign;
 import frc.robot.constants.ShintakeConstants;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Led;
 import frc.robot.subsystems.Shintake;
 import frc.robotkt.constants.IOConstants;
-import frc.robotkt.constants.VisionConstants;
 import frc.robotkt.subsystems.Arm;
-import frc.robotkt.subsystems.Camera;
 import frc.robotkt.subsystems.Drivetrain;
-import org.photonvision.PhotonCamera;
 
 public class RobotContainer {
     // Controllers
@@ -48,8 +41,8 @@ public class RobotContainer {
     final Arm arm = new Arm();
 
     // Cameras
-    final Camera camera = new Camera(new PhotonCamera(VisionConstants.kCameraName), drivetrain);
-    final PhotonCamera drivercam = new PhotonCamera(VisionConstants.kDriverCameraName);
+    // final Camera camera = new Camera(new PhotonCamera(VisionConstants.kCameraName), drivetrain);
+    // final PhotonCamera drivercam = new PhotonCamera(VisionConstants.kDriverCameraName);
 
     // Auto
     final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser();
@@ -60,7 +53,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("SetShooter", new SetShooter(shintake, driverctl));
         NamedCommands.registerCommand("Shoot", new Shoot(shintake));
         NamedCommands.registerCommand("Intake", new Intake(shintake, led));
-        NamedCommands.registerCommand("Angle", new AngleShooter(drivetrain, arm, camera, led, driverctl));
+        // NamedCommands.registerCommand("Angle", new AngleShooter(drivetrain, arm, camera, led, driverctl));
         NamedCommands.registerCommand("ResetArm", new ResetArm(arm));
 
         // Auto Chooser
@@ -71,16 +64,16 @@ public class RobotContainer {
 
         // Default commands
         drivetrain.setDefaultCommand(new RunCommand(() -> drivetrain.drive(driverctl), drivetrain));
-        camera.setDefaultCommand(new RunCommand(camera::reset, camera));
+        // camera.setDefaultCommand(new RunCommand(camera::reset, camera));
 
         // Shuffleboard/Driver camera
-        drivercam.setDriverMode(true);
-        CameraServer.startAutomaticCapture().setVideoMode(new VideoMode(1, 320, 240, 60));
+        // drivercam.setDriverMode(true);
+        // CameraServer.startAutomaticCapture().setVideoMode(new VideoMode(1, 320, 240, 60));
     }
 
     private void bindings() {
         // Tag stuff
-        driverctl.b().whileTrue(new TagAlign(drivetrain, camera, driverctl));
+        // driverctl.b().whileTrue(new TagAlign(drivetrain, camera, driverctl));
 
         // Emergency
         driverctl.rightTrigger().whileTrue(new RunCommand(drivetrain::lock, drivetrain));
@@ -105,8 +98,8 @@ public class RobotContainer {
         driverctl.leftBumper().onTrue(new Shoot(shintake));
 
         // Arm
-        operctl.axisGreaterThan(1, 0.4).whileTrue(new ManualAngle(arm, true));
-        operctl.axisLessThan(1, -0.4).whileTrue(new ManualAngle(arm, false));
+        operctl.axisLessThan(1, -0.4).whileTrue(new ManualAngle(arm, true));
+        operctl.axisGreaterThan(1, 0.4).whileTrue(new ManualAngle(arm, false));
         operctl.rightBumper().whileTrue(new ManualExtend(arm, true));
         operctl.leftBumper().whileTrue(new ManualExtend(arm, false));
 

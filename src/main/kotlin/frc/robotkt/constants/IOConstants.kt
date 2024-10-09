@@ -17,7 +17,6 @@ object IOConstants {
         const val kRightMotor = 31
         const val kLeftMotor = 32
         const val kExtMotor = 33
-        const val kPotChannel = 0
     }
 
     object Led {
@@ -40,7 +39,7 @@ object IOConstants {
     object Climber {
         const val kLeft = 41
         const val kRight = 42
-        
+
         const val kLeftLock = 3
         const val kRightLock = 4
     }
