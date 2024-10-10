@@ -106,21 +106,11 @@ class Drivetrain : SubsystemBase() {
 
     var timer = WPIUtilJNI.now() * 1e-6
 
-    var rotation = 0.0
     var translationDir = 0.0
     var translationMag = 0.0
 
     init {
         gyro.reset()
-
-        var driveTab = Shuffleboard.getTab("Drive Odometry")!!
-
-        // These are lambda suppliers, therefore only need to be called once
-        driveTab.addNumber("Heading (degrees)") { heading.degrees }
-        driveTab.addNumber("X Speed (m/s)") { chassisSpeeds.vxMetersPerSecond }
-        driveTab.addNumber("Y Speed (m/s)") { chassisSpeeds.vyMetersPerSecond }
-        driveTab.addNumber("Rotation Speed (rad/s)") { chassisSpeeds.omegaRadiansPerSecond }
-        driveTab.add("Field") { field }
 
         AutoBuilder.configureHolonomic(
             this::pose::get,
@@ -149,6 +139,14 @@ class Drivetrain : SubsystemBase() {
             },
             this
         )
+
+        var driveTab = Shuffleboard.getTab("Drive Odometry")!!
+
+        driveTab.addNumber("Heading (degrees)") { heading.degrees }
+        driveTab.addNumber("X Speed") { chassisSpeeds.vxMetersPerSecond }
+        driveTab.addNumber("Y Speed") { chassisSpeeds.vyMetersPerSecond }
+        driveTab.addNumber("Rotation Speed (rad per sec)") { chassisSpeeds.omegaRadiansPerSecond }
+        driveTab.add("Field") { field }
     }
 
     /**

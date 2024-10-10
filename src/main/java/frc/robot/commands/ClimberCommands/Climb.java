@@ -14,17 +14,17 @@ public class Climb extends Command {
 
     @Override
     public void initialize() {
-        climber.set(ClimberConstants.Speeds.kClimb);
+        climber.set(-ClimberConstants.Speeds.kClimb);
     }
 
     @Override
     public void execute() {
         double bias = climber.bias();
-        double left = ClimberConstants.Speeds.kClimb;
-        double right = ClimberConstants.Speeds.kClimb;
+        double left = -ClimberConstants.Speeds.kClimb;
+        double right = -ClimberConstants.Speeds.kClimb;
 
         if (Math.signum(bias) == 1) left *= bias;
-        else right *= Math.abs(bias);
+        else right *= -bias;
 
         climber.set(left, right);
     }

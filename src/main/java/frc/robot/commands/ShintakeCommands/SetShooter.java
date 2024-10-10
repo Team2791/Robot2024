@@ -4,7 +4,6 @@
 
 package frc.robot.commands.ShintakeCommands;
 
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.constants.ShintakeConstants;
@@ -34,21 +33,11 @@ public class SetShooter extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        driverctl.getHID().setRumble(RumbleType.kBothRumble, 0.3);
-
-        new Thread(() -> {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                throw new Error(e);
-            }
-
-            driverctl.getHID().setRumble(RumbleType.kBothRumble, 0);
-        }).start();
+        shintake.setShooter(0);
     }
 
     @Override
     public boolean isFinished() {
-        return shintake.atShooterTarget();
+        return false;
     }
 }

@@ -38,16 +38,16 @@ object PidConstants {
     }
 
     object Arm {
-        const val kPivP = 0.001
+        const val kPivP = 0.01
         const val kPivI = 0.0
         const val kPivD = 0.0
         const val kPivFF = 0.0
     }
 
     object Shintake {
-        const val kShooterP = 0.0
+        const val kShooterP = 0.2
         const val kShooterI = 0.0
-        const val kShooterD = 0.0
+        const val kShooterD = 0.1
         const val kShooterFF = 0.0
     }
 

@@ -10,11 +10,10 @@ import frc.robot.subsystems.Shintake;
 
 public class Shoot extends Command {
     final Shintake shintake;
-    int status = 0;
 
     public Shoot(Shintake shintake) {
         this.shintake = shintake;
-        addRequirements(shintake);
+        //addRequirements(shintake);
     }
 
     @Override
@@ -23,20 +22,8 @@ public class Shoot extends Command {
     }
 
     @Override
-    public void execute() {
-        // status will be even iff the shintake was not loaded
-        // by taking (!isLoaded) as int, we know when to increment status
-        if (status % 2 == (shintake.isLoaded() ? 0 : 1)) status += 1;
-    }
-
-    @Override
     public void end(boolean interrupted) {
         shintake.stopIntake();
-        if (!interrupted) shintake.stopShooter();
-    }
-
-    @Override
-    public boolean isFinished() {
-        return status >= 2;
+        shintake.stopShooter();
     }
 }

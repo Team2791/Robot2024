@@ -7,20 +7,19 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.ArmCommands.ArmToAmp;
 import frc.robot.commands.ArmCommands.ArmToGround;
 import frc.robot.commands.ArmCommands.ManualCommands.ManualAngle;
 import frc.robot.commands.ArmCommands.ManualCommands.ManualExtend;
 import frc.robot.commands.ArmCommands.ResetArm;
 import frc.robot.commands.AutoCommands.GroundIntake;
+import frc.robot.commands.ClimberCommands.ManualClimb;
 import frc.robot.commands.ResetGyro;
 import frc.robot.commands.ShintakeCommands.Intake;
 import frc.robot.commands.ShintakeCommands.Outtake;
 import frc.robot.commands.ShintakeCommands.SetShooter;
 import frc.robot.commands.ShintakeCommands.Shoot;
-import frc.robot.constants.ShintakeConstants;
+import frc.robot.constants.ClimberConstants;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Led;
 import frc.robot.subsystems.Shintake;
@@ -78,11 +77,11 @@ public class RobotContainer {
         // Emergency
         driverctl.rightTrigger().whileTrue(new RunCommand(drivetrain::lock, drivetrain));
 
-//        // Climber
-//        driverctl.povUp().whileTrue(new RightClimbUp());
-//        driverctl.povDown().whileTrue(new RightRelease());
-//        driverctl.povRight().whileTrue(new LeftClimbUp());
-//        driverctl.povLeft().whileTrue(new LeftRelease());
+        // Climber
+        driverctl.povUp().whileTrue(new ManualClimb(climber, 0, true, ClimberConstants.Speeds.kClimb));
+        driverctl.povDown().whileTrue(new ManualClimb(climber, 0, false, ClimberConstants.Speeds.kClimb));
+        driverctl.povRight().whileTrue(new ManualClimb(climber, 2, true, ClimberConstants.Speeds.kClimb));
+        driverctl.povLeft().whileTrue(new ManualClimb(climber, 2, false, ClimberConstants.Speeds.kClimb));
 
         // Gyro
         driverctl.back().whileTrue(new ResetGyro(drivetrain));
@@ -95,7 +94,7 @@ public class RobotContainer {
         operctl.start().whileTrue(new Intake(shintake, led));
         operctl.x().toggleOnTrue(new SetShooter(shintake, driverctl));
         operctl.y().whileTrue(new Outtake(shintake));
-        driverctl.leftBumper().onTrue(new Shoot(shintake));
+        driverctl.leftBumper().whileTrue(new Shoot(shintake));
 
         // Arm
         operctl.axisLessThan(1, -0.4).whileTrue(new ManualAngle(arm, true));
@@ -104,7 +103,8 @@ public class RobotContainer {
         operctl.leftBumper().whileTrue(new ManualExtend(arm, false));
 
         // Amp Positioning
-        operctl.b().whileTrue(new SequentialCommandGroup(new ArmToAmp(arm), new SetShooter(shintake, driverctl, ShintakeConstants.ShooterSpeeds.kAmpShoot)));
+        // operctl.b().whileTrue(new SequentialCommandGroup(new ArmToAmp(arm), new SetShooter(shintake, driverctl, ShintakeConstants.ShooterSpeeds.kAmpShoot)));
+        operctl.b().whileTrue(new Intake(shintake, led));
     }
 
     public Command getAutonomousCommand() {

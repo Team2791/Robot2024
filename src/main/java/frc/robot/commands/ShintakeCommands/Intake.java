@@ -5,7 +5,6 @@
 package frc.robot.commands.ShintakeCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.constants.ShintakeConstants;
 import frc.robot.subsystems.Led;
@@ -16,8 +15,7 @@ class TakeIn extends Command {
 
     public TakeIn(Shintake shintake) {
         this.shintake = shintake;
-
-        addRequirements(shintake);
+        //addRequirements(shintake);
     }
 
     @Override
@@ -41,7 +39,7 @@ class Load extends Command {
 
     public Load(Shintake shintake) {
         this.shintake = shintake;
-        addRequirements(shintake);
+        //addRequirements(shintake);
     }
 
     @Override
@@ -65,11 +63,8 @@ class Load extends Command {
 public class Intake extends SequentialCommandGroup {
     public Intake(Shintake shintake, Led led) {
         addCommands(
-                new RunCommand(() -> led.setRGB(255, 0, 0)),
                 new TakeIn(shintake),
-                new RunCommand(() -> led.setRGB(0, 255, 0)),
-                new Load(shintake),
-                new RunCommand(() -> led.setRGB(0, 0, 255))
+                new Load(shintake)
         );
     }
 }

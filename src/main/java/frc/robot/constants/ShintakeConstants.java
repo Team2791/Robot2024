@@ -11,7 +11,7 @@ public final class ShintakeConstants {
     }
 
     public static final class ShooterSpeeds {
-        public static final double kShoot = 0.4;
+        public static final double kShoot = 0.5;
         public static final double kAmpShoot = 0.25;
         public static final double kLoad = -0.1;
     }

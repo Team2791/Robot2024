@@ -6,6 +6,6 @@ import frc.robotkt.subsystems.Arm;
 
 public class ArmToGround extends SequentialCommandGroup {
     public ArmToGround(Arm arm) {
-        addCommands(new SequentialCommandGroup(new AngleArm(arm, 5), new ExtendArm(arm, 100)), new AngleArm(arm, ArmConstants.Pivot.kMinAngle));
+        addCommands(new AngleArm(arm, 15), new ExtendArm(arm, 100), new AngleArm(arm, ArmConstants.Pivot.kMinAngle));
     }
 }

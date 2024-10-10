@@ -74,6 +74,7 @@ class Camera(val camera: PhotonCamera, val drivetrain: Drivetrain) : SubsystemBa
             val measurement = pose.transformBy(VisionConstants.kCameraToRobot)!!
 
             odometry.addVisionMeasurement(measurement.toPose2d(), timestamp, VisionConstants.kCameraError)
+            drivetrain.field.robotPose = odometry.estimatedPosition
         }
     }
 }
