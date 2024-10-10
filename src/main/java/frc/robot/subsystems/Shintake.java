@@ -32,8 +32,9 @@ public class Shintake extends SubsystemBase {
         left.setIdleMode(CANSparkMax.IdleMode.kCoast);
         right.setIdleMode(CANSparkMax.IdleMode.kCoast);
 
-        left.follow(right, true);
+        left.follow(right, false);
         right.setInverted(true);
+        left.setInverted(true);
 
         ShuffleboardTab tab = Shuffleboard.getTab("Shintake");
 

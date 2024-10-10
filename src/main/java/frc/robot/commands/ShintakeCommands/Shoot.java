@@ -13,11 +13,12 @@ public class Shoot extends Command {
 
     public Shoot(Shintake shintake) {
         this.shintake = shintake;
-        //addRequirements(shintake);
+        addRequirements(shintake);
     }
 
     @Override
     public void initialize() {
+        shintake.setShooter(ShintakeConstants.ShooterSpeeds.kShoot);
         shintake.setIntake(ShintakeConstants.IntakeSpeeds.kIntake);
     }
 
