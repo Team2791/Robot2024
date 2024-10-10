@@ -5,7 +5,7 @@ import com.revrobotics.CANSparkBase.IdleMode
 import com.revrobotics.CANSparkLowLevel.MotorType
 import com.revrobotics.CANSparkMax
 import com.revrobotics.SparkPIDController
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robotkt.constants.ArmConstants
 import frc.robotkt.constants.IOConstants
@@ -22,18 +22,20 @@ class Arm : SubsystemBase() {
 
     private val pivctl = leftMotor.pidController!!
 
-    var angle
-        get() = pivenc.position
-        private set(target) = let { pivctl.setReference(normalizePiv(target), ControlType.kPosition) }
+    val angle
+        get() = pivenc.position * ArmConstants.Pivot.kPositionFactor
 
-    var extension
-        get() = extenc.position
+    val extension
+        get() = extenc.position * ArmConstants.Extension.kPositionFactor
 
     var angleTarget = 0.0
-        set(value) = let { angle = value; field = value }
+        set(value) {
+            field = normalizePiv(value)
+            pivctl.setReference(field, ControlType.kPosition)
+        }
 
     var extTarget = 0.0
-        set(value) = let { field = value }
+        set(value) = let { field = normalizeExt(value) }
 
     init {
         rightMotor.follow(leftMotor, true)
@@ -42,10 +44,7 @@ class Arm : SubsystemBase() {
         rightMotor.idleMode = IdleMode.kBrake
         extMotor.idleMode = IdleMode.kBrake
 
-        pivenc.positionConversionFactor = ArmConstants.Pivot.kPositionFactor
         pivenc.position = 0.0
-
-        extenc.positionConversionFactor = ArmConstants.Extension.kPositionFactor
         extenc.position = 0.0
 
         pivctl.p = PidConstants.Arm.kPivP
@@ -57,6 +56,16 @@ class Arm : SubsystemBase() {
         pivctl.setSmartMotionMaxAccel(ArmConstants.Pivot.kMaxAccel, 0)
         pivctl.setSmartMotionMaxVelocity(ArmConstants.Pivot.kMaxSpeed, 0)
         pivctl.setFeedbackDevice(pivenc)
+
+        var tab = Shuffleboard.getTab("Arm")!!
+
+        tab.addNumber("Pivot Angle") { angle }
+        tab.addNumber("Pivot Encoder") { pivenc.position }
+        tab.addNumber("Pivot Target") { angleTarget }
+
+        tab.addNumber("Extension Percent") { extension }
+        tab.addNumber("Extension Encoder") { extenc.position }
+        tab.addNumber("Extension Target") { extTarget }
     }
 
     companion object {
@@ -69,17 +78,17 @@ class Arm : SubsystemBase() {
             value.coerceIn(ArmConstants.Pivot.kMinAngle, ArmConstants.Pivot.kMaxAngle)
     }
 
-    fun atPivTarget() = abs(pivenc.position - angleTarget) < ArmConstants.kValueTolerance
-    fun atExtTarget() = abs(extenc.position - extTarget) < ArmConstants.kValueTolerance
+    fun atPivTarget() = abs(angle - angleTarget) < ArmConstants.kValueTolerance
+    fun atExtTarget() = abs(extension - extTarget) < ArmConstants.kValueTolerance
 
     // Manual control of the arm
     fun angleUp() = let { angleTarget = ArmConstants.Pivot.kMaxAngle }
     fun angleDown() = let { angleTarget = ArmConstants.Pivot.kMinAngle }
     fun holdAngle() = let { angleTarget = angle }
 
-    fun extend() = let { extension = ArmConstants.Extension.kMax }
-    fun retract() = let { extension = ArmConstants.Extension.kMin }
-    fun holdExtension() = let { extension = extTarget }
+    fun extend() = let { extTarget = ArmConstants.Extension.kMax }
+    fun retract() = let { extTarget = ArmConstants.Extension.kMin }
+    fun holdExtension() = let { extTarget = extension }
 
     fun hold() {
         holdAngle()
@@ -87,24 +96,12 @@ class Arm : SubsystemBase() {
     }
 
     fun extendSetpoint() {
-        if (abs(extension - extTarget) < 5 || extension < ArmConstants.Extension.kMin + 10 || extension > ArmConstants.Extension.kMax - 10) {
-            extMotor.set(0.0)
-            return
-        }
-
-        if (extension > extTarget) extMotor.set(-ArmConstants.Extension.kSpeed)
-        else if (extension < extTarget) extMotor.set(ArmConstants.Extension.kSpeed)
+        if (atExtTarget()) extMotor.set(0.0)
+        else if (extTarget < extension && extension > ArmConstants.Extension.kMin + 10) extMotor.set(-ArmConstants.Extension.kSpeed)
+        else if (extTarget > extension && extension < ArmConstants.Extension.kMax - 10) extMotor.set(ArmConstants.Extension.kSpeed)
     }
 
     override fun periodic() {
         extendSetpoint()
-
-        SmartDashboard.putNumber("Pivot Angle", angle)
-        SmartDashboard.putNumber("Pivot Encoder", pivenc.position)
-        SmartDashboard.putNumber("Pivot Target", angleTarget)
-
-        SmartDashboard.putNumber("Extension Percent", extension)
-        SmartDashboard.putNumber("Extension Encoder", extenc.position)
-        SmartDashboard.putNumber("Extension Target", extTarget)
     }
 }

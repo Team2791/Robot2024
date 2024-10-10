@@ -34,6 +34,6 @@ public class ManualExtend extends Command {
     }
 
     public void end(boolean interrupted) {
-        arm.hold();
+        arm.holdExtension();
     }
 }
