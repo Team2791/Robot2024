@@ -55,13 +55,14 @@ class Arm : SubsystemBase() {
         pivctl.setSmartMotionAccelStrategy(SparkPIDController.AccelStrategy.kTrapezoidal, 0)
         pivctl.setSmartMotionMaxAccel(ArmConstants.Pivot.kMaxAccel, 0)
         pivctl.setSmartMotionMaxVelocity(ArmConstants.Pivot.kMaxSpeed, 0)
-        pivctl.setOutputRange(PidConstants.Arm.kMinOut, PidConstants.Arm.kMaxOut)
+        pivctl.setOutputRange(-PidConstants.Arm.kMaxPower, PidConstants.Arm.kMaxPower)
 
         var tab = Shuffleboard.getTab("Arm")!!
 
         tab.addNumber("Pivot Angle") { angle }
         tab.addNumber("Pivot Encoder") { pivenc.position }
         tab.addNumber("Pivot Target") { angleTarget }
+        tab.addNumber("Pivot Commanded Power", leftMotor::get)
 
         tab.addNumber("Extension Percent") { extension }
         tab.addNumber("Extension Encoder") { extenc.position }

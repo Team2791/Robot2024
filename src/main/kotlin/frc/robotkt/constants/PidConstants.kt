@@ -42,20 +42,6 @@ object PidConstants {
         const val kPivI = 0.0
         const val kPivD = 0.0
         const val kPivFF = 0.0
-        const val kMinOut = 0.0
-        const val kMaxOut = 0.3
-    }
-
-    object Shintake {
-        const val kShooterP = 0.2
-        const val kShooterI = 0.0
-        const val kShooterD = 0.1
-        const val kShooterFF = 0.0
-    }
-
-    object Climber {
-        const val kP = 0.0
-        const val kI = 0.0
-        const val kD = 0.0
+        const val kMaxPower = 0.3
     }
 }
