@@ -9,9 +9,7 @@
     "MidSub",
     "TopAuto"
   ],
-  "autoFolders": [
-    "SubAutos"
-  ],
+  "autoFolders": [],
   "defaultMaxVel": 4.0,
   "defaultMaxAccel": 3.0,
   "defaultMaxAngVel": 360.0,

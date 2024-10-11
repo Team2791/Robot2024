@@ -2,8 +2,9 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -12,7 +13,6 @@ import frc.robot.commands.ArmCommands.ArmToGround;
 import frc.robot.commands.ArmCommands.ManualCommands.ManualAngle;
 import frc.robot.commands.ArmCommands.ManualCommands.ManualExtend;
 import frc.robot.commands.ArmCommands.ResetArm;
-import frc.robot.commands.AutoCommands.GroundIntake;
 import frc.robot.commands.ClimberCommands.ManualClimb;
 import frc.robot.commands.ResetGyro;
 import frc.robot.commands.ShintakeCommands.Intake;
@@ -24,8 +24,11 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Led;
 import frc.robot.subsystems.Shintake;
 import frc.robotkt.constants.IOConstants;
+import frc.robotkt.constants.VisionConstants;
 import frc.robotkt.subsystems.Arm;
+import frc.robotkt.subsystems.Camera;
 import frc.robotkt.subsystems.Drivetrain;
+import org.photonvision.PhotonCamera;
 
 public class RobotContainer {
     // Controllers
@@ -40,34 +43,27 @@ public class RobotContainer {
     final Arm arm = new Arm();
 
     // Cameras
-    // final Camera camera = new Camera(new PhotonCamera(VisionConstants.kCameraName), drivetrain);
-    // final PhotonCamera drivercam = new PhotonCamera(VisionConstants.kDriverCameraName);
+    final Camera camera = new Camera(new PhotonCamera(VisionConstants.kCameraName), drivetrain);
 
     // Auto
     final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser();
 
     public RobotContainer() {
         // Auto commands
-        NamedCommands.registerCommand("IntakeSequence", new GroundIntake(arm, shintake, led));
         NamedCommands.registerCommand("SetShooter", new SetShooter(shintake, driverctl));
         NamedCommands.registerCommand("Shoot", new Shoot(shintake));
-        NamedCommands.registerCommand("Intake", new Intake(shintake, led));
-        // NamedCommands.registerCommand("Angle", new AngleShooter(drivetrain, arm, camera, led, driverctl));
-        NamedCommands.registerCommand("ResetArm", new ResetArm(arm));
 
         // Auto Chooser
-        SmartDashboard.putData("Auto Chooser", autoChooser);
+        ShuffleboardTab tab = Shuffleboard.getTab("Competition");
+        tab.add("Choose Auto", autoChooser);
 
         // Buttons
         bindings();
 
         // Default commands
         drivetrain.setDefaultCommand(new RunCommand(() -> drivetrain.drive(driverctl), drivetrain));
-        // camera.setDefaultCommand(new RunCommand(camera::reset, camera));
+        camera.setDefaultCommand(new RunCommand(camera::reset));
 
-        // Shuffleboard/Driver camera
-        // drivercam.setDriverMode(true);
-        // CameraServer.startAutomaticCapture().setVideoMode(new VideoMode(1, 320, 240, 60));
     }
 
     private void bindings() {
