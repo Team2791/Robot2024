@@ -8,42 +8,72 @@ import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robotkt.constants.IOConstants;
 import frc.robotkt.subsystems.Drivetrain;
+import kotlin.Pair;
+
+class ClimberModule {
+    final CANSparkMax motor;
+    final RelativeEncoder encoder;
+    final Servo servo;
+
+    ClimberModule(int motor, int servo) {
+        this.motor = new CANSparkMax(motor, MotorType.kBrushless);
+        this.servo = new Servo(servo);
+        this.encoder = this.motor.getEncoder();
+
+        this.motor.setIdleMode(IdleMode.kBrake);
+        this.encoder.setPosition(0);
+        this.servo.setBoundsMicroseconds(2000, 0, 0, 0, 1000);
+    }
+
+    void set(double speed) {
+        motor.set(speed);
+    }
+
+    void lock(boolean lock) {
+        servo.setSpeed(lock ? 1 : 0);
+    }
+
+    void lock() {
+        lock(true);
+    }
+
+    void unlock() {
+        lock(false);
+    }
+
+    double speed() {
+        return motor.get();
+    }
+
+    double position() {
+        return encoder.getPosition();
+    }
+
+    void register(ShuffleboardTab tab, String prefix) {
+        tab.addNumber(prefix + " position", this::position);
+        tab.addNumber(prefix + " power", this::speed);
+    }
+}
 
 public class Climber extends SubsystemBase {
-    // Climbing motors
-    private final CANSparkMax leftMotor = new CANSparkMax(IOConstants.Climber.kLeft, MotorType.kBrushless);
-    private final CANSparkMax rightMotor = new CANSparkMax(IOConstants.Climber.kRight, MotorType.kBrushless);
-
-    // Linear actuators to lock the climber in place
-    private final Servo leftLock = new Servo(IOConstants.Climber.kLeftLock);
-    private final Servo rightLock = new Servo(IOConstants.Climber.kRightLock);
+    private final ClimberModule left = new ClimberModule(IOConstants.Climber.kLeft, IOConstants.Climber.kLeftLock);
+    private final ClimberModule right = new ClimberModule(IOConstants.Climber.kRight, IOConstants.Climber.kRightLock);
 
     private final AHRS gyro;
 
     public Climber(Drivetrain drivetrain) {
         gyro = drivetrain.getGyro();
 
-        leftMotor.setIdleMode(IdleMode.kBrake);
-        rightMotor.setIdleMode(IdleMode.kBrake);
-
-        leftLock.setBoundsMicroseconds(2000, 0, 0, 0, 1000);
-        rightLock.setBoundsMicroseconds(2000, 0, 0, 0, 1000);
-        leftMotor.setIdleMode(IdleMode.kBrake);
-        rightMotor.setIdleMode(IdleMode.kBrake);
-        leftMotor.setOpenLoopRampRate(.1);
-        rightMotor.setOpenLoopRampRate(.1);
-
         ShuffleboardTab tab = Shuffleboard.getTab("climber");
-
-        // No need to update in periodic, shuffleboard saves the lambda
-        tab.addNumber("Left position", this::getLeftPos);
-        tab.addNumber("Right position", this::getRightPos);
+        left.register(tab, "left");
+        right.register(tab, "right");
     }
 
     /// A number between -1 to 1 representing the roll
@@ -52,46 +82,39 @@ public class Climber extends SubsystemBase {
     }
 
     public void set(double leftSpeed, double rightSpeed) {
-        leftMotor.set(leftSpeed);
-        rightMotor.set(rightSpeed);
+        left.set(leftSpeed);
+        right.set(rightSpeed);
     }
 
     public void set(double speed) {
-        leftMotor.set(speed);
-        rightMotor.set(speed);
-    }
-
-    public double leftAmps() {
-        return leftMotor.getOutputCurrent();
-    }
-
-    public double rightAmps() {
-        return rightMotor.getOutputCurrent();
-    }
-
-    public void lock() {
-        leftLock.setSpeed(1);
-        rightLock.setSpeed(1);
-    }
-
-    public void unlock() {
-        leftLock.setSpeed(-1);
-        rightLock.setSpeed(-1);
-    }
-
-    public double getLeftPos() {
-        return leftMotor.getEncoder().getPosition();
-    }
-
-    public double getRightPos() {
-        return rightMotor.getEncoder().getPosition();
+        this.set(speed, speed);
     }
 
     public void setLeft(double speed) {
-        leftMotor.set(speed);
+        left.set(speed);
     }
 
     public void setRight(double speed) {
-        rightMotor.set(speed);
+        right.set(speed);
+    }
+
+    public void lock() {
+        left.lock();
+        right.lock();
+    }
+
+    public void unlock() {
+        left.unlock();
+        right.unlock();
+    }
+
+    /// (left, right)
+    public Pair<Double, Double> speeds() {
+        return new Pair<>(this.left.speed(), this.right.speed());
+    }
+
+    /// (left, right)
+    public Pair<Double, Double> positions() {
+        return new Pair<>(this.left.position(), this.right.position());
     }
 }

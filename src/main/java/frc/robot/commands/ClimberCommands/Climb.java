@@ -37,6 +37,6 @@ public class Climb extends Command {
 
     @Override
     public boolean isFinished() {
-        return climber.getLeftPos() <= ClimberConstants.Motor.kEncoderMax;
+        return climber.positions().getFirst() <= ClimberConstants.Motor.kEncoderMax;
     }
 }
