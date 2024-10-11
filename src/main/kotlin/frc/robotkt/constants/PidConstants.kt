@@ -42,6 +42,8 @@ object PidConstants {
         const val kPivI = 0.0
         const val kPivD = 0.0
         const val kPivFF = 0.0
+        const val kMinOut = 0.0
+        const val kMaxOut = 0.3
     }
 
     object Shintake {

@@ -23,7 +23,7 @@ class Arm : SubsystemBase() {
     private val pivctl = leftMotor.pidController!!
 
     val angle
-        get() = pivenc.position
+        get() = pivenc.position * ArmConstants.Pivot.kPositionFactor
 
     val extension
         get() = extenc.position * ArmConstants.Extension.kPositionFactor
@@ -45,8 +45,6 @@ class Arm : SubsystemBase() {
         extMotor.idleMode = IdleMode.kBrake
 
         pivenc.position = 0.0
-        pivenc.positionConversionFactor = ArmConstants.Pivot.kPositionFactor
-
         extenc.position = 0.0
 
         pivctl.p = PidConstants.Arm.kPivP
@@ -57,7 +55,7 @@ class Arm : SubsystemBase() {
         pivctl.setSmartMotionAccelStrategy(SparkPIDController.AccelStrategy.kTrapezoidal, 0)
         pivctl.setSmartMotionMaxAccel(ArmConstants.Pivot.kMaxAccel, 0)
         pivctl.setSmartMotionMaxVelocity(ArmConstants.Pivot.kMaxSpeed, 0)
-        pivctl.setFeedbackDevice(pivenc)
+        pivctl.setOutputRange(PidConstants.Arm.kMinOut, PidConstants.Arm.kMaxOut)
 
         var tab = Shuffleboard.getTab("Arm")!!
 
