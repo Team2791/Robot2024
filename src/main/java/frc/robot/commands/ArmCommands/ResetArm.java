@@ -21,6 +21,6 @@ public class ResetArm extends SequentialCommandGroup {
             public boolean isFinished() {
                 return !is || arm.atPivTarget();
             }
-        }, new AngleArm(arm, 0), new ExtendArm(arm, 0));
+        }, new ExtendArm(arm, 0), new AngleArm(arm, 0));
     }
 }

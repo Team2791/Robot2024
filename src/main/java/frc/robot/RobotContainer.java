@@ -24,11 +24,8 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Led;
 import frc.robot.subsystems.Shintake;
 import frc.robotkt.constants.IOConstants;
-import frc.robotkt.constants.VisionConstants;
 import frc.robotkt.subsystems.Arm;
-import frc.robotkt.subsystems.Camera;
 import frc.robotkt.subsystems.Drivetrain;
-import org.photonvision.PhotonCamera;
 
 public class RobotContainer {
     // Controllers
@@ -79,11 +76,11 @@ public class RobotContainer {
         driverctl.povLeft().whileTrue(new ManualClimb(climber, 2, false, ClimberConstants.Speeds.kClimb));
 
         // Gyro
-        driverctl.back().whileTrue(new ResetGyro(drivetrain));
+        driverctl.back().onTrue(new ResetGyro(drivetrain));
 
         // Ground intake
         operctl.a().whileTrue(new ParallelCommandGroup(new ArmToGround(arm), new Intake(shintake, led)));
-        //operctl.a().whileFalse(new ResetArm(arm));
+        operctl.a().whileFalse(new ResetArm(arm));
 
         // Intake and shooter
         operctl.start().whileTrue(new Intake(shintake, led));
