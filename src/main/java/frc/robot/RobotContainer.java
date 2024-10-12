@@ -94,8 +94,8 @@ public class RobotContainer {
 		driverctl.back().whileTrue(new ResetGyro(drivetrain));
 
 		// Ground intake
-		operctl.a().whileTrue(
-				new ParallelCommandGroup(new ArmToGround(arm), new Intake(shintake, led)));
+		operctl.a().whileTrue(new ParallelCommandGroup(new ArmToGround(arm),
+				new Intake(shintake, led, driverctl, operctl)));
 		operctl.a().whileFalse(new ResetArm(arm));
 
 		// Intake and shooter
@@ -112,7 +112,7 @@ public class RobotContainer {
 
 		// Amp Positioning
 		// operctl.b().whileTrue(new SequentialCommandGroup(new ArmToAmp(arm), new SetShooter(shintake, driverctl, ShintakeConstants.ShooterSpeeds.kAmpShoot)));
-		operctl.b().whileTrue(new Intake(shintake, led));
+		operctl.b().whileTrue(new Intake(shintake, led, driverctl, operctl));
 	}
 
 	public Command getAutonomousCommand() {

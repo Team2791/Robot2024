@@ -9,18 +9,20 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robotkt.subsystems.Arm;
 
 public class ResetArm extends SequentialCommandGroup {
-    public ResetArm(Arm arm) {
-        addCommands(new Command() {
-            boolean is = true;
+	public ResetArm(Arm arm) {
+		addCommands(new Command() {
+			boolean is = true;
 
-            public void initialize() {
-                if (arm.getAngle() > 0) is = false;
-                else arm.setAngleTarget(15);
-            }
+			public void initialize() {
+				if (arm.getAngle() > 0)
+					is = false;
+				else
+					arm.setAngleTarget(20);
+			}
 
-            public boolean isFinished() {
-                return !is || arm.atPivTarget();
-            }
-        }, new ExtendArm(arm, 0), new AngleArm(arm, 0));
-    }
+			public boolean isFinished() {
+				return !is || arm.atPivTarget();
+			}
+		}, new ExtendArm(arm, 0), new AngleArm(arm, 0));
+	}
 }
