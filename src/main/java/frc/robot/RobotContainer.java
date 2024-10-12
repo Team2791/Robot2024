@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.ArmCommands.ArmToGround;
 import frc.robot.commands.ArmCommands.ManualCommands.ManualAngle;
@@ -24,8 +26,11 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Led;
 import frc.robot.subsystems.Shintake;
 import frc.robotkt.constants.IOConstants;
+import frc.robotkt.constants.VisionConstants;
 import frc.robotkt.subsystems.Arm;
+import frc.robotkt.subsystems.Camera;
 import frc.robotkt.subsystems.Drivetrain;
+import org.photonvision.PhotonCamera;
 
 public class RobotContainer {
     // Controllers
@@ -75,11 +80,12 @@ public class RobotContainer {
         driverctl.povRight().whileTrue(new ManualClimb(climber, 2, true, ClimberConstants.Speeds.kClimb));
         driverctl.povLeft().whileTrue(new ManualClimb(climber, 2, false, ClimberConstants.Speeds.kClimb));
 
+        
         driverctl.y().whileTrue(new ManualClimb(climber, 1, true, ClimberConstants.Speeds.kClimb));
         driverctl.a().whileTrue(new ManualClimb(climber, 1, false, ClimberConstants.Speeds.kClimb));
 
         // Gyro
-        driverctl.back().onTrue(new ResetGyro(drivetrain));
+        driverctl.back().whileTrue(new ResetGyro(drivetrain));
 
         // Ground intake
         operctl.a().whileTrue(new ParallelCommandGroup(new ArmToGround(arm), new Intake(shintake, led)));
@@ -103,6 +109,6 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return autoChooser.getSelected();
+        return new SequentialCommandGroup(new SetShooter(shintake, driverctl), new WaitCommand(5), new Shoot(shintake));
     }
 }

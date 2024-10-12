@@ -33,11 +33,11 @@ public class SetShooter extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        shintake.setShooter(0);
+        //shintake.setShooter(0);
     }
 
     @Override
     public boolean isFinished() {
-        return false;
+        return true;
     }
 }
