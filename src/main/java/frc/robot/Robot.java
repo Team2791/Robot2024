@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * Try not to put too much logic here
  */
 public class Robot extends TimedRobot {
-    private final RobotContainer container = new RobotContainer();
+    private static final RobotContainer container = new RobotContainer();
     private Command auto;
 
     public void robotPeriodic() {
@@ -25,7 +25,7 @@ public class Robot extends TimedRobot {
     }
 
     public void autonomousInit() {
-        auto = this.container.getAutonomousCommand();
+        auto = container.getAutonomousCommand();
         if (auto == null) return;
 
         auto.schedule();

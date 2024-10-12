@@ -5,9 +5,7 @@
   "pathFolders": [
     "BottomCurvedAuto",
     "ClearSub",
-    "MidAuto",
-    "MidSub",
-    "TopAuto"
+    "MidAuto"
   ],
   "autoFolders": [],
   "defaultMaxVel": 4.0,

@@ -75,6 +75,9 @@ public class RobotContainer {
         driverctl.povRight().whileTrue(new ManualClimb(climber, 2, true, ClimberConstants.Speeds.kClimb));
         driverctl.povLeft().whileTrue(new ManualClimb(climber, 2, false, ClimberConstants.Speeds.kClimb));
 
+        driverctl.y().whileTrue(new ManualClimb(climber, 1, true, ClimberConstants.Speeds.kClimb));
+        driverctl.a().whileTrue(new ManualClimb(climber, 1, false, ClimberConstants.Speeds.kClimb));
+
         // Gyro
         driverctl.back().onTrue(new ResetGyro(drivetrain));
 
