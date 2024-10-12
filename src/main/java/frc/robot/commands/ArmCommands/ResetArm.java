@@ -4,12 +4,23 @@
 
 package frc.robot.commands.ArmCommands;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robotkt.subsystems.Arm;
 
 public class ResetArm extends SequentialCommandGroup {
     public ResetArm(Arm arm) {
-        if (arm.getAngle() < -0.5) addCommands(new AngleArm(arm, 5));
-        addCommands(new SequentialCommandGroup(new AngleArm(arm, 0), new ExtendArm(arm, 0)));
+        addCommands(new Command() {
+            boolean is = true;
+
+            public void initialize() {
+                if (arm.getAngle() > 0) is = false;
+                else arm.setAngleTarget(5);
+            }
+
+            public boolean isFinished() {
+                return is ? arm.atPivTarget() : true;
+            }
+        }, new AngleArm(arm, 0), new ExtendArm(arm, 0));
     }
 }

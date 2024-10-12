@@ -43,7 +43,7 @@ public class RobotContainer {
     final Arm arm = new Arm();
 
     // Cameras
-    final Camera camera = new Camera(new PhotonCamera(VisionConstants.kCameraName), drivetrain);
+    // final Camera camera = new Camera(new PhotonCamera(VisionConstants.kCameraName), drivetrain);
 
     // Auto
     final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser();
@@ -62,8 +62,7 @@ public class RobotContainer {
 
         // Default commands
         drivetrain.setDefaultCommand(new RunCommand(() -> drivetrain.drive(driverctl), drivetrain));
-        camera.setDefaultCommand(new RunCommand(camera::reset));
-
+        // camera.setDefaultCommand(new RunCommand(camera::reset, camera));
     }
 
     private void bindings() {
@@ -84,7 +83,7 @@ public class RobotContainer {
 
         // Ground intake
         operctl.a().whileTrue(new ParallelCommandGroup(new ArmToGround(arm), new Intake(shintake, led)));
-        operctl.a().whileFalse(new ResetArm(arm));
+        //operctl.a().whileFalse(new ResetArm(arm));
 
         // Intake and shooter
         operctl.start().whileTrue(new Intake(shintake, led));

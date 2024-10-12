@@ -91,6 +91,10 @@ class Arm : SubsystemBase() {
     fun retract() = let { extTarget = ArmConstants.Extension.kMin }
     fun holdExtension() = let { extTarget = extension }
 
+    // fun extend() = let { extMotor.set(ArmConstants.Extension.kSpeed) }
+    // fun retract() = let { extMotor.set(-ArmConstants.Extension.kSpeed) }
+    // fun holdExtension() = let { extMotor.set(0.0) }
+
     fun hold() {
         holdAngle()
         holdExtension()

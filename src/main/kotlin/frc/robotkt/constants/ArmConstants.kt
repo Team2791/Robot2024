@@ -10,13 +10,13 @@ object ArmConstants {
 
         const val kPositionFactor = (kMaxAngle - kMinAngle) / (kEncoderMax - kEncoderMin)
 
-        const val kMaxSpeed = 0.000000000000000000001
+        const val kMaxSpeed = 0.15
         const val kMaxAccel = 0.1
     }
 
     object Extension {
         const val kEncMin = 0.0
-        const val kEncMax = 33096.0
+        const val kEncMax = 42.4
 
         const val kMin = 0.0
         const val kMax = 100.0

@@ -38,7 +38,7 @@ object PidConstants {
     }
 
     object Arm {
-        const val kPivP = 0.01
+        const val kPivP = 0.02
         const val kPivI = 0.0
         const val kPivD = 0.0
         const val kPivFF = 0.0
