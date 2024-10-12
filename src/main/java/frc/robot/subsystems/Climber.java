@@ -22,11 +22,12 @@ class ClimberModule {
     final RelativeEncoder encoder;
     final Servo servo;
 
-    ClimberModule(int motor, int servo) {
+    ClimberModule(int motor, int servo, boolean reversed) {
         this.motor = new CANSparkMax(motor, MotorType.kBrushless);
         this.servo = new Servo(servo);
         this.encoder = this.motor.getEncoder();
 
+        this.motor.setInverted(reversed);
         this.motor.setIdleMode(IdleMode.kBrake);
         this.encoder.setPosition(0);
         this.servo.setBoundsMicroseconds(2000, 0, 0, 0, 1000);
@@ -63,8 +64,8 @@ class ClimberModule {
 }
 
 public class Climber extends SubsystemBase {
-    private final ClimberModule left = new ClimberModule(IOConstants.Climber.kLeft, IOConstants.Climber.kLeftLock);
-    private final ClimberModule right = new ClimberModule(IOConstants.Climber.kRight, IOConstants.Climber.kRightLock);
+    private final ClimberModule left = new ClimberModule(IOConstants.Climber.kLeft, IOConstants.Climber.kLeftLock, true);
+    private final ClimberModule right = new ClimberModule(IOConstants.Climber.kRight, IOConstants.Climber.kRightLock, false);
 
     private final AHRS gyro;
 
