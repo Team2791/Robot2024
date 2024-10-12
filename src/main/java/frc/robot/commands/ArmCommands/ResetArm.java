@@ -15,11 +15,11 @@ public class ResetArm extends SequentialCommandGroup {
 
             public void initialize() {
                 if (arm.getAngle() > 0) is = false;
-                else arm.setAngleTarget(5);
+                else arm.setAngleTarget(15);
             }
 
             public boolean isFinished() {
-                return is ? arm.atPivTarget() : true;
+                return !is || arm.atPivTarget();
             }
         }, new AngleArm(arm, 0), new ExtendArm(arm, 0));
     }

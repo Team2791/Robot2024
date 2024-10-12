@@ -1,0 +1,103 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 8.783337566675133,
+        "y": 2.4774483834681957
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.2734134039696645,
+        "y": 2.1842592256613096
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.162451467760079,
+        "y": 1.817772778402701
+      },
+      "prevControl": {
+        "x": 5.4263217097862775,
+        "y": 1.8324322362930456
+      },
+      "nextControl": {
+        "x": 4.342263188195953,
+        "y": 1.7722067628713611
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.3918139264849962,
+        "y": 3.7235023041474657
+      },
+      "prevControl": {
+        "x": 3.3593381472477226,
+        "y": 2.7999564570557722
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.15,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "IntakeReset"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 1.75,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "SetShooter"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 180.0
+  },
+  "goalEndState": {
+    "velocity": 3.0,
+    "rotation": -47.489552921999184,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "BottomCurvedAuto",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}
