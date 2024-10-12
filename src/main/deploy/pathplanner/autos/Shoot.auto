@@ -5,7 +5,7 @@
       "x": 0.8,
       "y": 4.310512499163074
     },
-    "rotation": -59.78126197797557
+    "rotation": 127.28957082692612
   },
   "command": {
     "type": "sequential",
@@ -20,13 +20,39 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 2.0
+            "waitTime": 3.0
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "Shoot"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Shoot"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.1
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Move Back"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         }
       ]

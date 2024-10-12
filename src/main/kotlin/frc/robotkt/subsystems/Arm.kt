@@ -23,7 +23,7 @@ class Arm : SubsystemBase() {
     private val pivctl = leftMotor.pidController!!
 
     val angle
-        get() = pivenc.position * ArmConstants.Pivot.kPositionFactor
+        get() = pivenc.position
 
     val extension
         get() = extenc.position * ArmConstants.Extension.kPositionFactor
@@ -45,6 +45,7 @@ class Arm : SubsystemBase() {
         extMotor.idleMode = IdleMode.kBrake
 
         pivenc.position = 0.0
+		pivenc.positionConversionFactor = ArmConstants.Pivot.kPositionFactor;
         extenc.position = 0.0
 
         pivctl.p = PidConstants.Arm.kPivP
@@ -90,10 +91,6 @@ class Arm : SubsystemBase() {
     fun extend() = let { extTarget = ArmConstants.Extension.kMax }
     fun retract() = let { extTarget = ArmConstants.Extension.kMin }
     fun holdExtension() = let { extTarget = extension }
-
-    // fun extend() = let { extMotor.set(ArmConstants.Extension.kSpeed) }
-    // fun retract() = let { extMotor.set(-ArmConstants.Extension.kSpeed) }
-    // fun holdExtension() = let { extMotor.set(0.0) }
 
     fun hold() {
         holdAngle()
