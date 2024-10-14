@@ -35,12 +35,10 @@ public class ManualClimb extends Command {
     }
 
     public void end(boolean interrupted) {
-        climber.stop();
+        climber.set(0);
     }
 
     public enum ClimbSide {
-        kLeft,
-        kBoth,
-        kRight,
+        kLeft, kBoth, kRight,
     }
 }
