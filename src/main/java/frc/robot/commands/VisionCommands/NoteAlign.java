@@ -8,7 +8,12 @@ import frc.robotkt.subsystems.Camera;
 import frc.robotkt.subsystems.Drivetrain;
 
 public class NoteAlign extends Command {
-    final PIDController pid = new PIDController(PidConstants.PhotonAlign.kP, PidConstants.PhotonAlign.kI, PidConstants.PhotonAlign.kD);
+    final PIDController pid = new PIDController(
+        PidConstants.PhotonAlign.kP,
+        PidConstants.PhotonAlign.kI,
+        PidConstants.PhotonAlign.kD
+    );
+
     final Drivetrain drivetrain;
     final Camera camera;
     final CommandXboxController driverctl;
@@ -18,8 +23,6 @@ public class NoteAlign extends Command {
         this.camera = camera;
         this.driverctl = driverctl;
 
-        camera.setMode(Camera.CameraMode.Note);
-
         pid.setTolerance(1);
         pid.setSetpoint(300);
 
@@ -28,7 +31,7 @@ public class NoteAlign extends Command {
     }
 
     public void execute() {
-        if (!camera.hasTargets()) {
+        if (camera.getBestTarget() == null || !camera.hasTargets()) {
             // We are capturing the drivetrain, so make sure we default drive
             drivetrain.drive(driverctl);
             return;

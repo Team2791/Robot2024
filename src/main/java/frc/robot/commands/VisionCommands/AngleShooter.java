@@ -2,20 +2,16 @@ package frc.robot.commands.VisionCommands;
 
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.subsystems.Led;
+import frc.robot.commands.FunctionalCommands.ExecuteCommand;
 import frc.robotkt.constants.ArmConstants;
 import frc.robotkt.constants.VisionConstants;
 import frc.robotkt.subsystems.Arm;
 import frc.robotkt.subsystems.Camera;
 import frc.robotkt.subsystems.Drivetrain;
-
-import java.util.Set;
+import frc.robotkt.subsystems.Notifier;
 
 class AngleArm extends Command {
     final TagAlign aligner;
@@ -38,11 +34,18 @@ class AngleArm extends Command {
         Translation3d cam2target = aligner.target.getBestCameraToTarget().getTranslation();
         Translation3d target2cam = cam2target.unaryMinus();
         Translation3d cam2bot = VisionConstants.kCameraToRobot.getTranslation();
-        Translation3d cam2botWithHeight = new Translation3d(cam2bot.getX(), cam2bot.getY(), ArmConstants.kPivotHeight - VisionConstants.kCameraHeight);
+        Translation3d cam2botWithHeight = new Translation3d(
+            cam2bot.getX(),
+            cam2bot.getY(),
+            ArmConstants.kPivotHeight - VisionConstants.kCameraHeight
+        );
         double target2bot = target2cam.plus(cam2botWithHeight).getDistance(new Translation3d());
 
         // tag triangle height
-        double tagHeight = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField().getTagPose(aligner.target.getFiducialId()).get().getZ() - height;
+        double tagHeight = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField()
+            .getTagPose(aligner.target.getFiducialId())
+            .get()
+            .getZ() - height;
 
         // base
         double base = Math.sqrt(Math.pow(target2bot, 2) - Math.pow(tagHeight, 2));
@@ -89,19 +92,23 @@ class AngleArm extends Command {
 }
 
 public class AngleShooter extends SequentialCommandGroup {
-    public AngleShooter(Drivetrain drivetrain, Arm arm, Camera camera, Led led, CommandXboxController driverctl) {
-        TagAlign aligner = new TagAlign(drivetrain, camera, driverctl, Set.of(4, 7));
+    public AngleShooter(
+        Drivetrain drivetrain,
+        Arm arm,
+        Camera camera,
+        Notifier notifier,
+        CommandXboxController driverctl
+    ) {
+        TagAlign aligner = new TagAlign(drivetrain, camera, driverctl, 4, 7);
         AngleArm angler = new AngleArm(drivetrain, arm, aligner);
 
         addCommands(
-                new RunCommand(() -> led.setRGB(255, 0, 0), led),
-                aligner,
-                new RunCommand(() -> led.setRGB(0, 255, 0), led, drivetrain),
-                angler,
-                new RunCommand(() -> led.setRGB(0, 0, 255), led),
-                new RunCommand(() -> driverctl.getHID().setRumble(GenericHID.RumbleType.kRightRumble, 1)),
-                new WaitCommand(0.5),
-                new RunCommand(() -> driverctl.getHID().setRumble(GenericHID.RumbleType.kRightRumble, 0))
+            new ExecuteCommand(() -> notifier.getLed().setRGB(255, 0, 0)),
+            aligner,
+            new ExecuteCommand(() -> notifier.getLed().setRGB(0, 255, 0)),
+            angler,
+            new ExecuteCommand(() -> notifier.getLed().setRGB(0, 0, 255)),
+            new ExecuteCommand(notifier::notify)
         );
     }
 }

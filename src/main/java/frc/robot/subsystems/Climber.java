@@ -64,8 +64,17 @@ class ClimberModule {
 }
 
 public class Climber extends SubsystemBase {
-    private final ClimberModule left = new ClimberModule(IOConstants.Climber.kLeft, IOConstants.Climber.kLeftLock, true);
-    private final ClimberModule right = new ClimberModule(IOConstants.Climber.kRight, IOConstants.Climber.kRightLock, false);
+    private final ClimberModule left = new ClimberModule(
+        IOConstants.Climber.kLeft,
+        IOConstants.Climber.kLeftLock,
+        true
+    );
+    
+    private final ClimberModule right = new ClimberModule(
+        IOConstants.Climber.kRight,
+        IOConstants.Climber.kRightLock,
+        false
+    );
 
     private final AHRS gyro;
 

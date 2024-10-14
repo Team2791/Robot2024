@@ -38,7 +38,6 @@ public class Shintake extends SubsystemBase {
 
         ShuffleboardTab tab = Shuffleboard.getTab("Shintake");
 
-        // Lambda expressions only need to be sent once
         tab.addNumber("Shooter Speed", this::getShooter);
         tab.addNumber("Intake Speed", this::getIntake);
         tab.addBoolean("Loaded", this::isLoaded);
@@ -54,10 +53,6 @@ public class Shintake extends SubsystemBase {
 
     public void stopShooter() {
         setShooter(0);
-    }
-
-    public boolean atShooterTarget() {
-        return Math.abs(shooterSpeed - right.getEncoder().getVelocity()) < ShintakeConstants.kTolerance;
     }
 
     public double getIntake() {

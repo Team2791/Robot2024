@@ -36,25 +36,25 @@ import kotlin.math.hypot
 import kotlin.math.sin
 
 class Drivetrain : SubsystemBase() {
-    val frontLeft = SwerveModule(
+    private val frontLeft = SwerveModule(
         IOConstants.DrivetrainCan.kFrontLeftDrive,
         IOConstants.DrivetrainCan.kFrontLeftTurn,
         DriveConstants.AngularOffsets.kFrontLeft
     )
 
-    val frontRight = SwerveModule(
+    private val frontRight = SwerveModule(
         IOConstants.DrivetrainCan.kFrontRightDrive,
         IOConstants.DrivetrainCan.kFrontRightTurn,
         DriveConstants.AngularOffsets.kFrontRight
     )
 
-    val rearLeft = SwerveModule(
+    private val rearLeft = SwerveModule(
         IOConstants.DrivetrainCan.kRearLeftDrive,
         IOConstants.DrivetrainCan.kRearLeftTurn,
         DriveConstants.AngularOffsets.kRearLeft
     )
 
-    val rearRight = SwerveModule(
+    private val rearRight = SwerveModule(
         IOConstants.DrivetrainCan.kRearRightDrive,
         IOConstants.DrivetrainCan.kRearRightTurn,
         DriveConstants.AngularOffsets.kRearRight
@@ -62,8 +62,8 @@ class Drivetrain : SubsystemBase() {
 
     val gyro = AHRS(SPI.Port.kMXP)
 
-    val magLimiter = SlewRateLimiter(DriveConstants.SlewRate.kMagnitude)
-    val rotLimiter = SlewRateLimiter(DriveConstants.SlewRate.kRotation)
+    private val magLimiter = SlewRateLimiter(DriveConstants.SlewRate.kMagnitude)
+    private val rotLimiter = SlewRateLimiter(DriveConstants.SlewRate.kRotation)
 
     val heading
         get() = Rotation2d.fromDegrees(gyro.angle * DriveConstants.kGyroFactor)!!
@@ -71,7 +71,7 @@ class Drivetrain : SubsystemBase() {
     val gyroAngle
         get() = Rotation2d.fromDegrees(gyro.angle)!!
 
-    val modules
+    private val modules
         get() = listOf(frontLeft, frontRight, rearLeft, rearRight)
 
     val modulePositions
@@ -82,7 +82,7 @@ class Drivetrain : SubsystemBase() {
 
     var chassisSpeeds: ChassisSpeeds
         get() = DriveConstants.kDriveKinematics.toChassisSpeeds(*moduleStates)
-        set(speeds) {
+        private set(speeds) {
             val states = DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds)
             SwerveDriveKinematics.desaturateWheelSpeeds(states, DriveConstants.kMaxSpeedMps)
 
@@ -93,9 +93,9 @@ class Drivetrain : SubsystemBase() {
 
     var pose: Pose2d
         get() = odometry.estimatedPosition
-        set(value) = odometry.resetPosition(heading, modulePositions, value)
+        private set(value) = odometry.resetPosition(heading, modulePositions, value)
 
-    val odometry = SwerveDrivePoseEstimator(
+    internal val odometry = SwerveDrivePoseEstimator(
         DriveConstants.kDriveKinematics,
         heading,
         modulePositions,
@@ -104,10 +104,9 @@ class Drivetrain : SubsystemBase() {
 
     val field = Field2d()
 
-    var timer = WPIUtilJNI.now() * 1e-6
-
-    var translationDir = 0.0
-    var translationMag = 0.0
+    private var timer = WPIUtilJNI.now() * 1e-6
+    private var translationDir = 0.0
+    private var translationMag = 0.0
 
     init {
         gyro.reset()

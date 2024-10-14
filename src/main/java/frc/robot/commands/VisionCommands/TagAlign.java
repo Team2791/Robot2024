@@ -14,7 +14,12 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 public class TagAlign extends Command {
-    final PIDController pid = new PIDController(PidConstants.PhotonAlign.kP, PidConstants.PhotonAlign.kI, PidConstants.PhotonAlign.kD);
+    final PIDController pid = new PIDController(
+        PidConstants.PhotonAlign.kP,
+        PidConstants.PhotonAlign.kI,
+        PidConstants.PhotonAlign.kD
+    );
+
     final Drivetrain drivetrain;
     final Camera camera;
     final CommandXboxController driverctl;
@@ -23,15 +28,14 @@ public class TagAlign extends Command {
     // make the target accessible to not recalculate. see AngleShooter.java
     PhotonTrackedTarget target;
 
-    public TagAlign(Drivetrain drivetrain, Camera camera, CommandXboxController driverctl, Set<Integer> targetIds) {
+    public TagAlign(Drivetrain drivetrain, Camera camera, CommandXboxController driverctl, Integer... targetIds) {
         this.drivetrain = drivetrain;
         this.camera = camera;
         this.driverctl = driverctl;
-        this.filter = (target) -> targetIds.contains(target.getFiducialId());
+        this.filter = (target) -> Set.of(targetIds).contains(target.getFiducialId());
 
         pid.setTolerance(1);
         pid.setSetpoint(300);
-        camera.setMode(Camera.CameraMode.AprilTag);
 
         addRequirements(drivetrain, camera);
     }
@@ -44,7 +48,6 @@ public class TagAlign extends Command {
 
         pid.setTolerance(1);
         pid.setSetpoint(300);
-        camera.setMode(Camera.CameraMode.AprilTag);
 
         addRequirements(drivetrain, camera);
     }
@@ -57,7 +60,9 @@ public class TagAlign extends Command {
         }
 
         List<PhotonTrackedTarget> targets = camera.getTargets();
-        Optional<PhotonTrackedTarget> target = targets.stream().filter(t -> this.filter.test(t) && t.getPoseAmbiguity() <= 0.6).findFirst();
+        Optional<PhotonTrackedTarget> target = targets.stream()
+            .filter(t -> this.filter.test(t) && t.getPoseAmbiguity() <= 0.6)
+            .findFirst();
         if (target.isEmpty()) return;
 
         this.target = target.get();

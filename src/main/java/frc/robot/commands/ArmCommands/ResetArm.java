@@ -8,19 +8,29 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robotkt.subsystems.Arm;
 
+class BringUp extends Command {
+    final Arm arm;
+    boolean set = true;
+
+    public BringUp(Arm arm) {
+        this.arm = arm;
+        addRequirements(arm);
+    }
+
+    @Override
+    public void initialize() {
+        if (arm.getAngle() < 0) set = false;
+        else arm.setAngleTarget(20);
+    }
+
+    @Override
+    public boolean isFinished() {
+        return !set || arm.atPivTarget();
+    }
+}
+
 public class ResetArm extends SequentialCommandGroup {
     public ResetArm(Arm arm) {
-        addCommands(new Command() {
-            boolean is = true;
-
-            public void initialize() {
-                if (arm.getAngle() > 0) is = false;
-                else arm.setAngleTarget(15);
-            }
-
-            public boolean isFinished() {
-                return !is || arm.atPivTarget();
-            }
-        }, new ExtendArm(arm, 0), new AngleArm(arm, 0));
+        addCommands(new BringUp(arm), new ExtendArm(arm, 0), new AngleArm(arm, 0));
     }
 }

@@ -31,7 +31,7 @@ class Arm : SubsystemBase() {
     var angleTarget = 0.0
         set(value) {
             field = normalizePiv(value)
-            pivctl.setReference(field, ControlType.kPosition)
+            pivctl.setReference(field, ControlType.kPosition) // TODO: test ControlType.kSmartMotion
         }
 
     var extTarget = 0.0
@@ -45,8 +45,9 @@ class Arm : SubsystemBase() {
         extMotor.idleMode = IdleMode.kBrake
 
         pivenc.position = 0.0
-		pivenc.positionConversionFactor = ArmConstants.Pivot.kPositionFactor;
         extenc.position = 0.0
+
+        pivenc.positionConversionFactor = ArmConstants.Pivot.kPositionFactor
 
         pivctl.p = PidConstants.Arm.kPivP
         pivctl.i = PidConstants.Arm.kPivI
@@ -57,6 +58,7 @@ class Arm : SubsystemBase() {
         pivctl.setSmartMotionMaxAccel(ArmConstants.Pivot.kMaxAccel, 0)
         pivctl.setSmartMotionMaxVelocity(ArmConstants.Pivot.kMaxSpeed, 0)
         pivctl.setOutputRange(-PidConstants.Arm.kMaxPower, PidConstants.Arm.kMaxPower)
+        pivctl.setFeedbackDevice(pivenc)
 
         var tab = Shuffleboard.getTab("Arm")!!
 
