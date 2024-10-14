@@ -82,13 +82,17 @@ public class Climber extends SubsystemBase {
         return (this.gyro.getRoll() / 180.0);
     }
 
-    public void set(double leftSpeed, double rightSpeed) {
-        left.set(leftSpeed);
-        right.set(rightSpeed);
+    public void set(double left, double right) {
+        setLeft(left);
+        setRight(right);
     }
 
     public void set(double speed) {
         this.set(speed, speed);
+    }
+
+    public void stop() {
+        this.set(0);
     }
 
     public void setLeft(double speed) {
