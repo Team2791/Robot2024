@@ -13,7 +13,7 @@ class Notifier(
 ) : SubsystemBase() {
     private val timer = Timer()
 
-    fun notify() {
+    fun vibrate() {
         driverctl.hid.setRumble(RumbleType.kBothRumble, 1.0)
         operctl.hid.setRumble(RumbleType.kBothRumble, 1.0)
         timer.start()
