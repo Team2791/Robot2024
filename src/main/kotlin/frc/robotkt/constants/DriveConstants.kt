@@ -20,8 +20,8 @@ object DriveConstants {
     }
 
     object Dimensions {
-        const val kWheelBase = 24.5 * kMetersPerInch
-        const val kTrackWidth = 22.5 * kMetersPerInch
+        const val kWheelBase = 26.25 * kMetersPerInch
+        const val kTrackWidth = kWheelBase
         val kDriveBaseRadius = 0.5 * hypot(kWheelBase, kTrackWidth)
     }
 
@@ -32,7 +32,7 @@ object DriveConstants {
         Translation2d(-Dimensions.kWheelBase / 2, -Dimensions.kTrackWidth / 2)
     )
 
-    const val kMaxSpeedMps = 15.0
+    const val kMaxSpeedMps = 20.0
     const val kMaxSpeedAnglular = kTau
     const val kGyroFactor = -1.0
 }
