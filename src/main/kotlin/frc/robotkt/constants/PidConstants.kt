@@ -30,18 +30,4 @@ object PidConstants {
         const val kPidMin = -1.0
         const val kPidMax = 1.0
     }
-
-    object PhotonAlign {
-        const val kP = 0.1
-        const val kI = 0.0
-        const val kD = 0.0
-    }
-
-    object Arm {
-        const val kPivP = 0.02
-        const val kPivI = 0.0
-        const val kPivD = 0.0
-        const val kPivFF = 0.0
-        const val kMaxPower = 0.3
-    }
 }

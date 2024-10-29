@@ -3,7 +3,7 @@ package frc.robotkt.constants
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics
 import kotlin.math.PI
-import kotlin.math.hypot
+import kotlin.math.sqrt
 
 object DriveConstants {
     object AngularOffsets {
@@ -20,19 +20,18 @@ object DriveConstants {
     }
 
     object Dimensions {
-        const val kWheelBase = 24.5 * kMetersPerInch
-        const val kTrackWidth = 22.5 * kMetersPerInch
-        val kDriveBaseRadius = 0.5 * hypot(kWheelBase, kTrackWidth)
+        const val kWheelBase = 23.25 * kMetersPerInch
+        val kDriveBaseRadius = 0.5 * kWheelBase * sqrt(2.0)
     }
 
     val kDriveKinematics = SwerveDriveKinematics(
-        Translation2d(Dimensions.kWheelBase / 2, Dimensions.kTrackWidth / 2),
-        Translation2d(Dimensions.kWheelBase / 2, -Dimensions.kTrackWidth / 2),
-        Translation2d(-Dimensions.kWheelBase / 2, Dimensions.kTrackWidth / 2),
-        Translation2d(-Dimensions.kWheelBase / 2, -Dimensions.kTrackWidth / 2)
+        Translation2d(Dimensions.kWheelBase / 2, Dimensions.kWheelBase / 2),
+        Translation2d(Dimensions.kWheelBase / 2, -Dimensions.kWheelBase / 2),
+        Translation2d(-Dimensions.kWheelBase / 2, Dimensions.kWheelBase / 2),
+        Translation2d(-Dimensions.kWheelBase / 2, -Dimensions.kWheelBase / 2)
     )
 
-    const val kMaxSpeedMps = 15.0
+    const val kMaxSpeedMps = 20
     const val kMaxSpeedAnglular = kTau
     const val kGyroFactor = -1.0
 }

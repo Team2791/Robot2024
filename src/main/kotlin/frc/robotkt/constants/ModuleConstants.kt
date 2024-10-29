@@ -16,9 +16,9 @@ object ModuleConstants {
     }
 
     object DriveMotor {
-        const val kPinionTeeth = 14.0
+        const val kPinionTeeth = 16.0
         const val kBevelGearTeeth = 45.0
-        const val kSpurTeeth = 22.0
+        const val kSpurTeeth = 19.0
         const val kBevelPinionTeeth = 15.0
         const val kReduction = (kBevelGearTeeth * kSpurTeeth) / (kPinionTeeth * kBevelPinionTeeth)
         const val kCurrentLimit = 40

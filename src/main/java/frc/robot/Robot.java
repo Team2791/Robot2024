@@ -20,10 +20,6 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().run();
     }
 
-    public void disabledInit() {
-        container.led.setRGB(255, 0, 0);
-    }
-
     public void autonomousInit() {
         auto = container.getAutonomousCommand();
         if (auto == null) return;
@@ -33,7 +29,6 @@ public class Robot extends TimedRobot {
 
     public void teleopInit() {
         if (auto != null) auto.cancel();
-        container.led.setRGB(255, 255, 255);
     }
 
     public void testInit() {
