@@ -25,6 +25,7 @@ public class SetShooter extends Command {
 
     @Override
     public void initialize() {
+        signal.set(false);
         shooter.setShooter();
     }
 

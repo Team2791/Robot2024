@@ -66,10 +66,7 @@ class Drivetrain : SubsystemBase() {
     private val rotLimiter = SlewRateLimiter(DriveConstants.SlewRate.kRotation)
 
     val heading
-        get() = Rotation2d.fromDegrees(gyro.roll * DriveConstants.kGyroFactor)!!
-
-    val gyroAngle
-        get() = Rotation2d.fromDegrees(gyro.roll.toDouble())!!
+        get() = Rotation2d.fromDegrees(gyro.angle * DriveConstants.kGyroFactor)!!
 
     private val modules
         get() = listOf(frontLeft, frontRight, rearLeft, rearRight)

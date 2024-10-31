@@ -33,5 +33,5 @@ object DriveConstants {
 
     const val kMaxSpeedMps = 20.0
     const val kMaxSpeedAnglular = kTau
-    const val kGyroFactor = 1.0
+    const val kGyroFactor = -1.0
 }

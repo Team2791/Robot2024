@@ -30,12 +30,14 @@ public class Intake extends Command {
 
     @Override
     public void execute() {
-        if (shooter.getKicker() <= ShooterConstants.kIntakeThreshold)
+        if (shooter.getKicker() >= ShooterConstants.kCurrentThreshold)
             timer.start();
     }
 
     @Override
     public void end(boolean interrupted) {
+        timer.stop();
+        timer.reset();
         shooter.stop();
         notifier.vibrate();
     }
