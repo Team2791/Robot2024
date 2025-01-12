@@ -28,7 +28,8 @@ class SwerveModule(driveId: Int, turnId: Int, val angularOffset: Double) {
             corrected.speedMetersPerSecond = desired.speedMetersPerSecond
             corrected.angle = desired.angle.plus(Rotation2d(angularOffset))
 
-            val optimized = SwerveModuleState.optimize(corrected, Rotation2d(turnEncoder.position))!!
+            val optimized =
+                    SwerveModuleState.optimize(corrected, Rotation2d(turnEncoder.position))!!
             drivePid.setReference(optimized.speedMetersPerSecond, ControlType.kVelocity)
             turnPid.setReference(optimized.angle.radians, ControlType.kPosition)
 
@@ -82,7 +83,6 @@ class SwerveModule(driveId: Int, turnId: Int, val angularOffset: Double) {
         driveMotor.setSmartCurrentLimit(ModuleConstants.DriveMotor.kCurrentLimit)
         turnMotor.setSmartCurrentLimit(ModuleConstants.TurnMotor.kCurrentLimit)
 
-        // One module is f*ed up
         if (driveId == 40) driveMotor.inverted = true
 
         // Maintain configs
@@ -98,7 +98,11 @@ class SwerveModule(driveId: Int, turnId: Int, val angularOffset: Double) {
         get() = SwerveModuleState(driveEncoder.velocity, Rotation2d(turnEncoder.position))
 
     val position
-        get() = SwerveModulePosition(driveEncoder.position, Rotation2d(turnEncoder.position - angularOffset))
+        get() =
+                SwerveModulePosition(
+                        driveEncoder.position,
+                        Rotation2d(turnEncoder.position - angularOffset)
+                )
 
     fun stop() {
         driveMotor.stopMotor()

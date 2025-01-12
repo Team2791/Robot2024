@@ -11,7 +11,7 @@ class Camera(name: String, val drivetrain: Drivetrain) : SubsystemBase() {
 
     private val estimator = PhotonPoseEstimator(
         AprilTagFields.k2024Crescendo.loadAprilTagLayoutField()!!,
-        PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY,
+        PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
         camera,
         VisionConstants.kCameraToRobot.inverse(),
     )
